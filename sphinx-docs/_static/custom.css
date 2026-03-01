@@ -1,0 +1,13 @@
+/* Consistent table widths */
+table.docutils {
+    width: 100%;
+}
+
+/* Mermaid diagram sizing */
+.mermaid {
+    margin: 0.75em 0;
+}
+
+.mermaid svg {
+    max-height: 180px;
+}
