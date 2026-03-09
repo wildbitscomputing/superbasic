@@ -1,0 +1,240 @@
+"""Pygments lexer for F256 SuperBASIC."""
+
+from pygments.lexer import RegexLexer, bygroups, words
+from pygments.token import (
+    Comment,
+    Keyword,
+    Name,
+    Number,
+    Operator,
+    Punctuation,
+    String,
+    Text,
+)
+
+
+class SuperBASICLexer(RegexLexer):
+    name = "SuperBASIC"
+    aliases = ["superbasic", "basic"]
+    filenames = ["*.bas"]
+
+    tokens = {
+        "root": [
+            # Line numbers at start of line
+            (r"^\s*\d+", Name.Label),
+            # REM comments (keyword form)
+            (r"(?i)\brem\b.*$", Comment.Single),
+            # Apostrophe comments
+            (r"'.*$", Comment.Single),
+            # Strings
+            (r'"[^"]*"', String.Double),
+            # Hex numbers
+            (r"\$[0-9A-Fa-f]+", Number.Hex),
+            # Decimal numbers (float)
+            (r"\b\d+\.\d*", Number.Float),
+            # Decimal numbers (integer)
+            (r"\b\d+\b", Number.Integer),
+            # Structure keywords (control flow)
+            (
+                words(
+                    (
+                        "while",
+                        "if",
+                        "repeat",
+                        "for",
+                        "proc",
+                        "wend",
+                        "endif",
+                        "then",
+                        "until",
+                        "next",
+                        "endproc",
+                        "end",
+                        "goto",
+                        "gosub",
+                        "return",
+                        "else",
+                        "to",
+                        "downto",
+                        "step",
+                        "stop",
+                        "on",
+                        "off",
+                    ),
+                    prefix=r"(?i)\b",
+                    suffix=r"\b",
+                ),
+                Keyword,
+            ),
+            # Commands
+            (
+                words(
+                    (
+                        "print",
+                        "cprint",
+                        "input",
+                        "let",
+                        "dim",
+                        "data",
+                        "read",
+                        "restore",
+                        "call",
+                        "local",
+                        "new",
+                        "list",
+                        "run",
+                        "clear",
+                        "cls",
+                        "load",
+                        "save",
+                        "verify",
+                        "bload",
+                        "bsave",
+                        "dir",
+                        "drive",
+                        "poke",
+                        "pokew",
+                        "pokel",
+                        "poked",
+                        "memcopy",
+                        "lomem",
+                        "assert",
+                        "assemble",
+                        "option",
+                        "try",
+                        "cursor",
+                        "mouse",
+                        "mdelta",
+                        "setdate",
+                        "settime",
+                        "xload",
+                        "xgo",
+                    ),
+                    prefix=r"(?i)\b",
+                    suffix=r"\b",
+                ),
+                Keyword.Reserved,
+            ),
+            # Graphics / sound commands
+            (
+                words(
+                    (
+                        "bitmap",
+                        "line",
+                        "plot",
+                        "rect",
+                        "circle",
+                        "text",
+                        "image",
+                        "sprite",
+                        "sprites",
+                        "tile",
+                        "tiles",
+                        "gfx",
+                        "sound",
+                        "zap",
+                        "shoot",
+                        "ping",
+                        "explode",
+                        "palette",
+                        "colour",
+                        "color",
+                        "solid",
+                        "outline",
+                        "here",
+                        "from",
+                        "by",
+                        "at",
+                    ),
+                    prefix=r"(?i)\b",
+                    suffix=r"\b",
+                ),
+                Name.Builtin,
+            ),
+            # Built-in functions
+            (
+                words(
+                    (
+                        "abs",
+                        "alloc",
+                        "asc",
+                        "chr\\$",
+                        "event",
+                        "frac",
+                        "fre",
+                        "get\\$",
+                        "get",
+                        "getdate\\$",
+                        "gettime\\$",
+                        "hit",
+                        "inkey\\$",
+                        "inkey",
+                        "int",
+                        "isval",
+                        "itemcount",
+                        "itemget\\$",
+                        "joyb",
+                        "joyx",
+                        "joyy",
+                        "keydown",
+                        "left\\$",
+                        "len",
+                        "max",
+                        "mid\\$",
+                        "min",
+                        "not",
+                        "peek",
+                        "peekd",
+                        "peekl",
+                        "peekw",
+                        "playing",
+                        "random",
+                        "right\\$",
+                        "rnd",
+                        "screen\\$",
+                        "screen",
+                        "sgn",
+                        "spc",
+                        "str\\$",
+                        "tile",
+                        "timer",
+                        "val",
+                    ),
+                    prefix=r"(?i)\b",
+                    suffix=r"(?=\()",
+                ),
+                Name.Function,
+            ),
+            # Boolean constants
+            (r"(?i)\b(true|false)\b", Keyword.Constant),
+            # 65C02 assembly mnemonics
+            (
+                words(
+                    (
+                        "adc", "and", "asl", "bcc", "bcs", "beq", "bit", "bmi",
+                        "bne", "bpl", "bra", "brk", "bvc", "bvs", "clc", "cld",
+                        "cli", "clv", "cmp", "cpx", "cpy", "dec", "dex", "dey",
+                        "eor", "inc", "inx", "iny", "jmp", "jsr", "lda", "ldx",
+                        "ldy", "lsr", "nop", "ora", "pha", "php", "phx", "phy",
+                        "pla", "plp", "plx", "ply", "rol", "ror", "rti", "rts",
+                        "sbc", "sec", "sed", "sei", "sta", "stx", "sty", "stz",
+                        "tax", "tay", "trb", "tsb", "tsx", "txa", "txs", "tya",
+                        "stp",
+                    ),
+                    prefix=r"(?i)\b",
+                    suffix=r"\b",
+                ),
+                Keyword.Type,
+            ),
+            # Operators
+            (r"[+\-*/\\<>=]", Operator),
+            (r"<>|<=|>=|<<|>>", Operator),
+            (r"%", Operator),
+            # Punctuation
+            (r"[(),;:.]", Punctuation),
+            # Identifiers (with optional $ or # suffix)
+            (r"[a-zA-Z_][a-zA-Z0-9_]*[#$]?", Name.Variable),
+            # Whitespace
+            (r"\s+", Text.Whitespace),
+        ],
+    }

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Depending on the hardware model and generation, a Wildbits/K2 machine includes a stereo SN76489 sound chip, and may also feature additional audio hardware such as SID, OPL3, and MIDI chips.
+Depending on the hardware model and generation, a Wildbits machine includes a stereo SN76489 sound chip, and may also feature additional audio hardware such as SID, OPL3, and MIDI chips.
 
 In SuperBASIC these are simplified, so the same tones are played on left or right channels simultaneously.
 
@@ -33,4 +33,4 @@ It is possible to set a parameter to automatically change the pitch of the chann
 
 ## Easy Commands
 
-Four commands `ZAP`, `SHOOT`, `PING` and `EXPLODE` exist which play a simple sound effect.
+Four commands `zap`, `shoot`, `ping` and `explode` exist which play a simple sound effect.

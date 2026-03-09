@@ -6,7 +6,7 @@ SuperBASIC supports a single tile map, made up of 8×8 pixel images. A tile map 
 
 ## Setting Up a Tile Map
 
-The `TILES` command sets up a tile map. For example, the following command sets up a 48×48 tile map at the default locations (see below), and turns it on:
+The `tiles` command sets up a tile map. For example, the following command sets up a 48×48 tile map at the default locations (see below), and turns it on:
 
 ```basic
 100 tiles dim 48,48 on
@@ -14,18 +14,18 @@ The `TILES` command sets up a tile map. For example, the following command sets 
 
 ## Manipulating a Tile Map
 
-The `TILE` command is used to manipulate a tile map, by either scrolling its position, or by writing to it. These commands can be chained in a similar manner to the graphics drawing ones.
+The `tile` command is used to manipulate a tile map, by either scrolling its position, or by writing to it. These commands can be chained in a similar manner to the graphics drawing ones.
 
 This example sets the draw pointer at tile 4 across, 5 down and draws the following tiles, writing horizontally: tile 10, 3 tile 11s, and another tile 10. So it is not difficult to create maps programmatically.
 
-`TILE TO` scrolls the tile map on the screen — this is in pixels, not whole tiles.
+`tile to` scrolls the tile map on the screen — this is in pixels, not whole tiles.
 
-The `TILE()` function reads the tile at the current map position (which following the code at line 100, should be 11).
+The `tile()` function reads the tile at the current map position (which following the code at line 100, should be 11).
 
 ```basic
-100 tile at 4,5 draw 10,11 line 3,10
-110 tile to 14,12
-120 t = tile(5,5)
+100   tile at 4,5 draw 10,11 line 3,10
+110   tile to 14,12
+120   t = tile(5,5)
 ```
 
 ## Data Formats

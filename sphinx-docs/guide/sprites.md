@@ -12,7 +12,7 @@ sprite 3 image 5 to 20,20
 
 This manipulates sprite number 3 (there are 64, numbered 0–63), using image number 5, centred on screen position 20,20. The image number comes from the data set — in the example set below it would be `enemy.png` rotated by 90° — the sixth entry as we count from 0. You can change the location and image independently.
 
-Most of the theoretical graphics options do not work; you cannot colour, scale, flip etc. a sprite — the graphic is what it is. However, they are very fast compared with drawing an image on the screen using the `IMAGE` command.
+Most of the theoretical graphics options do not work; you cannot colour, scale, flip etc. a sprite — the graphic is what it is. However, they are very fast compared with drawing an image on the screen using the `image` command.
 
 ## Creating Sprites
 

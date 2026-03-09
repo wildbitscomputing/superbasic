@@ -53,9 +53,9 @@ example, `"Arthur Dent"` is a string literal.
 Here are some examples:
 
 ```basic
-100 count = 19
-110 height# = 178.2
-120 name$ = "Arthur Dent"
+100   count = 19
+110   height# = 178.2
+120   name$ = "Arthur Dent"
 ```
 
 ## Arrays
@@ -66,12 +66,12 @@ individual element is accessed by giving its index inside parentheses. Array ind
 zero:
 
 ```basic
-100 dim fruits$(3)
-110 fruits$(0) = "apple"
-120 fruits$(1) = "orange"
-130 fruits$(2) = "banana"
-140 print fruits$(0)          ' prints "apple"
-150 print fruits$(2)          ' prints "banana"
+100   dim fruits$(3)
+110   fruits$(0) = "apple"
+120   fruits$(1) = "orange"
+130   fruits$(2) = "banana"
+140   print fruits$(0)                   ' prints "apple"
+150   print fruits$(2)                   ' prints "banana"
 ```
 
 SuperBASIC supports both one-dimensional and two-dimensional arrays, with up to 254 elements in
@@ -82,9 +82,9 @@ When first created, string array elements are empty strings, and number array el
 Here is a two-dimensional array of numbers, which you can think of like a grid with rows and columns:
 
 ```basic
-100 dim grid(8,8)    ' 8 by 8 grid of numbers
-110 grid(4,3) = 17
-120 print grid(4,3)  ' prints 17
-130 print grid(7,7)  ' prints 0
+100   dim grid(8,8)                      ' 8 by 8 grid of numbers
+110   grid(4,3) = 17
+120   print grid(4,3)                    ' prints 17
+130   print grid(7,7)                    ' prints 0
 ```
 

@@ -26,7 +26,7 @@ Integers, floats, strings, and arrays.
 :::
 
 :::{grid-item-card} Structured Programming
-:link: guide/procedures
+:link: guide/structured_programming
 :link-type: doc
 Procedures, WHILE, REPEAT, FOR, and IF/ELSE/ENDIF.
 :::
@@ -88,7 +88,7 @@ Complete A–Z reference for every SuperBASIC keyword.
 guide/introduction
 guide/getting_started
 guide/variables
-guide/procedures
+guide/structured_programming
 guide/graphics
 guide/tiles
 guide/sprites

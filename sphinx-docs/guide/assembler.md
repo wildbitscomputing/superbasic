@@ -1,6 +1,6 @@
 # Inline Assembly
 
-SuperBASIC has a built-in inline assembler, closely modelled on that of BASIC in the British Acorn machines (Atom, BBC Micro, Archimedes). Assembled routines can be called via the `CALL` statement.
+SuperBASIC has a built-in inline assembler, closely modelled on that of BASIC in the British Acorn machines (Atom, BBC Micro, Archimedes). Assembled routines can be called via the `call` statement.
 
 ## How It Works
 
@@ -27,12 +27,12 @@ Assemblers often require multiple passes through the source, and this one is no 
 Normally these are wrapped in a loop for the two passes. This illustrates the need — the first time through the assembler doesn't know where `forward` is — the second time round it has been set by line 140, so the branch can be correctly calculated:
 
 ```basic
-100 for pass = 0 to 1
-110 assemble $6000,pass
-120 bra forward
-130 jsr $FFE2
-140 .forward:rts
-150 next
+100   for pass = 0 to 1
+110     assemble $6000,pass
+120     bra forward
+130     jsr $FFE2
+140     .forward:rts
+150   next
 ```
 
 Note that unlike the Acorn machines there are no square brackets to delimit the assembler code — assembler commands can be put in at any time.
@@ -41,4 +41,5 @@ Note that unlike the Acorn machines there are no square brackets to delimit the 
 
 There is a minor syntactic limitation, in that instructions that target the accumulator (`inc`, `dec`, `lsr`, `ror`, `asl` and `rol`) must not use the `A` postfix — so it is `inc` rather than `inc a`.
 
-More generally, this assembler should be used for writing supporting code for BASIC programs — to speed up a part that is too slow in an interpreted language. It could be used for writing much larger programs (I believe "Elite" was written with this sort of system), but you would be better off using an assembler like `64tass` or `acme`, and loading the generated code into memory with the `BLOAD` command.
+More generally, this assembler should be used for writing supporting code for BASIC programs — to speed up a part that is too slow in an interpreted language. It could be used for writing much larger programs (I believe "Elite" was written with this sort of system), but you would be better off using an assembler like `64tass` or `acme`, and loading the generated code into memory with the `bload` command.
+
