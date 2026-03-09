@@ -1,9 +1,12 @@
 # F256 SuperBASIC Reference Manual
 
-*By Paul Robson & Matthias Brukner*
+```{only} html
+*By Paul Robson*
 
 A modernised BASIC interpreter for the 65C02-based Wildbits/K2 retro computers.
+```
 
+````{only} html
 ::::{grid} 2
 :gutter: 3
 
@@ -80,6 +83,7 @@ Complete A–Z reference for every SuperBASIC keyword.
 :::
 
 ::::
+````
 
 ```{toctree}
 :hidden:

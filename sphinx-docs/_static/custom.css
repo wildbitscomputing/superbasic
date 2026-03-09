@@ -1,3 +1,13 @@
+/* Wildbits brand colors */
+:root {
+    --wb-navy: #272662;
+    --wb-red: #EE4025;
+    --wb-orange: #F1632B;
+    --wb-gold: #FDBB3A;
+    --wb-green: #44A348;
+    --wb-teal: #6BA7BB;
+}
+
 /* Consistent table widths */
 table.docutils {
     width: 100%;
@@ -10,4 +20,114 @@ table.docutils {
 
 .mermaid svg {
     max-height: 180px;
+}
+
+/* Admonition styling — note */
+.admonition.note {
+    border-left: 4px solid var(--wb-navy);
+    background: color-mix(in srgb, var(--wb-navy) 8%, transparent);
+}
+.admonition.note > .admonition-title {
+    background: color-mix(in srgb, var(--wb-navy) 15%, transparent);
+    color: var(--wb-navy);
+}
+
+/* Admonition styling — warning */
+.admonition.warning {
+    border-left: 4px solid var(--wb-orange);
+    background: color-mix(in srgb, var(--wb-orange) 8%, transparent);
+}
+.admonition.warning > .admonition-title {
+    background: color-mix(in srgb, var(--wb-orange) 15%, transparent);
+    color: var(--wb-orange);
+}
+
+/* Admonition styling — tip / hint */
+.admonition.tip, .admonition.hint {
+    border-left: 4px solid var(--wb-green);
+    background: color-mix(in srgb, var(--wb-green) 8%, transparent);
+}
+.admonition.tip > .admonition-title,
+.admonition.hint > .admonition-title {
+    background: color-mix(in srgb, var(--wb-green) 15%, transparent);
+    color: var(--wb-green);
+}
+
+/* Admonition styling — danger / error */
+.admonition.danger, .admonition.error {
+    border-left: 4px solid var(--wb-red);
+    background: color-mix(in srgb, var(--wb-red) 8%, transparent);
+}
+.admonition.danger > .admonition-title,
+.admonition.error > .admonition-title {
+    background: color-mix(in srgb, var(--wb-red) 15%, transparent);
+    color: var(--wb-red);
+}
+
+/* Admonition styling — important */
+.admonition.important {
+    border-left: 4px solid var(--wb-gold);
+    background: color-mix(in srgb, var(--wb-gold) 8%, transparent);
+}
+.admonition.important > .admonition-title {
+    background: color-mix(in srgb, var(--wb-gold) 15%, transparent);
+    color: #8a6d00;
+}
+
+/* Generic admonitions (custom title) */
+.admonition:not(.note):not(.warning):not(.tip):not(.hint):not(.danger):not(.error):not(.important) {
+    border-left: 4px solid var(--wb-teal);
+    background: color-mix(in srgb, var(--wb-teal) 8%, transparent);
+}
+.admonition:not(.note):not(.warning):not(.tip):not(.hint):not(.danger):not(.error):not(.important) > .admonition-title {
+    background: color-mix(in srgb, var(--wb-teal) 15%, transparent);
+    color: var(--wb-navy);
+}
+
+/* Dark mode overrides */
+body[data-theme="dark"] .admonition.note {
+    background: color-mix(in srgb, var(--wb-navy) 15%, transparent);
+}
+body[data-theme="dark"] .admonition.note > .admonition-title {
+    background: color-mix(in srgb, var(--wb-navy) 25%, transparent);
+    color: var(--wb-teal);
+}
+body[data-theme="dark"] .admonition.warning {
+    background: color-mix(in srgb, var(--wb-orange) 12%, transparent);
+}
+body[data-theme="dark"] .admonition.warning > .admonition-title {
+    background: color-mix(in srgb, var(--wb-orange) 20%, transparent);
+    color: var(--wb-orange);
+}
+body[data-theme="dark"] .admonition.tip,
+body[data-theme="dark"] .admonition.hint {
+    background: color-mix(in srgb, var(--wb-green) 12%, transparent);
+}
+body[data-theme="dark"] .admonition.tip > .admonition-title,
+body[data-theme="dark"] .admonition.hint > .admonition-title {
+    background: color-mix(in srgb, var(--wb-green) 20%, transparent);
+    color: var(--wb-green);
+}
+body[data-theme="dark"] .admonition.danger,
+body[data-theme="dark"] .admonition.error {
+    background: color-mix(in srgb, var(--wb-red) 12%, transparent);
+}
+body[data-theme="dark"] .admonition.danger > .admonition-title,
+body[data-theme="dark"] .admonition.error > .admonition-title {
+    background: color-mix(in srgb, var(--wb-red) 20%, transparent);
+    color: var(--wb-red);
+}
+body[data-theme="dark"] .admonition.important {
+    background: color-mix(in srgb, var(--wb-gold) 12%, transparent);
+}
+body[data-theme="dark"] .admonition.important > .admonition-title {
+    background: color-mix(in srgb, var(--wb-gold) 20%, transparent);
+    color: var(--wb-gold);
+}
+body[data-theme="dark"] .admonition:not(.note):not(.warning):not(.tip):not(.hint):not(.danger):not(.error):not(.important) {
+    background: color-mix(in srgb, var(--wb-teal) 12%, transparent);
+}
+body[data-theme="dark"] .admonition:not(.note):not(.warning):not(.tip):not(.hint):not(.danger):not(.error):not(.important) > .admonition-title {
+    background: color-mix(in srgb, var(--wb-teal) 20%, transparent);
+    color: var(--wb-teal);
 }

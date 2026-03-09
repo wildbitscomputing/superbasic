@@ -52,15 +52,15 @@ When building the sprite it strips it as much as possible and centres it in the 
 
 ```{mermaid}
 flowchart LR
-    PNG["PNG images<br/>(up to 32×32)"] --> BUILD["spritebuild.py"]
-    BUILD --> BIN["Binary sprite set"]
-    BIN --> MEM["$30000+<br/>Sprite Memory"]
-    MEM --> HW["64 Hardware<br/>Sprites"]
+    classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
+    classDef secondary fill:#F1632B,color:#fff,stroke:#d14a1a
+    classDef accent fill:#44A348,color:#fff,stroke:#358a38
+    classDef alert fill:#EE4025,color:#fff,stroke:#c4301c
 
-    style PNG fill:#1565c0,color:#fff,stroke:#0d47a1
-    style BUILD fill:#e65100,color:#fff,stroke:#bf360c
-    style BIN fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style HW fill:#c62828,color:#fff,stroke:#b71c1c
+    PNG["PNG images<br/>(up to 32×32)"]:::primary --> BUILD["spritebuild.py"]:::secondary
+    BUILD --> BIN["Binary sprite set"]:::accent
+    BIN --> MEM["$30000+<br/>Sprite Memory"]:::primary
+    MEM --> HW["64 Hardware<br/>Sprites"]:::alert
 ```
 
 ## Collision Detection

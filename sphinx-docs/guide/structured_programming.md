@@ -18,13 +18,13 @@ same steps over and over again.
 
 ```{mermaid}
 flowchart LR
-    CALL["myfunc(args)"] --> PROC["PROC myfunc(params)"]
-    PROC --> BODY["Procedure body<br/>(params are local)"]
-    BODY --> ENDP["ENDPROC"]
-    ENDP --> RET["Return to caller"]
+    classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
+    classDef accent fill:#44A348,color:#fff,stroke:#358a38
 
-    style CALL fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style ENDP fill:#2e7d32,color:#fff,stroke:#1b5e20
+    CALL["myfunc(args)"]:::accent --> PROC["PROC myfunc(params)"]:::primary
+    PROC --> BODY["Procedure body<br/>(params are local)"]:::primary
+    BODY --> ENDP["ENDPROC"]:::accent
+    ENDP --> RET["Return to caller"]:::primary
 ```
 
 A procedure is defined using the `proc` keyword, followed by the procedure’s name and a pair of
@@ -48,9 +48,9 @@ you can call a procedure from anywhere in your code—including from within othe
 A procedure is called by writing its name followed by parentheses:
 
 ```basic
-100   greet()                              ' prints "Hello!" and "How are you?"
-110   print "Bye-bye!"                     ' prints "Bye−bye!"
-120   end                                  ' end of program
+100   greet()                         ' prints "Hello!" and "How are you?"
+110   print "Bye-bye!"                ' prints "Bye−bye!"
+120   end                             ' end of program
 200   proc greet()
 210     print "Hello!"
 220     print "How are you?"
@@ -69,10 +69,10 @@ placeholder for a value that we’ll pass to the procedure when we call it.
 Let’s tweak our `greet` procedure to greet someone by name:
 
 ```basic
-100   greet("Alice")                       ' prints "Hello, Alice!"
-110   greet("Bob")                         ' prints "Hello, Bob!"
-120   print "Bye-bye!"                     ' prints "Bye−bye!"
-130   end                                  ' end of program
+100   greet("Alice")                  ' prints "Hello, Alice!"
+110   greet("Bob")                    ' prints "Hello, Bob!"
+120   print "Bye-bye!"                ' prints "Bye−bye!"
+130   end                             ' end of program
 200   proc greet(name$)
 210     print "Hello, " + name$ + "!"
 220   endproc
@@ -92,10 +92,10 @@ To define a procedure that takes more than one parameter, simply separate the pa
 commas, and do the same when providing arguments in the procedure call:
 
 ```basic
-100   greet("Alice", "morning")            ' prints "Good morning, Alice! "
-110   greet("Charlie", "evening")          ' prints "Good evening, Charlie! "
-120   print "Bye-bye!"                     ' prints "Bye−bye!"
-130   end                                  ' end of program
+100   greet("Alice", "morning")       ' prints "Good morning, Alice! "
+110   greet("Charlie", "evening")     ' prints "Good evening, Charlie! "
+120   print "Bye-bye!"                ' prints "Bye−bye!"
+130   end                             ' end of program
 200   proc greet(name$, time_of_day$)
 210     print"Good "; time_of_day$; ", "; name$; "!"
 220   endproc
@@ -140,14 +140,15 @@ on each pass. For example, this program prints the numbers 1 through 10:
 
 ```{mermaid}
 flowchart LR
-    FOR["FOR i = start TO end"] --> BODY["Loop body"]
-    BODY --> NEXT["NEXT"]
-    NEXT --> CHECK{"i past end?"}
-    CHECK -->|no| BODY
-    CHECK -->|yes| DONE["Done"]
+    classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
+    classDef secondary fill:#F1632B,color:#fff,stroke:#d14a1a
+    classDef highlight fill:#FDBB3A,color:#272662,stroke:#d4a030
 
-    style FOR fill:#e65100,color:#fff,stroke:#bf360c
-    style CHECK fill:#f57f17,color:#fff,stroke:#e65100
+    FOR["FOR i = start TO end"]:::secondary --> BODY["Loop body"]:::primary
+    BODY --> NEXT["NEXT"]:::primary
+    NEXT --> CHECK{"i past end?"}:::highlight
+    CHECK -->|no| BODY
+    CHECK -->|yes| DONE["Done"]:::primary
 ```
 
 
@@ -160,14 +161,14 @@ and columns of a table.
 For instance, to display a multiplication table, you could write:
 
 ```basic
-10   cls                                 ' clear the screen
-20   for i=1 to 9                        ' outer loop, cycle through rows 1 to 9
-30     for j=1 to 9                      ' inner loop, cycle through columns 1 to 9
-40       print i;"x";j;"=";i*j,          ' print one multiplication fact (i x j)
-50     next                              ' go to the next column
-60     print                             ' move the cursor to the next line
-70     print                             ' insert a blank line for spacing
-80   next                                ' go to the next row
+10   cls                            ' clear the screen
+20   for i=1 to 9                   ' outer loop, cycle through rows 1 to 9
+30     for j=1 to 9                 ' inner loop, cycle through columns 1 to 9
+40       print i;"x";j;"=";i*j,     ' print one multiplication fact (i x j)
+50     next                         ' go to the next column
+60     print                        ' move the cursor to the next line
+70     print                        ' insert a blank line for spacing
+80   next                           ' go to the next row
 ```
 
 As indicated by indentation, lines 30–70 form the body of the _outer loop_, while line 40 is the body of the
@@ -202,17 +203,17 @@ For example, our multiplication-table program can be rewritten to move the inner
 procedure:
 
 ```basic
-10     cls                               ' clear the screen
-20     for i=1 to 9                      ' loop through rows 1 to 9
-30       print_row(i)                    ' print multiplication facts for the row
-40       print                           ' insert a blank line for spacing
-50     next                              ' go to the next row
+10     cls                          ' clear the screen
+20     for i=1 to 9                 ' loop through rows 1 to 9
+30       print_row(i)               ' print multiplication facts for the row
+40       print                      ' insert a blank line for spacing
+50     next                         ' go to the next row
 60     end
-100    proc print_row(i)                 ' print one row of the table
-110      for j=1 to 9                    ' loop through columns 1 to 9
-120        print i;"x";j;"=";i*j,        ' print the multiplication fact
-130      next                            ' go to the next column
-140      print                           ' move the cursor to the next line
+100    proc print_row(i)            ' print one row of the table
+110      for j=1 to 9               ' loop through columns 1 to 9
+120        print i;"x";j;"=";i*j,   ' print the multiplication fact
+130      next                       ' go to the next column
+140      print                      ' move the cursor to the next line
 150    endproc
 ```
 
@@ -257,12 +258,13 @@ program is listed, helps to make the repeated block visually clear.
 
 ```{mermaid}
 flowchart LR
-    WHILE["WHILE condition"] --> TEST{"true?"}
-    TEST -->|yes| BODY["Loop body"] --> WHILE
-    TEST -->|no| WEND["WEND"]
+    classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
+    classDef secondary fill:#F1632B,color:#fff,stroke:#d14a1a
+    classDef highlight fill:#FDBB3A,color:#272662,stroke:#d4a030
 
-    style WHILE fill:#e65100,color:#fff,stroke:#bf360c
-    style TEST fill:#f57f17,color:#fff,stroke:#e65100
+    WHILE["WHILE condition"]:::secondary --> TEST{"true?"}:::highlight
+    TEST -->|yes| BODY["Loop body"]:::primary --> WHILE
+    TEST -->|no| WEND["WEND"]:::primary
 ```
 
 
@@ -281,12 +283,13 @@ The loop executes `playgame()` once before checking whether `lives  = 0`.
 
 ```{mermaid}
 flowchart LR
-    REPEAT["REPEAT"] --> BODY["Loop body"] --> TEST{"UNTIL condition"}
-    TEST -->|false| REPEAT
-    TEST -->|true| DONE["Done"]
+    classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
+    classDef secondary fill:#F1632B,color:#fff,stroke:#d14a1a
+    classDef highlight fill:#FDBB3A,color:#272662,stroke:#d4a030
 
-    style REPEAT fill:#e65100,color:#fff,stroke:#bf360c
-    style TEST fill:#f57f17,color:#fff,stroke:#e65100
+    REPEAT["REPEAT"]:::secondary --> BODY["Loop body"]:::primary --> TEST{"UNTIL condition"}:::highlight
+    TEST -->|false| REPEAT
+    TEST -->|true| DONE["Done"]:::primary
 ```
 
 ## `if` ... `else` ... `endif`

@@ -23,8 +23,8 @@ The input to the program is standard ASCII files, with line numbers. Line number
 I would start with something simple though:
 
 ```basic
-10 print "Hello, world !"
-20 zap
+10    print "Hello, world !"
+20    zap
 ```
 
 Each file should end in a character with an ASCII code greater than 127, which marks the end of the file. You can copy one from the software in GitHub.
@@ -51,4 +51,8 @@ python ..\bin\fnxmgr.zip --port COM1 --binary load.bas --address 28000
 
 ## Memory Use
 
-The cross-development upload area is at `$28000`–`$2BFFF` in physical memory. For the full memory map including program pages, graphics regions, and the `LOMEM` command, see {doc}`memory`.
+Program text is uploaded to physical address `$28000` onwards. The `xload` and `xgo` commands
+read from this address until they encounter the end-of-file marker, so the upload area grows
+with the size of your source file. Be aware that very large files may overlap with sprite memory
+at `$30000`. For the full memory map including program pages, graphics regions, and the `LOMEM`
+command, see {doc}`memory`.

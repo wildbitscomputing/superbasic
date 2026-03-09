@@ -11,7 +11,7 @@ the kind of data stored in the variable (see the next section for more details).
 Here are some examples of valid names:
 
 
-```basic
+```text
 n
 count17
 number_of_lives
@@ -22,7 +22,7 @@ average#
 
 Here are some examples of _invalid_ names:
 
-```basic
+```text
 2string      ' can not start with a number
 $name        ' $ character must be at the end
 total#sum    ' # character must be at the end

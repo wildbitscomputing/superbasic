@@ -226,9 +226,9 @@ class SuperBASICLexer(RegexLexer):
                 ),
                 Keyword.Type,
             ),
-            # Operators
-            (r"[+\-*/\\<>=]", Operator),
+            # Operators (multi-char before single-char to avoid partial matches)
             (r"<>|<=|>=|<<|>>", Operator),
+            (r"[+\-*/\\<>=]", Operator),
             (r"%", Operator),
             # Punctuation
             (r"[(),;:.]", Punctuation),
