@@ -1,14 +1,14 @@
 # Cross Development of BASIC Programs
 
-Cross development is an alternative to the classic way of programming a Home Computer, where the programmer types code directly into the machine. Cross development allows you to write the code on a Personal Computer, and upload it through the USB debug port in the F256. It is also possible to do this with machine code and graphic and other data.
+Cross development is an alternative to the classic way of programming a Home Computer, where the programmer types code directly into the machine. Cross development allows you to write the code on a Personal Computer, and upload it through the USB debug port. It is also possible to do this with machine code and graphic and other data.
 
 ## Assistance
 
-In the SuperBASIC git, <https://github.com/paulscottrobson/superbasic>, each release contains a file `howto-crossdev-basic.zip` which gives everything you need to cross develop in BASIC and some example programs.
+In the SuperBASIC git, <https://github.com/wildbitscomputing/superbasic>, each release contains a file `howto-crossdev-basic.zip` which gives everything you need to cross develop in BASIC and some example programs.
 
 ## Connection
 
-To connect your F256Junior to a PC (Windows, Linux, Mac) you need a standard USB cable with a Micro USB plug. This needs to be a data cable — some cables only provide power. The Micro USB plug plugs into the board, and the USB plug into the PC.
+To connect your Wildbits/K2 to a PC (Windows, Linux, Mac) you need a USB data cable — Micro USB for the Wildbits/Jr or Wildbits/K, or USB-C for the Wildbits/Jr2 or Wildbits/K2. Some cables only provide power; make sure yours supports data. The USB plug connects to the board, and the other end to the PC.
 
 ## Software
 
@@ -18,7 +18,7 @@ Besides Python version 3, the FnxMgr script requires `pyserial`.
 
 ## BASIC
 
-The input to the program is standard ASCII files, with line numbers. Line numbers are required for editing only. (There is a Python script on the SuperBASIC GitHub which adds these automatically.) However, you do not need to use line numbers in programming, though `GOTO` and `GOSUB` are implemented if you wish, or want to port old software.
+The input to the program is standard ASCII files, with line numbers. Line numbers are required for editing only. (The `number.py` script on the SuperBASIC GitHub adds line numbers and the end-of-file marker automatically.) However, you do not need to use line numbers in programming, though `GOTO` and `GOSUB` are implemented if you wish, or want to port old software.
 
 I would start with something simple though:
 
@@ -31,7 +31,7 @@ Each file should end in a character with an ASCII code greater than 127, which m
 
 ## Uploading and Running
 
-This is written for people with "B" boards which automatically start up into BASIC. If you are booting from RAM, or have an A board, it will be slightly different.
+This is written for boards which automatically start up into BASIC.
 
 Uploading works by loading the ASCII text into memory. It is then effectively "typed in" by either the `xload` command or the `xgo` command. The first loads the program in (and it can then be listed or edited or run in the normal way). The second loads and runs it.
 
@@ -51,12 +51,4 @@ python ..\bin\fnxmgr.zip --port COM1 --binary load.bas --address 28000
 
 ## Memory Use
 
-Program memory occupies `$2000`–`$3FFF` and is **banked via MMU slot 1**, supporting up to 32 × 8KB pages (~256KB of program space). Array and `alloc()` storage lives at `$4000`–`$7FFF` (16KB). The BASIC ROM is mapped into `$8000`–`$BFFF`.
-
-The memory block `$C000`–`$DFFF` contains I/O pages — you can change I/O registers, but do not map RAM here and change it unless you are absolutely sure of what you are doing.
-
-The memory block `$E000`–`$FFFF` contains the Kernel.
-
-## Sprites
-
-Sprites are loaded (in BASIC) to `$30000` and there is a simple index format. This is covered in the sprites section.
+The cross-development upload area is at `$28000`–`$2BFFF` in physical memory. For the full memory map including program pages, graphics regions, and the `LOMEM` command, see {doc}`memory`.

@@ -1,8 +1,18 @@
 # Configuration file for the Sphinx documentation builder.
 
-project = "F256 SuperBASIC"
-copyright = "2026, Paul Robson & Matthias Brukner"
-author = "Paul Robson & Matthias Brukner"
+import sys
+import os
+sys.path.insert(0, os.path.abspath("."))
+
+from superbasic_lexer import SuperBASICLexer
+from sphinx.highlighting import lexers
+
+lexers["basic"] = SuperBASICLexer()
+lexers["superbasic"] = SuperBASICLexer()
+
+project = "Wildbits SuperBASIC"
+copyright = "2023-2026, Paul Robson & Wildbits Computing Company"
+author = "Paul Robson & Wildbits Computing Company"
 release = "1.1"
 
 extensions = [
@@ -27,7 +37,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 html_theme = "furo"
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
-html_title = "F256 SuperBASIC"
+html_title = "Wildbits SuperBASIC"
 
 html_theme_options = {
     "navigation_with_keys": True,
@@ -39,7 +49,7 @@ latex_documents = [
     (
         "index",
         "f256-superbasic.tex",
-        "F256 SuperBASIC Reference Manual",
+        "Wildbits SuperBASIC Reference Manual",
         "Paul Robson",
         "manual",
     ),

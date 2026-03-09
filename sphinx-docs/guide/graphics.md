@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The graphics subsystem consists of three components, which is a subset of the full capabilities of the F256 machines.
+The graphics subsystem consists of three components, which is a subset of the full capabilities of the Wildbits/K2 hardware.
 
 | Layer | Description |
 |---|---|
@@ -20,7 +20,7 @@ Bitmap graphics can be done in one of three ways:
 - Directly accessing the graphics library via the `GFX` command.
 - "Hitting the hardware" directly using `POKE` and `DOKE` or the indirection operators.
 
-The latter is the most flexible. BASIC simplifies the graphics system to some extent to make it easier to use; for example, the Junior can have up to three bitmaps, but only one is supported using BASIC commands.
+The latter is the most flexible. BASIC simplifies the graphics system to some extent to make it easier to use; for example, the F256 can have up to three bitmaps, but only one is supported using BASIC commands.
 
 ## Graphics Modifiers and Actions
 

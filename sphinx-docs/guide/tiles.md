@@ -2,7 +2,7 @@
 
 ## Introduction
 
-SuperBASIC supports a single tile map, made up of 8×8 pixel images. A tile map can be up to 255×255 tiles in size.
+SuperBASIC supports a single tile map, made up of 8×8 pixel images. A tile map can be up to 255×255 tiles in size. The default size is 64×32.
 
 ## Setting Up a Tile Map
 

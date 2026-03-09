@@ -2,47 +2,89 @@
 
 ## Procedure and Variable Naming
 
-SuperBASIC allows full naming of both variables and procedures (a type of "subroutine"). A name begins with an alphabetic character or underscore, and continues with either alphanumeric characters or underscores. They may also have a type character (`$`, `(`, or `#`), e.g.:
+SuperBASIC lets you give long, descriptive names to both variables and procedures (also known as
+subroutines). Using clear names makes your programs easier to read and understand.
+
+A name must start with a letter or an underscore (`_`), and it can continue with any combination of
+letters, numbers, or underscores. A name may also end with a type character (`$` or `#`), which shows
+the kind of data stored in the variable (see the next section for more details).
+Here are some examples of valid names:
+
 
 ```basic
-hello_world
-count09
-my_name_is_earl
+n
+count17
+number_of_lives
+str2num
 name$
-inventory(
-mean_value#
+average#
 ```
 
-This allows you to write readable code — no more trying to remember what `C7` is.
+Here are some examples of _invalid_ names:
 
-An implementation note: when the program is stored in memory, it only keeps one copy of the actual identifier "text" name, irrespective of how many times you use it. So apart from that once, there is no space saving from using long identifier names.
+```basic
+2string      ' can not start with a number
+$name        ' $ character must be at the end
+total#sum    ' # character must be at the end
+```
+
+
+```{note}
+
+When a program is stored in memory, each identifier name is stored only once, regardless
+of how many times it appears in the program. Thus, aside from that single instance, using
+shorter identifier names provides no additional space savings.
+```
 
 ## Types
 
-Variables in SuperBASIC are one of three types: integers, floating point, and strings.
+SuperBASIC supports three variable types: integers, floating-point numbers, and strings.
+By default, a variable is an integer. Integers are whole numbers, such as −5, 0, or 4200. In SuperBASIC,
+they can go up to about 2 billion or down to−2 billion.
 
-By default a variable holds an **integer**, which is a number between about −2 billion and +2 billion (technically it's a 32-bit integer).
+A variable name ending with `#` represents a floating-point number (a decimal). Floating-point numbers
+let you use very large, very small, or fractional values (like 178.2). They are more flexible than integers,
+but sometimes less exact and a little slower to calculate.
 
-A variable name that ends with a `#` holds a **floating point** number (decimal), which has a much larger range but is less accurate and slower.
+A variable name ending with `$` represents a string. A string is simply arbitrary text, up to 253 characters
+long. In program code, string values—called string literals—are written inside quotation marks. For
+example, `"Arthur Dent"` is a string literal.
 
-A variable name that ends with a `$` holds a **string**, which is a sequence of characters up to 253 characters in length.
-
-These are some examples of variables being assigned values:
+Here are some examples:
 
 ```basic
-100 count = 42
-110 height# = 162.7
-120 name$ = "Jack Hobbs"
+100 count = 19
+110 height# = 178.2
+120 name$ = "Arthur Dent"
 ```
 
 ## Arrays
 
-Arrays are a collection of variables, stored under one name. SuperBASIC supports up to two dimensions of arrays, with a maximum of 254 elements in each dimension. Arrays are indexed from zero.
+An array is a collection of related variables that share the same name and are stored together. Arrays
+are created using the `dim` statement, followed by the array name and the number of elements. Each
+individual element is accessed by giving its index inside parentheses. Array indexes always begin at
+zero:
 
 ```basic
-100 dim a$(3)
-110 a$(1) = "Entry 1"
-120 a$(3) = "Entry 3"
-130 dim grid(8,8)
-140 grid(4,3) = 42
+100 dim fruits$(3)
+110 fruits$(0) = "apple"
+120 fruits$(1) = "orange"
+130 fruits$(2) = "banana"
+140 print fruits$(0)          ' prints "apple"
+150 print fruits$(2)          ' prints "banana"
 ```
+
+SuperBASIC supports both one-dimensional and two-dimensional arrays, with up to 254 elements in
+each dimension.
+
+When first created, string array elements are empty strings, and number array elements are set to zero.
+
+Here is a two-dimensional array of numbers, which you can think of like a grid with rows and columns:
+
+```basic
+100 dim grid(8,8)    ' 8 by 8 grid of numbers
+110 grid(4,3) = 17
+120 print grid(4,3)  ' prints 17
+130 print grid(7,7)  ' prints 0
+```
+

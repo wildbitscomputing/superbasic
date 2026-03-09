@@ -2,7 +2,7 @@
 
 *By Paul Robson & Matthias Brukner*
 
-A modernised BASIC interpreter for the 65C02-based Foenix F256 retro computers.
+A modernised BASIC interpreter for the 65C02-based Wildbits/K2 retro computers.
 
 ::::{grid} 2
 :gutter: 3
@@ -13,8 +13,8 @@ A modernised BASIC interpreter for the 65C02-based Foenix F256 retro computers.
 Overview, memory layout, and storage format.
 :::
 
-:::{grid-item-card} Writing Programs
-:link: guide/programs
+:::{grid-item-card} Getting started
+:link: guide/getting_started
 :link-type: doc
 Line-number editing, screen editor keys, and cross-development.
 :::
@@ -61,10 +61,16 @@ SN76489 channels, sound queuing, and easy sound effects.
 65C02 inline assembler modelled on the BBC Micro.
 :::
 
+:::{grid-item-card} Memory
+:link: guide/memory
+:link-type: doc
+Physical memory map, program paging, and the LOMEM command.
+:::
+
 :::{grid-item-card} Cross Development
 :link: guide/crossdev
 :link-type: doc
-USB uploading, FnxMgr, and memory map.
+USB uploading and FnxMgr.
 :::
 
 :::{grid-item-card} Keyword Reference
@@ -80,7 +86,7 @@ Complete A–Z reference for every SuperBASIC keyword.
 :caption: User Guide
 
 guide/introduction
-guide/programs
+guide/getting_started
 guide/variables
 guide/procedures
 guide/graphics
@@ -88,6 +94,7 @@ guide/tiles
 guide/sprites
 guide/sound
 guide/assembler
+guide/memory
 guide/crossdev
 ```
 

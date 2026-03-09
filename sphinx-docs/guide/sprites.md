@@ -20,7 +20,7 @@ SuperBASIC by default loads sprite data to memory location `$30000`. This chapte
 
 ## Getting Images
 
-Sprite data is built from PNG images up to 32×32. There are some examples in the Solarfox directory in the GitHub: <https://github.com/paulscottrobson/superbasic>.
+Sprite data is built from PNG images up to 32×32. There are some examples in the Solarfox directory in the GitHub: <https://github.com/wildbitscomputing/superbasic>.
 
 They can be created individually, or ripped from sprite sheets — this is what `ripgfx.py` is doing in the Makefile in `solarfox/graphics`; starting with the PNG file `source.png` it is informed where graphics are, and it tries to work out a bounding box for that graphic, and exports it to the various files.
 

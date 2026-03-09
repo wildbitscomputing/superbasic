@@ -1,48 +1,96 @@
 # Structured Programming
 
-SuperBASIC is designed for better and more readable programs. If you learnt BASIC on another machine, you will mostly have used `GOTO`, `GOSUB` and `RETURN`.
+SuperBASIC is built to help you write programs that are easy to read and easy to change later. If you’ve
+used BASIC on another computer, you might be used to steering your program with commands like
+`goto`, `gosub`, and `return`. These work fine in small programs, but once your code grows, they can
+make things messy and hard to follow.
 
-These are terrible.
-
-SuperBASIC does support these, but it is strongly advised you do not use them. However, they can be useful for running old code. SuperBASIC is not Microsoft BASIC compatible, but is close enough so that code will normally work with minor alterations.
+SuperBASIC still lets you use those commands if you want, but it also offers tools you’ll probably prefer
+as your programs get bigger. With loops, procedures, and multi-step conditionals, your code can flow
+more naturally—making it simpler to read, easier to fix, and more fun to work with.
 
 ## Named Procedures
 
-The language supports named procedures, which are full identifiers. This means that instead of writing `GOSUB 300`, you can have a procedure called `addscore` or `moveinvaders` or whatever you like; they can be meaningful and this enhances program readability.
+A _named procedure_ is simply a block of code that has a name. Once you’ve defined a procedure, you can
+run it—also called _calling it_—anywhere in your program just by using its name. This often makes your
+code easier to follow (assuming you choose clear, descriptive names), and saves you from writing the
+same steps over and over again.
+
+A procedure is defined using the `proc` keyword, followed by the procedure’s name and a pair of
+parentheses, followed by the code to be executed when the procedure is called. The definition is closed
+with the `endproc` keyword:
 
 ```basic
-100 printmessage("hello",42)
-110 end
-120 proc printmessage(msg$,n)
-130   print msg$+"world  x "+str$(n)
-140 endproc
+200 proc greet()
+210   print "Hello!"
+220   print "How are you?"
+230 endproc
 ```
 
-This is a simple piece of code showing a procedure call `printmessage` which prints a silly message. It has two parameters: the message (in `msg$`) and a number (in `n`).
+The code inside a procedure—in this case, lines 210–220—is called the _body_ of the procedure. This is
+the part that actually runs when the procedure is called. Note that the body does not execute until you
+explicitly call the procedure.
 
-These are considered "local" to the procedure, so if you have either of them "outside" the procedure the values are not affected:
+In SuperBASIC, procedures must be defined at the end of your program, after the `end` keyword, but
+you can call a procedure from anywhere in your code—including from within other procedures.
+
+A procedure is called by writing its name followed by parentheses:
 
 ```basic
-90  n = 12
-100 printmessage("hello",42)
-105 print n
-110 end
-120 proc printmessage(msg$,n)
-130   print msg$+"world  x "+str$(n)
-140 endproc
+100 greet()                              ' prints "Hello!" and "How are you?"
+110 print "Bye-bye!"                     ' prints "Bye−bye!"
+120 end                                  ' end of program
+200 proc greet()
+210   print "Hello!"
+220   print "How are you?"
+230 endproc
 ```
 
-This will print the message ("Hello world x 42") and after it, will print the value of `n`, which will still be 12. `n` will only be 42 inside `printmessage`.
+Here, lines 200–230 define the procedure, and line 100 calls it. When the program encounters the
+`greet()` call in line 100, it jumps to the first line of the procedure’s body (line 210, `print "Hello!"`),
+executes the entire body, and then returns to line 110 to continue with the rest of the program.
 
-If you have no parameters then the brackets must still be used:
+## Procedures with parameters
+
+Procedures become even more useful when they can accept _parameters_. A parameter is simply a
+placeholder for a value that we’ll pass to the procedure when we call it.
+
+Let’s tweak our `greet` procedure to greet someone by name:
 
 ```basic
-100 endgame()
-110 end
-120 proc endgame()
-130   print "You lose !"
-140 endproc
+100 greet("Alice")                       ' prints "Hello, Alice!"
+110 greet("Bob")                         ' prints "Hello, Bob!"
+120 print "Bye-bye!"                     ' prints "Bye−bye!"
+130 end                                  ' end of program
+200 proc greet(name$)
+210   print "Hello, " + name$ + "!"
+220 endproc
 ```
+
+Here, we’ve added a parameter called `$name`, indicating that the procedure expects to receive a
+string value that is a person’s name. 
+
+
+When the procedure is called on line 100 with the argument `"Alice"` , `name$` is assigned that value,
+and line 210 prints `Hello, Alice!` . When control returns to line 110 and the procedure is called with
+`"Bob"` , `name$` becomes `"Bob"` , and line 210 prints `Hello, Bob!`.
+
+## Multiple parameters
+
+To define a procedure that takes more than one parameter, simply separate the parameter names with
+commas, and do the same when providing arguments in the procedure call:
+
+```basic
+100    greet("Alice", "morning")            ' prints "Good morning, Alice! "
+110    greet("Charlie", "evening")          ' prints "Good evening, Charlie! "
+120    print "Bye-bye!"                     ' prints "Bye−bye!"
+130    end                                  ' end of program
+200    proc greet(name$, time_of_day$)
+210        print"Good "; time_of_day$; ", "; name$; "!"
+220    endproc
+```
+
+A procedure can accept up to 13 parameters.
 
 ## While and Repeat
 
@@ -92,7 +140,15 @@ It is also possible to count backwards using `downto`:
 120 next
 ```
 
-There are two variations from common BASIC. Firstly there is currently no `STEP`; you can only count either up by 1, or down by 1. Secondly, some BASICs require the index in `next` (e.g. `next i`) and have peculiar behaviours if you change the order, which are not supported, nor should they be.
+You can also use `STEP` to control the increment:
+
+```basic
+100 for i = 0 to 100 step 10
+110   print i
+120 next
+```
+
+Some BASICs require the index variable in `NEXT` (e.g. `next i`) and have peculiar behaviours if you change the order; this is not supported.
 
 ## If ... Else ... Endif
 

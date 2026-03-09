@@ -51,7 +51,7 @@ Returns the ASCII value of the first character in the string, or zero if the str
 
 ## # and $
 
-`#` and `$` are used to type variables. `#` is a floating point value, `$` is a string. The default type is integer. Variables are not stored internally by name but by reference. This means they are quick to access but means they are always in existence from the start of a program if used in it. Integers are 32-bit; floats have a 31-bit mantissa and byte exponent.
+`#` and `$` are used to type variables. `#` is a floating point value, `$` is a string. The default type is integer. Variables are not stored internally by name but by reference. This means they are quick to access but means they are always in existence from the start of a program if used in it. Integers are 32-bit signed; floats have a 32-bit signed mantissa and 8-bit exponent, giving approximately 9 decimal digits of precision.
 
 ```basic
 100 an_integer  = 42
@@ -106,10 +106,11 @@ Subtract.
 
 ## %
 
-Binary modulus operator. The second value must be non-zero.
+Binary modulus operator. Returns the non-negative remainder. The second value must be non-zero.
 
 ```basic
-100 print 42 % 5
+100 print 42 % 5 : rem prints 2
+110 print -17 % 5 : rem prints 2
 ```
 
 ## .
@@ -235,10 +236,11 @@ Saves a chunk of memory into a file. The 2nd parameter is the address in full me
 
 ## call
 
-Calls an assembly subroutine at the specified address. The address can be specified in decimal or hex.
+Calls an assembly subroutine at the specified address. You may provide up to three arguments, which will be loaded into the A, X, and Y registers respectively. The address can be specified in decimal or hex.
 
 ```basic
 100 call $4000
+110 call $4000,65,0,0
 ```
 
 ## chr$()
@@ -338,11 +340,12 @@ Returns the constant zero.
 
 ## for next
 
-A loop which repeats code a fixed number of times, which must be executed at least once. The step is 1 for `to` and −1 for `downto`. The final letter on `next` is not supported.
+A loop which repeats code a fixed number of times, which must be executed at least once. The default step is 1 for `to` and −1 for `downto`; use `STEP` to set a different increment. The variable name on `NEXT` is not supported.
 
 ```basic
-100 for i = 1 to 10:print i:next i
+100 for i = 1 to 10:print i:next
 110 for i = 10 downto 1:print i:next
+120 for i = 0 to 100 step 10:print i:next
 ```
 
 ## frac()
@@ -401,7 +404,7 @@ Sends a three-parameter command directly to the graphics subsystem. Often the la
 
 ## gosub
 
-Call a routine at a given line number. This is provided for compatibility only. Do not use it except for type-ins of old listings or I will hunt you down and torture you.
+Call a routine at a given line number. Provided for compatibility with older programs; use named procedures instead for new code.
 
 ```basic
 100 gosub 1000
@@ -409,10 +412,10 @@ Call a routine at a given line number. This is provided for compatibility only. 
 
 ## goto
 
-Transfer execution to given line number. See `GOSUB`; same result. If it's for typing in old programs, fair enough, but please don't use it for new code.
+Transfer execution to given line number. Provided for compatibility with older programs; use structured control flow instead for new code.
 
 ```basic
-100 goto 666:rem "will happen if you use goto. you don't need it"
+100 goto 200
 ```
 
 ## hit()
@@ -602,7 +605,7 @@ Gets the current delta status of the PS/2 mouse. 6 reference parameters (normall
 
 ## memcopy
 
-This command is an interface to the F256 Junior's DMA hardware. `MEMCOPY` has several formats:
+This command is an interface to the Wildbits/K2's DMA hardware. `MEMCOPY` has several formats:
 
 ```basic
 100 memcopy $10000,$4000 to $18000
@@ -699,7 +702,7 @@ The `poke`, `pokew`, `pokel` and `poked` functions write one to four bytes to th
 
 Prints to the current output device, either strings or numbers (which are preceded by a space). `print` with `,` goes to the next tab stop. A return is printed unless the command ends in `;` or `,`.
 
-The `at x,y` modifier positions the cursor before printing.
+The `at row, column` modifier positions the cursor before printing (zero-based, top-left is 0,0).
 
 ```basic
 100 print 42,"hello"
@@ -798,7 +801,7 @@ save "game.bas"
 
 ## screen()
 
-Returns the character code at the given screen position (column, row).
+Returns the character code at the given screen position (row, column).
 
 ```basic
 100 print screen(0,0)
@@ -806,7 +809,7 @@ Returns the character code at the given screen position (column, row).
 
 ## screen$()
 
-Returns the character at the given screen position (column, row) as a single-character string.
+Returns the character at the given screen position (row, column) as a single-character string.
 
 ```basic
 100 print screen$(0,0)

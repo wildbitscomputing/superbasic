@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The F256Jr has 2 independent SN76489 sound chips, for left and right channel, and optionally 2 further SID chips or SID chip clones.
+Depending on the hardware model and generation, a Wildbits/K2 machine includes a stereo SN76489 sound chip, and may also feature additional audio hardware such as SID, OPL3, and MIDI chips.
 
 In SuperBASIC these are simplified, so the same tones are played on left or right channels simultaneously.
 
