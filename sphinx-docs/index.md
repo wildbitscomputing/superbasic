@@ -31,7 +31,7 @@ Integers, floats, strings, and arrays.
 :::{grid-item-card} Structured Programming
 :link: guide/structured_programming
 :link-type: doc
-Procedures, WHILE, REPEAT, FOR, and IF/ELSE/ENDIF.
+Procedures, functions, WHILE, REPEAT, FOR, and IF/ELSE/ENDIF.
 :::
 
 :::{grid-item-card} Graphics

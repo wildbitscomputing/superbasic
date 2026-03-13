@@ -112,6 +112,94 @@ A procedure can accept up to 13 parameters.
 different inputs.
 ```
 
+## User-Defined Functions
+
+A _user-defined function_ is like a procedure, but it returns a value. This means you can use it
+inside expressions—anywhere you'd normally write a number or a string.
+
+### Single-line functions
+
+The simplest form defines a function in a single line using `deffn`:
+
+```basic
+400   deffn square(x) = x * x
+```
+
+You can then call it by name, just like a built-in function:
+
+```basic
+100   print square(5)                    ' prints 25
+110   print square(3) + square(4)        ' prints 25
+```
+
+A function can take multiple parameters, or none at all:
+
+```basic
+410   deffn add(a, b) = a + b
+420   deffn pi() = 3.14159
+```
+
+```{mermaid}
+flowchart LR
+    classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
+    classDef accent fill:#44A348,color:#fff,stroke:#358a38
+
+    CALL["square(5)"]:::accent --> DEF["DEFFN square(x) = x * x"]:::primary
+    DEF --> EVAL["Evaluate x * x<br/>(x = 5)"]:::primary
+    EVAL --> RET["Return 25"]:::accent
+```
+
+### Multi-line functions
+
+When a function's logic is too complex for a single expression, you can write a multi-line function
+using `deffn` ... `enddef`. To set the return value, assign to the function's own name inside the
+body:
+
+```basic
+100   print absval(-7)                   ' prints 7
+110   end
+200   deffn absval(x)
+210     if x < 0
+220       absval = -x
+230     else
+240       absval = x
+250     endif
+260   enddef absval
+```
+
+The `enddef` keyword closes the function body. It can optionally be followed by an expression
+whose value is returned:
+
+```basic
+300   deffn double(x)
+310   enddef x * 2
+```
+
+A bare `enddef` (with no expression) returns zero.
+
+Like procedures, function definitions belong at the end of your program, after `end`. Parameters
+are local to the function—they don't affect variables of the same name elsewhere in your program.
+
+### Nested function calls
+
+Functions can be nested—you can pass the result of one function as an argument to another:
+
+```basic
+100   print add(square(2), square(3))    ' prints 13  (4 + 9)
+110   print square(add(1, 2))            ' prints 9   (3 squared)
+```
+
+Functions can also be used inside control structures, assigned to variables, or combined with any
+other expression.
+
+```{admonition} Functions vs. Procedures
+:class: seealso
+- A **procedure** (`proc`/`endproc`) performs an action but does not return a value. You call it as
+  a standalone statement.
+- A **function** (`deffn`/`enddef`) computes and returns a value. You call it inside an expression.
+- Both support parameters, and both localise their parameters automatically.
+```
+
 ## `for` loops
 
 A `for` loop repeats a block of code a fixed number of times. When you know in advance how many

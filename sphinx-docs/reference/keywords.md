@@ -291,6 +291,24 @@ Shows all the files in the current drive.
 100   dir
 ```
 
+## deffn enddef
+
+Define a user function. Single-line functions use `= expr`; multi-line functions use `enddef` to close the body. The return value of a multi-line function is set by assigning to the function name, or by following `enddef` with an expression.
+
+```basic
+100   print square(5)
+110   print absval(-3)
+120   end
+200   deffn square(x) = x * x
+210   deffn absval(x)
+220     if x < 0
+230       absval = -x
+240     else
+250       absval = x
+260     endif
+270   enddef absval
+```
+
 ## dim
 
 Dimension number or string arrays with up to two dimensions, with a maximum of 254 elements in each dimension.
