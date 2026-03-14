@@ -4,3 +4,4 @@ __pycache__
 .release
 dist
 **/generated/timestamp.asm
+sphinx-docs/_build/
