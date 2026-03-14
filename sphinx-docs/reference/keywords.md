@@ -291,22 +291,22 @@ Shows all the files in the current drive.
 100   dir
 ```
 
-## deffn enddef
+## fn endfn
 
-Define a user function. Single-line functions use `= expr`; multi-line functions use `enddef` to close the body. The return value of a multi-line function is set by assigning to the function name, or by following `enddef` with an expression.
+Define a user function. Single-line functions use `= expr`; multi-line functions use `endfn` to close the body. Use `return expr` inside a multi-line function to return a value explicitly; a bare `endfn` returns zero.
 
 ```basic
 100   print square(5)
 110   print absval(-3)
 120   end
-200   deffn square(x) = x * x
-210   deffn absval(x)
+200   fn square(x) = x * x
+210   fn absval(x)
 220     if x < 0
-230       absval = -x
+230       return -x
 240     else
-250       absval = x
+250       return x
 260     endif
-270   enddef absval
+270   endfn
 ```
 
 ## dim
@@ -729,14 +729,13 @@ The `at row, column` modifier positions the cursor before printing (zero-based, 
 
 ## proc endproc
 
-Simple procedures. These should be used rather than `GOSUB`. Or else. The empty brackets are mandatory even if there aren't any parameters.
+Named procedures. These should be used rather than `GOSUB`. Or else. The empty brackets are mandatory even if there aren't any parameters. Definitions are skipped during normal execution, so they can appear anywhere in your program.
 
 ```basic
-100   printmessage("hello",42)
-110   end
-120   proc printmessage(msg$,n)
-130     print msg$+"world  x "+str$(n)
-140   endproc
+100   proc printmessage(msg$,n)
+110     print msg$+"world  x "+str$(n)
+120   endproc
+130   printmessage("hello",42)
 ```
 
 ## rnd() random()
@@ -786,10 +785,11 @@ Conditional loop, which is tested at the bottom.
 
 ## return
 
-Return from `GOSUB` call. You can make up your own death threats.
+Outside a function, returns from a `GOSUB` call. Inside a multi-line function body (`fn` ... `endfn`), `return expr` evaluates the expression and returns its value; a bare `return` returns zero.
 
 ```basic
 100   return
+110   return x * 2
 ```
 
 ## right$()

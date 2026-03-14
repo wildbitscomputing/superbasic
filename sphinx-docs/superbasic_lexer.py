@@ -43,6 +43,8 @@ class SuperBASICLexer(RegexLexer):
                         "repeat",
                         "for",
                         "proc",
+                        "fn",
+                        "endfn",
                         "wend",
                         "endif",
                         "then",

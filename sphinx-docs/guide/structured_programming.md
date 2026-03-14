@@ -6,8 +6,8 @@ used BASIC on another computer, you might be used to steering your program with 
 make things messy and hard to follow.
 
 SuperBASIC still lets you use those commands if you want, but it also offers tools you’ll probably prefer
-as your programs get bigger. With loops, procedures, and multi-step conditionals, your code can flow
-more naturally—making it simpler to read, easier to fix, and more fun to work with.
+as your programs get bigger. With loops, procedures, functions, and multi-step conditionals, your code
+can flow more naturally—making it simpler to read, easier to fix, and more fun to work with.
 
 ## Named Procedures
 
@@ -42,8 +42,9 @@ The code inside a procedure—in this case, lines 210–220—is called the _bod
 the part that actually runs when the procedure is called. Note that the body does not execute until you
 explicitly call the procedure.
 
-In SuperBASIC, procedures must be defined at the end of your program, after the `end` keyword, but
-you can call a procedure from anywhere in your code—including from within other procedures.
+Procedure definitions are automatically skipped during normal execution, so they can appear anywhere
+in your program—before or after the code that calls them, or even in the middle. You can call a
+procedure from anywhere in your code, including from within other procedures.
 
 A procedure is called by writing its name followed by parentheses:
 
@@ -119,10 +120,10 @@ inside expressions—anywhere you'd normally write a number or a string.
 
 ### Single-line functions
 
-The simplest form defines a function in a single line using `deffn`:
+The simplest form defines a function in a single line using `fn`:
 
 ```basic
-400   deffn square(x) = x * x
+400   fn square(x) = x * x
 ```
 
 You can then call it by name, just like a built-in function:
@@ -135,8 +136,8 @@ You can then call it by name, just like a built-in function:
 A function can take multiple parameters, or none at all:
 
 ```basic
-410   deffn add(a, b) = a + b
-420   deffn pi() = 3.14159
+410   fn add(a, b) = a + b
+420   fn pi() = 3.14159
 ```
 
 ```{mermaid}
@@ -144,7 +145,7 @@ flowchart LR
     classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
     classDef accent fill:#44A348,color:#fff,stroke:#358a38
 
-    CALL["square(5)"]:::accent --> DEF["DEFFN square(x) = x * x"]:::primary
+    CALL["square(5)"]:::accent --> DEF["FN square(x) = x * x"]:::primary
     DEF --> EVAL["Evaluate x * x<br/>(x = 5)"]:::primary
     EVAL --> RET["Return 25"]:::accent
 ```
@@ -152,35 +153,36 @@ flowchart LR
 ### Multi-line functions
 
 When a function's logic is too complex for a single expression, you can write a multi-line function
-using `deffn` ... `enddef`. To set the return value, assign to the function's own name inside the
-body:
+using `fn` ... `endfn`. Use `return expr` inside the body to return a value:
 
 ```basic
 100   print absval(-7)                   ' prints 7
 110   end
-200   deffn absval(x)
+200   fn absval(x)
 210     if x < 0
-220       absval = -x
+220       return -x
 230     else
-240       absval = x
+240       return x
 250     endif
-260   enddef absval
+260   endfn
 ```
 
-The `enddef` keyword closes the function body. It can optionally be followed by an expression
-whose value is returned:
+The `endfn` keyword closes the function body. If execution reaches `endfn` without hitting a
+`return`, the function returns zero.
+
+A simple multi-line function can use `return` on its own line:
 
 ```basic
-300   deffn double(x)
-310   enddef x * 2
+300   fn double(x)
+310     return x * 2
+320   endfn
 ```
 
-A bare `enddef` (with no expression) returns zero.
+Like procedures, function definitions are automatically skipped during normal execution, so they
+can appear anywhere in your program. Parameters are local to the function—they don't affect
+variables of the same name elsewhere in your program.
 
-Like procedures, function definitions belong at the end of your program, after `end`. Parameters
-are local to the function—they don't affect variables of the same name elsewhere in your program.
-
-### Nested function calls
+### Nested and recursive function calls
 
 Functions can be nested—you can pass the result of one function as an argument to another:
 
@@ -189,14 +191,26 @@ Functions can be nested—you can pass the result of one function as an argument
 110   print square(add(1, 2))            ' prints 9   (3 squared)
 ```
 
-Functions can also be used inside control structures, assigned to variables, or combined with any
+Functions can also call themselves recursively:
+
+```basic
+100   fn fact(n)
+110     if n <= 1
+120       return 1
+130     endif
+140     return n * fact(n - 1)
+150   endfn
+160   print fact(5)                      ' prints 120
+```
+
+Functions can also be used inside control structures, results assigned to variables, or combined with any
 other expression.
 
 ```{admonition} Functions vs. Procedures
 :class: seealso
 - A **procedure** (`proc`/`endproc`) performs an action but does not return a value. You call it as
   a standalone statement.
-- A **function** (`deffn`/`enddef`) computes and returns a value. You call it inside an expression.
+- A **function** (`fn`/`endfn`) computes and returns a value. You call it inside an expression.
 - Both support parameters, and both localise their parameters automatically.
 ```
 
