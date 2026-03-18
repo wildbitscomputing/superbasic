@@ -11,8 +11,8 @@
 #   sb01 = boot + headerdata  (N+0, slot 3, remapped to RAM after boot)
 #   sb02 = main code block 1  (N+1, slot 4)
 #   sb03 = main code block 2  (N+2, slot 5 default)
-#   sb04 = module page 1      (N+3, inc 8+5 once)
-#   sb05 = module page 2      (N+4, inc 8+5 twice)
+#   sb04 = module page 1      (N+3, slot 5 via inc 8+5)
+#   sb05 = module page 2      (N+4, slot 3 via save/restore 8+3)
 
 import sys
 from pathlib import Path

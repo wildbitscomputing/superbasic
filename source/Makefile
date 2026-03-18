@@ -25,7 +25,7 @@ ASFLAGS += -D HARDWARE=$(HARDWARE) -D HARDWARE_GEN=$(HARDWARE_GEN) \
 			'-D TILEIMAGES_ADDRESS=$(DOLLAR)$(LTILEIMAGES)' \
 			-L $(BUILDDIR)debug$(S)basic.lst -l $(BUILDDIR)debug$(S)basic.lbl
 
-MODULES = +hardware +tokeniser +kernel +graphics:2 +sound:2
+MODULES = +hardware +tokeniser +graphics +kernel:2 +sound:2
 BUILD_OUT = $(BUILDDIR)basic.rom
 SCRIPTDIR = scripts$(S)
 MAME_PATH=../../mame
@@ -98,12 +98,13 @@ prelim:
 	$(Q)$(PYTHON) $(SCRIPTDIR)errors.py $(LANGUAGE)
 	$(Q)$(PYTHON) $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
 	$(Q)$(PYTHON) $(SCRIPTDIR)makebuild.py $(MODULES)
-	$(Q)$(PYTHON) $(SCRIPTDIR)tokens.py
-	$(Q)$(PYTHON) $(SCRIPTDIR)constants.py
-	$(Q)$(PYTHON) $(SCRIPTDIR)version.py $(VERSION)
 
 	@echo "Building submodules"
 	$(Q)$(MAKE) -B -C ..$(S)modules clean all
+
+	$(Q)$(PYTHON) $(SCRIPTDIR)tokens.py
+	$(Q)$(PYTHON) $(SCRIPTDIR)constants.py
+	$(Q)$(PYTHON) $(SCRIPTDIR)version.py $(VERSION)
 
 #
 #		Print base version to console
