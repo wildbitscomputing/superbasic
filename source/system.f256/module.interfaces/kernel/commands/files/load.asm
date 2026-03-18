@@ -44,9 +44,6 @@ LoadFile:
 		bcs 	CLErrorHandler 				; error, so fail.
 		sta 	BasicFileStream 			; save the reading stream.
 
-		lda 	#LFLoadingMsg & $FF
-		ldx 	#LFLoadingMsg >> 8
-		jsr 	PrintStringXA
 		inc 	EXTSuppressCursor 			; freeze cursor position during loading
 		lda 	BasicFileStream 			; restore stream for LoadReadByteInit
 		jsr     LoadReadByteInit            ; Init reader with the stream
@@ -75,14 +72,7 @@ _CLExit:
 		;
 CLComplete:
 		stz 	EXTSuppressCursor 			; resume cursor tracking
-		lda 	#_CLCMsg & $FF
-		ldx 	#_CLCMsg >> 8
-		jmp 	PrintStringXA
-
-_CLCMsg:
-		.text 	13,"Complete.",13,0
-LFLoadingMsg:
-		.text 	"Loading",0
+		rts
 		;
 		;		Close file and handle error
 		;

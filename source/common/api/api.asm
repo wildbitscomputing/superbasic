@@ -21,7 +21,7 @@ Yield       .fill   4   ; Give unused time to the kernel.
 Putch       .fill   4   ; deprecated
 RunBlock    .fill   4   ; Chain to resident program by block ID.
 RunNamed    .fill   4   ; Chain to resident program by name.
-            .fill   4   ; reserved
+Chdir       .fill   4   ; Change/get current working directory (buflen>0: chdir, buflen=0: getcwd)
 
 BlockDevice .namespace
 List        .fill   4   ; Returns a bit-set of available block-accessible devices.

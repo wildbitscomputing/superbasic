@@ -111,7 +111,7 @@ _not_ok:
 		rts
 
 _continue:
-		.text	"Program has unsaved changes, continue (y/N)? ",0
+		.text	"Unsaved changes, continue (y/N)? ",0
 
 		.send code
 

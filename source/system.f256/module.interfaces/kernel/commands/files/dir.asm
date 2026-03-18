@@ -13,34 +13,51 @@
 
 	.section code
 
+DIR_SORT_NAME	= 0
+DIR_SORT_SIZE	= 1
+
+; ************************************************************************************************
+;
+;		DIR [path] [BY NAME|SIZE]
+;
+; ************************************************************************************************
+
 Command_Dir:	;; [dir]
-		;
-		;		Parse optional path parameter (must happen in main code,
-		;		not module space, because .cget accesses program memory
-		;		in slot 3 which is swapped when the module is banked in).
+		lda 	#DIR_SORT_NAME
+		sta 	dirSortMode
+		stz 	kernel.args.directory.open.path_len
 		;
 		.cget
-		cmp 	#KWC_EOL 					; end of line?
-		beq 	_CDNoPath
-		cmp 	#KWD_COLON 					; colon separator?
-		beq 	_CDNoPath
+		cmp 	#KWC_EOL
+		beq 	_CDGo
+		cmp 	#KWD_BY
+		beq 	_CDParseSort
 		;
 		ldx 	#0
-		jsr 	EvaluateString 				; evaluate path string -> zTemp0
-		lda 	zTemp0 						; set path pointer
+		jsr 	EvaluateString
+		lda 	zTemp0
 		sta 	kernel.args.directory.open.path
 		lda 	zTemp0+1
 		sta 	kernel.args.directory.open.path+1
-		;
-		ldy 	#$FF 						; find string length
-_CDPathLen:
-		iny
+		phy
+		ldy 	#$FF
+_CDLen:	iny
 		lda 	(zTemp0),y
-		bne 	_CDPathLen
+		bne 	_CDLen
 		sty 	kernel.args.directory.open.path_len
-		jmp 	DirImpl
-_CDNoPath:
-		stz 	kernel.args.directory.open.path_len
+		ply
+		.cget
+		cmp 	#KWD_BY
+		bne 	_CDGo
+_CDParseSort:
+		iny
+		.cget
+		cmp 	#KWD_SIZE
+		bne 	_CDGo
+		iny
+		lda 	#DIR_SORT_SIZE
+		sta 	dirSortMode
+_CDGo:
 		jmp 	DirImpl
 
 	.send code

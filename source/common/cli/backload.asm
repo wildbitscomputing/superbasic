@@ -20,9 +20,6 @@
 
 BackloadProgram:
 		jsr 	NewProgram 					; does the actual NEW.
-		ldx 	#_BLLoad >> 8
-		lda 	#_BLLoad & $FF
-		jsr 	PrintStringXA
 
 		lda 	#SOURCE_ADDRESS >> 13 		; start page
 		sta 	BackLoadPage
@@ -76,8 +73,6 @@ _BPEndLine:
 _BPExit:
 		stz 	$FFFA
 		jmp 	ClearSystem 				; clear variables etc.
-_BLLoad:
-		.text 	"Loading from Memory",13,0
 
 ; ************************************************************************************************
 ;

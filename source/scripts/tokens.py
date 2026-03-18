@@ -45,6 +45,7 @@ class TokenSource(object):
 				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
 				get$( 		inkey(		get( 		itemcount(	itemget$( 	keydown(
 				tile(		screen(	    screen$(	fre(~
+				cd$(		dir$(		dir(
 
 			{0}							// Set 0
 				data 		dim 		let 		rem  		else 		to
@@ -54,6 +55,7 @@ class TokenSource(object):
 				from		plot 		on 			off 		palette 	sound
 				poke 		pokew 		pokel 		poked 		memcopy 	clear
 				step~
+				name		size
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop
@@ -64,7 +66,7 @@ class TokenSource(object):
 				bsave		lomem 		input 		cls 		gosub
 				return 		print 		cprint 		goto 		cursor
 				mouse 		mdelta 		try 		tile 		tiles
-				option
+				option		cd
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs
