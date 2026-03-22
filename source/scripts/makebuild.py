@@ -96,14 +96,14 @@ for f in moduleFiles:
 h.write('\n; --- Header data in boot section ($6000-$7FFF) ---\n')
 h.write('\t.include\t"../modules/hardware/header/.build/headerdata.dat"\n')
 
+h.write('\n; --- Error text in module page 1 ---\n')
+h.write('\t.include\t"./common/generated/_errortext.asm"\n')
+
 if page2ModuleFiles:
-    h.write("\n; --- Module page 2 (slot 3, $6000-$7FFF) ---\n")
-    h.write("; page2 section at $4000 in binary\n")
-    h.write("; .logical * + $2000 maps labels to $6000+ runtime addresses\n")
+    h.write("\n; --- Module page 2 ---\n")
+    h.write("; page2 section at $4000 (below boot section at $6000)\n")
+    h.write("; .logical * + $6000 in each block maps labels to $A000+ runtime addresses\n")
     for f in page2ModuleFiles:
         h.write('\t.include\t"{0}"\n'.format(f.replace(os.sep, "/")))
-    # Error text in slot 3 module page (accessed via Slot3BankIn from ErrorHandler)
-    h.write('\n; --- Error text in slot 3 module page ---\n')
-    h.write('\t.include\t"./common/generated/_errortext_p2.asm"\n')
 
 h.close()

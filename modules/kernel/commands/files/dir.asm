@@ -24,20 +24,32 @@
 
 ;
 ;		Buffer layout in RAM page 4 mapped to slot 2 ($4000-$5FFF):
+;		Parallel arrays indexed by entry number (0-based, 8-bit X).
 ;
-;		$4000-$41FF: Index array (128 entries × 4 bytes)
-;					 [name_ptr_lo] [name_ptr_hi] [blocks_lo] [blocks_hi]
-;		$4200-$5FFD: Packed null-terminated name strings
+;		$4000-$407F: Name pointer low bytes  (128 bytes, 127 entries + 1 sort overflow)
+;		$4080-$40FF: Name pointer high bytes (128 bytes)
+;		$4100-$417F: Block count low bytes   (128 bytes)
+;		$4180-$41FF: Block count high bytes  (128 bytes)
+;		$4200-$427F: Flags (FAT32 attributes)(128 bytes)
+;		$4280-$5FFD: Packed null-terminated name strings
 ;		$5FFE-$5FFF: Free block count (2 bytes)
 ;
 DIR_BUF_BASE	= $4000
-DIR_INDEX		= DIR_BUF_BASE				; index array starts here
-DIR_NAMES		= DIR_BUF_BASE + $200		; names start at $4200
+DIR_NAME_LO	= DIR_BUF_BASE				; name pointer low bytes
+DIR_NAME_HI	= DIR_BUF_BASE + $80		; name pointer high bytes
+DIR_BLK_LO	= DIR_BUF_BASE + $100		; block count low bytes
+DIR_BLK_HI	= DIR_BUF_BASE + $180		; block count high bytes
+DIR_FLAGS		= DIR_BUF_BASE + $200		; FAT32 attributes
+DIR_NAMES		= DIR_BUF_BASE + $280		; packed name strings
 DIR_NAMES_END	= DIR_BUF_BASE + $1FFE		; end of name area
 DIR_FREE_BLK	= DIR_BUF_BASE + $1FFE		; free block count (2 bytes)
-DIR_MAX_ENTRIES	= 128						; max entries in index
-DIR_ENTRY_SIZE	= 4							; bytes per index entry
+DIR_MAX_ENTRIES	= 127						; max entries (128th slot reserved for sort overflow)
 DIR_RAM_PAGE	= 4							; unused RAM page for buffer
+DIR_ATTR_HIDDEN	= $02						; FAT32 hidden attribute bit
+DIR_ATTR_DIR	= $10						; FAT32 directory attribute bit
+DIR_SORT_NONE	= 0							; no sorting
+DIR_SORT_NAME	= 1							; sort by name (case-insensitive)
+DIR_SORT_SIZE	= 2							; sort by size (descending)
 
 ; ************************************************************************************************
 ;
@@ -85,11 +97,14 @@ _RDProcessEvent:
 		bra 	_RDEventLoop
 _RDNotKey:
 		jsr     _RDMessages
+		jsr 	kernel.Yield
 		bra     _RDEventLoop
 
 _RDDone:
-		;		Directory stream closed — sort and print
+		;		Directory stream closed — sort and optionally print
 		jsr 	_SortEntries
+		lda 	dirLoadOnly
+		bne 	_RDExit
 		jsr 	_PrintEntries
 
 _RDExit:
@@ -151,6 +166,8 @@ _RDRead:
 		jmp     kernel.Directory.Read
 
 _RDVolume:
+		lda 	dirLoadOnly
+		bne 	_RDVolSkip
 		;		Print volume name immediately (not buffered)
 		lda 	#"["
 		jsr 	EXTPrintCharacter
@@ -165,12 +182,22 @@ _RDVolume:
 		lda 	#13
 		jsr 	EXTPrintCharacter
 		jmp     _RDRead
+_RDVolSkip:
+		;		Still must consume the volume data from the stream
+		lda     KNLEvent.directory.volume.len
+		jsr     _ReadDataToLineBuffer
+		jmp     _RDRead
 
 _RDFile:
+		;		Skip hidden files
+		lda 	KNLEvent.directory.file.flags
+		and 	#DIR_ATTR_HIDDEN
+		bne 	_RDFileSkipJmp
 		;		Check if index is full
 		lda 	dirFileCount
 		cmp 	#DIR_MAX_ENTRIES
 		bcc 	_RDFileOk
+_RDFileSkipJmp:
 		jmp 	_RDFileSkip
 _RDFileOk:
 
@@ -198,22 +225,25 @@ _RDCopyName:
 		bpl 	_RDCopyName
 _RDCopyDone:
 
-		;		Now read block count into lineBuffer
+		;		Save flags before ReadExt (which may overwrite event data)
+		lda 	KNLEvent.directory.file.flags
+		pha
+
+		;		Read block count into lineBuffer
 		jsr 	_ReadExtToLineBuffer
 
-		;		Build index entry
-		lda 	dirFileCount
-		asl 	a
-		asl 	a
-		tax
+		;		Build entry in parallel arrays
+		ldx 	dirFileCount
 		lda 	dirNamePtr
-		sta 	DIR_INDEX,x
+		sta 	DIR_NAME_LO,x
 		lda 	dirNamePtr+1
-		sta 	DIR_INDEX+1,x
+		sta 	DIR_NAME_HI,x
 		lda 	lineBuffer 					; blocks lo (from ReadExt)
-		sta 	DIR_INDEX+2,x
+		sta 	DIR_BLK_LO,x
 		lda 	lineBuffer+1 				; blocks hi
-		sta 	DIR_INDEX+3,x
+		sta 	DIR_BLK_HI,x
+		pla 								; flags (saved before ReadExt)
+		sta 	DIR_FLAGS,x
 
 		;		Advance name pointer past name + null
 		clc
@@ -269,41 +299,60 @@ _RDEOF:
 ; ************************************************************************************************
 
 _SortEntries:
+		lda 	dirSortMode
+		beq 	_SortRts 					; mode 0 = no sorting
 		lda 	dirFileCount
 		cmp 	#2
 		bcs 	_SortStart
+_SortRts:
 		rts 								; need at least 2 entries
 _SortStart:
 
-		ldx 	#DIR_ENTRY_SIZE 			; start with entry 1
+		ldx 	#1 							; start with entry 1
 _SortOuter:
 		;		Save current entry to temps
-		lda 	DIR_INDEX,x
+		lda 	DIR_NAME_LO,x
 		sta 	dirSortNameLo
-		lda 	DIR_INDEX+1,x
+		lda 	DIR_NAME_HI,x
 		sta 	dirSortNameHi
-		lda 	DIR_INDEX+2,x
+		lda 	DIR_BLK_LO,x
 		sta 	dirSortBlkLo
-		lda 	DIR_INDEX+3,x
+		lda 	DIR_BLK_HI,x
 		sta 	dirSortBlkHi
+		lda 	DIR_FLAGS,x
+		sta 	dirSortFlags
 
 		stx 	dirSortI 					; save outer index
 		txa
 _SortInner:
-		sec
-		sbc 	#DIR_ENTRY_SIZE
-		bcc 	_SortAtZeroJmp 				; reached beginning → insert at 0
+		dec 	a
+		bmi 	_SortAtZero 				; reached beginning → insert at 0
 		tax
 
-		;		Compare based on sort mode
+		;		Directories always sort before files
+		lda 	DIR_FLAGS,x
+		and 	#DIR_ATTR_DIR
+		sta 	dirCmpTmp 					; entry[x] is dir?
+		lda 	dirSortFlags
+		and 	#DIR_ATTR_DIR 				; saved is dir?
+		cmp 	dirCmpTmp
+		beq 	_SortSameType 				; both same type → compare normally
+		bcs 	_SortShift 					; saved is dir, entry[x] is not → shift right
+		bra 	_SortInsertAfter 			; entry[x] is dir, saved is not → insert after
+
+_SortSameType:
+		;		Both dirs: always compare by name. Both files: check sort mode.
+		lda 	dirCmpTmp
+		bne 	_SortCmpName 				; both are dirs → sort by name
 		lda 	dirSortMode
 		cmp 	#DIR_SORT_SIZE
 		beq 	_SortCmpSize
 
-		;		Compare by name: index[x].name vs saved name
-		lda 	DIR_INDEX,x
+		;		Compare by name: entry[x].name vs saved name
+_SortCmpName:
+		lda 	DIR_NAME_LO,x
 		sta 	zTemp0
-		lda 	DIR_INDEX+1,x
+		lda 	DIR_NAME_HI,x
 		sta 	zTemp0+1
 		lda 	dirSortNameLo
 		sta 	zTemp1
@@ -314,60 +363,54 @@ _SortInner:
 		beq 	_SortInsertAfter
 		bra 	_SortShift
 
-		;		Compare by size: index[x].blocks vs saved blocks (descending)
+		;		Compare by size: descending (largest first)
 _SortCmpSize:
-		lda 	DIR_INDEX+3,x 				; compare high byte first
+		lda 	DIR_BLK_HI,x 				; compare high byte first
 		cmp 	dirSortBlkHi
-		bcc 	_SortShift 					; entry[x] < saved → entry is smaller, shift right
+		bcc 	_SortShift 					; entry[x] < saved → shift right
 		bne 	_SortInsertAfter 			; entry[x] > saved → insert after
-		lda 	DIR_INDEX+2,x 				; high bytes equal, compare low
+		lda 	DIR_BLK_LO,x 				; high bytes equal, compare low
 		cmp 	dirSortBlkLo
 		bcc 	_SortShift 					; entry[x] < saved → shift right
 		bra 	_SortInsertAfter 			; entry[x] >= saved → insert after
 
 _SortShift:
-
-		;		Shift entry[x] right
-		lda 	DIR_INDEX,x
-		sta 	DIR_INDEX+DIR_ENTRY_SIZE,x
-		lda 	DIR_INDEX+1,x
-		sta 	DIR_INDEX+DIR_ENTRY_SIZE+1,x
-		lda 	DIR_INDEX+2,x
-		sta 	DIR_INDEX+DIR_ENTRY_SIZE+2,x
-		lda 	DIR_INDEX+3,x
-		sta 	DIR_INDEX+DIR_ENTRY_SIZE+3,x
+		;		Shift entry[x] right by one position
+		lda 	DIR_NAME_LO,x
+		sta 	DIR_NAME_LO+1,x
+		lda 	DIR_NAME_HI,x
+		sta 	DIR_NAME_HI+1,x
+		lda 	DIR_BLK_LO,x
+		sta 	DIR_BLK_LO+1,x
+		lda 	DIR_BLK_HI,x
+		sta 	DIR_BLK_HI+1,x
+		lda 	DIR_FLAGS,x
+		sta 	DIR_FLAGS+1,x
 
 		txa
 		bra 	_SortInner
 
-_SortAtZeroJmp:
+_SortAtZero:
 		ldx 	#0 							; insert at beginning
 		bra 	_SortDoInsert
 _SortInsertAfter:
-		txa 								; insert after entry[x]
-		clc
-		adc 	#DIR_ENTRY_SIZE
-		tax
+		inx 								; insert after entry[x]
 _SortDoInsert:
 		lda 	dirSortNameLo
-		sta 	DIR_INDEX,x
+		sta 	DIR_NAME_LO,x
 		lda 	dirSortNameHi
-		sta 	DIR_INDEX+1,x
+		sta 	DIR_NAME_HI,x
 		lda 	dirSortBlkLo
-		sta 	DIR_INDEX+2,x
+		sta 	DIR_BLK_LO,x
 		lda 	dirSortBlkHi
-		sta 	DIR_INDEX+3,x
+		sta 	DIR_BLK_HI,x
+		lda 	dirSortFlags
+		sta 	DIR_FLAGS,x
 
 		;		Next outer entry
 		ldx 	dirSortI
-		txa
-		clc
-		adc 	#DIR_ENTRY_SIZE
-		tax
-		txa
-		lsr 	a
-		lsr 	a
-		cmp 	dirFileCount
+		inx
+		cpx 	dirFileCount
 		bcc 	_SortOuterJmp
 		rts
 _SortOuterJmp:
@@ -414,7 +457,9 @@ _TURts:
 _PrintEntries:
 		lda 	dirFileCount
 		ora 	dirFileCount+1
-		beq 	_PESummary 					; no files
+		bne 	_PEHaveFiles
+		jmp 	_PESummary 					; no files
+_PEHaveFiles:
 
 		stz 	dirPrintIdx
 _PELoop:
@@ -433,18 +478,15 @@ _PEShiftCheck:
 		bra 	_PEShiftCheck
 _PENoPause:
 
-		;		Get index entry
-		lda 	dirPrintIdx
-		asl 	a
-		asl 	a
-		tax
+		;		Get entry
+		ldx 	dirPrintIdx
 
 		;		Print: " name"
 		lda 	#32
 		jsr 	EXTPrintCharacter
-		lda 	DIR_INDEX,x
+		lda 	DIR_NAME_LO,x
 		sta 	zTemp0
-		lda 	DIR_INDEX+1,x
+		lda 	DIR_NAME_HI,x
 		sta 	zTemp0+1
 		;		Find name length for padding
 		phy
@@ -476,17 +518,28 @@ _PEPad:
 _PEPadDone:
 		ply
 
+		;		Check if entry is a directory
+		ldx 	dirPrintIdx
+		lda 	DIR_FLAGS,x
+		and 	#DIR_ATTR_DIR
+		beq 	_PENotDir
+		;		Print " <DIR>" right-aligned
+		lda 	#32
+		jsr 	EXTPrintCharacter
+		ldx 	#_CDDirTag >> 8
+		lda 	#_CDDirTag & $FF
+		jsr 	PrintStringXA
+		bra 	_PEEndLine
+_PENotDir:
 		;		Print right-aligned block count
-		lda 	dirPrintIdx
-		asl 	a
-		asl 	a
-		tax
-		ldy 	DIR_INDEX+3,x 				; blocks hi → Y
-		lda 	DIR_INDEX+2,x 				; blocks lo → A
+		ldx 	dirPrintIdx
+		ldy 	DIR_BLK_HI,x 				; blocks hi → Y
+		lda 	DIR_BLK_LO,x 				; blocks lo → A
 		phy
 		plx 								; X = blocks hi
 		jsr 	ConvertInt16
 		jsr 	_CDPrintRightAligned
+_PEEndLine:
 		lda 	#13
 		jsr 	EXTPrintCharacter
 
@@ -494,7 +547,8 @@ _PEPadDone:
 		inc 	dirPrintIdx
 		lda 	dirPrintIdx
 		cmp 	dirFileCount
-		bcc 	_PELoop
+		bcs 	_PESummary
+		jmp 	_PELoop
 
 _PESummary:
 		lda 	#13
@@ -530,6 +584,8 @@ _CDFreeMsg:
 		.text 	" blocks free.",13,0
 _CDBlocksHdr:
 		.text 	"                   Blocks",0
+_CDDirTag:
+		.text 	"<DIR>",0
 
 ; ************************************************************************************************
 ;
@@ -590,6 +646,7 @@ _CDPRAPrint:
 
 Export_DirStringImpl:
 		;		Argument already in dirFuncArg (set by interface)
+		phy 								; preserve Y (code pointer)
 		lda 	dirFuncArg
 		cmp 	dirFileCount
 		bcs 	_DSSEmpty
@@ -602,12 +659,10 @@ Export_DirStringImpl:
 		sta 	8+2
 
 		pla
-		asl 	a
-		asl 	a
 		tax
-		lda 	DIR_INDEX,x
+		lda 	DIR_NAME_LO,x
 		sta 	zTemp0
-		lda 	DIR_INDEX+1,x
+		lda 	DIR_NAME_HI,x
 		sta 	zTemp0+1
 
 		ldy 	#0
@@ -629,6 +684,7 @@ _DSSReturn:
 		sta 	NSMantissa1,x
 		lda 	#NSBIsString
 		sta 	NSStatus,x
+		ply 								; restore Y (code pointer)
 		rts
 
 _DSSEmpty:
@@ -637,6 +693,7 @@ _DSSEmpty:
 
 Export_DirNumImpl:
 		;		Arguments in dirFuncArg (value) and dirFuncSign (sign)
+		phy 								; preserve Y (code pointer)
 		lda 	dirFuncSign
 		bmi 	_DNNeg
 
@@ -651,12 +708,10 @@ Export_DirNumImpl:
 		lda 	#DIR_RAM_PAGE
 		sta 	8+2
 		pla
-		asl 	a
-		asl 	a
-		tay
-		lda 	DIR_INDEX+2,y
+		tax
+		lda 	DIR_BLK_LO,x
 		sta 	zTemp0
-		lda 	DIR_INDEX+3,y
+		lda 	DIR_BLK_HI,x
 		sta 	zTemp1
 		lda 	dirSavedSlot2
 		sta 	8+2
@@ -711,6 +766,7 @@ _DNRetInt:
 		stz 	NSMantissa3,x
 		stz 	NSExponent,x
 		stz 	NSStatus,x
+		ply 								; restore Y (code pointer)
 		rts
 
 	.send code
@@ -738,10 +794,14 @@ dirSortBlkLo:
 		.fill 	1
 dirSortBlkHi:
 		.fill 	1
+dirSortFlags:
+		.fill 	1
 dirCmpTmp:
 		.fill 	1
 dirFuncArg:
 		.fill 	1
 dirFuncSign:
+		.fill 	1
+dirLoadOnly:
 		.fill 	1
 	.send storage

@@ -29,6 +29,7 @@ MODULES = +hardware +tokeniser +graphics +kernel:2 +sound:2
 BUILD_OUT = $(BUILDDIR)basic.rom
 SCRIPTDIR = scripts$(S)
 MAME_PATH=../../mame
+KERNEL_PATH=../../F256_MicroKernel
 BASIC_TESTS_PATH=$(PWD)/../test
 IMAGE := $(BASIC_TESTS_PATH)/.output/tests.img
 
@@ -189,10 +190,22 @@ flash: build
 	foenixmgr flash-bulk build/basic.csv
 
 #
+#		Build kernel and copy ROMs to MAME
+#
+kernel:
+	$(Q)$(MAKE) -C $(KERNEL_PATH)
+	$(Q)$(CCOPY) $(KERNEL_PATH)/bin/*.bin $(MAME_PATH)/roms/f256k
+	$(Q)$(CDEL) $(MAME_PATH)/nvram/f256k/flash
+
+#
 #		Test in emulator
 #
 emu: build $(IMAGE)
 	$(Q)$(CCOPY) $(BUILDDIR)/sb*.bin $(MAME_PATH)/roms/f256k
+	$(Q)$(CDEL) $(MAME_PATH)/nvram/f256k/flash
+	cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms
+
+emu2: build $(IMAGE)
 	$(Q)$(CDEL) $(MAME_PATH)/nvram/f256k/flash
 	cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms
 

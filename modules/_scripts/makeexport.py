@@ -38,6 +38,7 @@ def main(*, build_dir: Path) -> None:
         print(".send storage")
         print("")
         print("Slot3Init:")
+        print("\tstz Slot3Depth")
         print("\tlda 8+4")
         print("\tclc")
         print("\tadc #3")

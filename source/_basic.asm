@@ -171,11 +171,11 @@ StartModuleCode:
 ; --- Header data in boot section ($6000-$7FFF) ---
 	.include	"../modules/hardware/header/.build/headerdata.dat"
 
-; --- Module page 2 (slot 3, $6000-$7FFF) ---
-; page2 section at $4000 in binary
-; .logical * + $2000 maps labels to $6000+ runtime addresses
+; --- Error text in module page 1 ---
+	.include	"./common/generated/_errortext.asm"
+
+; --- Module page 2 ---
+; page2 section at $4000 (below boot section at $6000)
+; .logical * + $6000 in each block maps labels to $A000+ runtime addresses
 	.include	"../modules/.build/kernel_p2.module.asm"
 	.include	"../modules/.build/sound_p2.module.asm"
-
-; --- Error text in slot 3 module page ---
-	.include	"./common/generated/_errortext_p2.asm"

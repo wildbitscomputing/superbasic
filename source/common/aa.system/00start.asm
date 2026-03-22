@@ -68,7 +68,7 @@ Boot:	jmp 	Start
 
 Start:	ldx 	#$FF 						; stack reset
 		txs
-		jsr 	Slot3Init					; compute slot 3 module page from slot 4 (must be before any slot 3 wrapper calls)
+		jsr 	Slot3Init					; compute slot 3 module page
 
 		.if 	soundIntegrated==1 			; silence PSG immediately on boot
 		lda 	#$0F 						; (SN76489 may start in noisy state)
