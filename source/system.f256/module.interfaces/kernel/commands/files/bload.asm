@@ -113,7 +113,7 @@ _BLErrorExit:
 ;
 ; ************************************************************************************************
 
-BLAccessPage = 3 							; page to use for actual memory.
+BLAccessPage = 2 							; page to use for actual memory (not slot 3, used for module banking)
 
 BLOpenPhysicalMemory:
 		lda 	BLAccessPage+8 				; save current mapping

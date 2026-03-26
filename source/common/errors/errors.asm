@@ -24,7 +24,7 @@ ErrorHandler:
 		tay 								; find the error text
 		beq 	_EHEnd
 		ldx 	#0
-		inc 	8+5 						; bank in module page 1 (ErrorText lives there)
+		jsr 	Slot3BankIn 				; bank in slot 3 module page (ErrorText lives there)
 		.set16 	zTemp0,ErrorText
 _EHFind:
 		dey 								; keep looking through text
@@ -48,7 +48,7 @@ _EHCopy:
 		iny
 		bra 	_EHCopy
 _EHCopyDone:
-		dec 	8+5 						; restore main ROM page
+		jsr 	Slot3BankOut 				; restore slot 3 mapping
 		lda 	#ArgumentStorage & $FF 		; print from buffer
 		ldx 	#ArgumentStorage >> 8
 		jsr 	PrintStringXA

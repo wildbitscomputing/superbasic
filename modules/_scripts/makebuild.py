@@ -60,7 +60,7 @@ def process_source(path: Path, out: TextIO, *, page: int = 1) -> list[str]:
                 normalized = " ".join(line.split())
                 if normalized == ".section code":
                     out.write("\t\t.section page2\n")
-                    out.write("\t\t.logical * + $6000\n")
+                    out.write("\t\t.logical * + $2000\n")
                     continue
                 elif normalized == ".send code":
                     out.write("\t\t.here\n")
