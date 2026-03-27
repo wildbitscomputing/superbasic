@@ -21,6 +21,17 @@
 WarmStart:
 		ldx 	#$FF
 		txs
+		;
+		;		Reset slot 3 module state in case an error left it mapped.
+		;		(Error paths in slot 3 modules jump to ErrorHandler/WarmStart,
+		;		 skipping Slot3BankOut and leaving slot 3 on the module page.)
+		;
+		lda 	Slot3Depth
+		beq 	_slot3ok
+		stz 	Slot3Depth
+		lda 	#3
+		sta 	8+3
+_slot3ok:
 
 		lda		EXTPendingWrap				; check for a pending wrap state
 		beq 	_set_color					; no pending wrap, jump to set color

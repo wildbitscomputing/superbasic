@@ -4,6 +4,9 @@ Reads exported function names from `.exports` files in the build directory
 and generates corresponding entry points. If paging is enabled, includes
 the necessary assembly code to handle memory bank switching.
 
+Page 1 modules use slot 5 (inc/dec 8+5).
+Page 2 modules use slot 3 (save/restore 8+3 with depth counter).
+
 Outputs the entry points code to standard output.
 """
 
@@ -18,28 +21,72 @@ def main(*, build_dir: Path) -> None:
 
     print(f"PagingEnabled = {1 if paging else 0}")
 
-    # Map module page number to MMU slot increments from slot 5 default (N+2):
-    #   page 1 (sb04 = N+3): 1 increment past default
-    #   page 2 (sb05 = N+4): 2 increments past default
-    page_to_incs = {1: 1, 2: 2}
+    has_page2 = any(exports[m]["page"] == 2 for m in exports)
+
+    if paging and has_page2:
+        # These routines are included inside an existing .section code block
+        # in 00start.asm, so no .section/.send wrappers are needed here.
+        # Slot3ModulePage/Slot3Depth/Slot3Saved are declared in 04data.inc
+        # (placed before numberBuffer/decimalBuffer to survive buffer overflows).
+        print("")
+        print("; --- Slot 3 module bank switching ---")
+        print("")
+        print("Slot3Init:")
+        print("\tstz Slot3Depth")
+        print("\tlda 8+4")
+        print("\tclc")
+        print("\tadc #3")
+        print("\tsta Slot3ModulePage")
+        print("\trts")
+        print("")
+        print("Slot3BankIn:")
+        print("\tphy")
+        print("\tpha")
+        print("\tinc Slot3Depth")
+        print("\tlda Slot3Depth")
+        print("\tcmp #1")
+        print("\tbne +")
+        print("\tldy 8+3")
+        print("\tsty Slot3Saved")
+        print("\tldy Slot3ModulePage")
+        print("\tsty 8+3")
+        print("+\tpla")
+        print("\tply")
+        print("\trts")
+        print("")
+        print("Slot3BankOut:")
+        print("\tpha")
+        print("\tphy")
+        print("\tdec Slot3Depth")
+        print("\tbne +")
+        print("\tldy Slot3Saved")
+        print("\tsty 8+3")
+        print("+\tply")
+        print("\tpla")
+        print("\trts")
 
     for module in exports:
         page = exports[module]["page"]
         routines = exports[module]["routines"]
         module_name = exports[module]["name"]
-        incs = page_to_incs[page]
         print(f"\t.if {module_name}Integrated == 1")
         for routine in routines:
             print(f"{routine}:")
             if paging:
-                for _ in range(incs):
+                if page == 1:
                     print("\tinc 8+5")
-                print(f"\tjsr\tExport_{routine}")
-                print("\tphp")
-                for _ in range(incs):
+                    print(f"\tjsr\tExport_{routine}")
+                    print("\tphp")
                     print("\tdec 8+5")
-                print("\tplp")
-                print("\trts")
+                    print("\tplp")
+                    print("\trts")
+                elif page == 2:
+                    print("\tjsr Slot3BankIn")
+                    print(f"\tjsr\tExport_{routine}")
+                    print("\tphp")
+                    print("\tjsr Slot3BankOut")
+                    print("\tplp")
+                    print("\trts")
             else:
                 print(f"\tjmp\tExport_{routine}")
 
@@ -50,7 +97,7 @@ def read_exports(build_dir: Path) -> dict[str, dict]:
     """Read all `.exports` files from the build directory.
 
     Files named `<module>_p2.exports` are treated as page 2 exports
-    (requiring double inc/dec 8+5). All others are page 1.
+    (slot 3 via save/restore 8+3). All others are page 1 (slot 5 via inc/dec 8+5).
     """
     all_exports: dict[str, dict] = {}
 

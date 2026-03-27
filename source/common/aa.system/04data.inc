@@ -175,14 +175,23 @@ tokenBuffer:
 lineBuffer: 								; used for input - ASCII line goes here
 		.fill 	253
 
+programChanged:
+		.fill	1							; tracks whether program has been changed since last save
+
+;		Slot 3 module bank switching state (placed before buffers so that
+;		a numberBuffer/decimalBuffer overflow cannot corrupt them).
+Slot3ModulePage:
+		.fill 	1
+Slot3Depth:
+		.fill 	1
+Slot3Saved:
+		.fill 	1
+
 numberBuffer:								; buffer for numbers (32 bit binary + sign + ASCIIZ)
 		.fill 	34
 decimalBuffer: 								; buffer for number -> string conversion.
-		.fill 	16		
+		.fill 	24
 
-programChanged:
-		.fill	1							; tracks whether program has been changed since last save
-		
 		.send 	storage
 
 ; ************************************************************************************************

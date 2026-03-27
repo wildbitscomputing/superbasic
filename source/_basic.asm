@@ -119,6 +119,7 @@
 	.include	"./system.f256/module.interfaces/graphics/tile.asm"
 	.include	"./system.f256/module.interfaces/hardware/cls.asm"
 	.include	"./system.f256/module.interfaces/hardware/cursor.asm"
+	.include	"./system.f256/module.interfaces/kernel/commands/cd.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/crossdev.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/dos.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/event.asm"
@@ -136,6 +137,8 @@
 	.include	"./system.f256/module.interfaces/kernel/commands/mouse.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/setdatetime.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/timer.asm"
+	.include	"./system.f256/module.interfaces/kernel/functions/cd.asm"
+	.include	"./system.f256/module.interfaces/kernel/functions/dir.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/fre.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/getdatetime.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/getinkey.asm"
@@ -163,16 +166,16 @@ StartModuleCode:
 .send code
 	.include	"../modules/.build/hardware.module.asm"
 	.include	"../modules/.build/tokeniser.module.asm"
-	.include	"../modules/.build/kernel.module.asm"
-
-; --- Error text in module page 1 ---
-	.include	"./common/generated/_errortext.asm"
+	.include	"../modules/.build/graphics.module.asm"
 
 ; --- Header data in boot section ($6000-$7FFF) ---
 	.include	"../modules/hardware/header/.build/headerdata.dat"
 
-; --- Module page 2 ---
+; --- Module page 2 (slot 3) ---
 ; page2 section at $4000 (below boot section at $6000)
-; .logical * + $6000 in each block maps labels to $A000+ runtime addresses
-	.include	"../modules/.build/graphics_p2.module.asm"
+; .logical * + $2000 in each block maps labels to $6000+ runtime addresses
+
+; --- Error text in slot 3 module page ---
+	.include	"./common/generated/_errortext_p2.asm"
+	.include	"../modules/.build/kernel_p2.module.asm"
 	.include	"../modules/.build/sound_p2.module.asm"

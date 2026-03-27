@@ -78,8 +78,8 @@ _process_event:
 		lda 	KNLEvent.type 
 		cmp     #kernel.event.file.OPENED
 		beq 	_success
-		cmp     #kernel.event.file.NOT_FOUND 
-		beq 	_exit
+		cmp     #kernel.event.file.NOT_FOUND
+		beq 	_error_exit
 		cmp     #kernel.event.file.ERROR 
 		bne 	_loop
 
@@ -87,15 +87,18 @@ _process_event:
 		;	The FAT32 driver returns ERROR when opening a non-existent file, we map the error to NOT_FOUND
 		;
 		lda		#kernel.event.file.NOT_FOUND
-		bra		_exit
+		bra		_error_exit
 
 _kernel_error
-		lda     #kernel.event.file.ERROR 
-		bra		_exit
+		lda     #kernel.event.file.ERROR
+		bra		_error_exit
 
 _success
 		tya
 		clc
+		bra 	_exit
+_error_exit
+		sec
 _exit
 		ply
 		rts
