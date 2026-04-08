@@ -12,15 +12,6 @@
 		.section code
 
 Export_EXTBootXA:
-		pha
-		phx
-		jsr		IsDestructiveActionOK
-		plx
-		pla
-		bcc		_action_ok
-		jmp		WarmStart
-
-_action_ok:
 		sta		zTemp0+0
 		stx		zTemp0+1
 
@@ -77,10 +68,6 @@ _copy_done:
 		sta		kernel.args.buf+1
 
 		jsr		kernel.RunNamed
-
-		jsr		ResetTokenBuffer
-		.error_noprogram
-
-		jmp		WarmStart
+		rts
 
 		.send code

@@ -48,9 +48,13 @@ _slot3ok:
 		lda 	lineBuffer 					; first character is slash
 		cmp 	#"/"
 		bne 	_WSNotSlash
+		jsr 	IsDestructiveActionOK 		; confirm if unsaved program (before module page-in)
+		bcs 	WarmStart 					; user cancelled
 		ldx 	#(lineBuffer+1) >> 8 		; boot rest of line.
 		lda 	#(lineBuffer+1) & $FF
-		jmp 	EXTBootXA
+		jsr 	EXTBootXA 					; JSR so wrapper restores slot 5 on return
+		jsr 	ResetTokenBuffer 			; RunNamed returned, program was not found
+		.error_noprogram
 
 _WSNotSlash:
 		jsr 	TKTokeniseLine 				; tokenise the line

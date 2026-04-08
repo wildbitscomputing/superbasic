@@ -523,7 +523,7 @@ _PEPadDone:
 		lda 	DIR_FLAGS,x
 		and 	#DIR_ATTR_DIR
 		beq 	_PENotDir
-		;		Print " <DIR>" right-aligned
+		;		Print " <dir>" right-aligned
 		lda 	#32
 		jsr 	EXTPrintCharacter
 		ldx 	#_CDDirTag >> 8
@@ -531,6 +531,7 @@ _PEPadDone:
 		jsr 	PrintStringXA
 		bra 	_PEEndLine
 _PENotDir:
+		;		Print right-aligned block count
 		;		Print right-aligned block count
 		ldx 	dirPrintIdx
 		ldy 	DIR_BLK_HI,x 				; blocks hi → Y
@@ -587,7 +588,7 @@ _CDFreeMsg:
 _CDBlocksHdr:
 		.text 	"                   Blocks",0
 _CDDirTag:
-		.text 	"<DIR>",0
+		.text 	"<dir>",0
 
 ; ************************************************************************************************
 ;

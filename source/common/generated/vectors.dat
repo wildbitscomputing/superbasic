@@ -164,13 +164,12 @@ VectorSet0:
 	.word	Command_Read                     ; $de READ
 	.word	RectangleCommand                 ; $df RECT
 	.word	RemCommand                       ; $e0 REM
-	.word	SyntaxError                      ; $e1 SIZE
-	.word	SyntaxError                      ; $e2 SOLID
-	.word	SoundCommand                     ; $e3 SOUND
-	.word	SpriteCommand                    ; $e4 SPRITE
-	.word	TextCommand                      ; $e5 TEXT
-	.word	Unused2                          ; $e6 TO
-	.word	Unused5                          ; $e7 STEP
+	.word	SyntaxError                      ; $e1 SOLID
+	.word	SoundCommand                     ; $e2 SOUND
+	.word	SpriteCommand                    ; $e3 SPRITE
+	.word	TextCommand                      ; $e4 TEXT
+	.word	Unused2                          ; $e5 TO
+	.word	Unused5                          ; $e6 STEP
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

@@ -100,13 +100,12 @@ KeywordSet0:
 	.text	4,$1c,"READ"           ; $de READ
 	.text	4,$2e,"RECT"           ; $df RECT
 	.text	3,$e4,"REM"            ; $e0 REM
-	.text	4,$3b,"SIZE"           ; $e1 SIZE
-	.text	5,$7b,"SOLID"          ; $e2 SOLID
-	.text	5,$89,"SOUND"          ; $e3 SOUND
-	.text	6,$d7,"SPRITE"         ; $e4 SPRITE
-	.text	4,$45,"TEXT"           ; $e5 TEXT
-	.text	2,$a3,"TO"             ; $e6 TO
-	.text	4,$3c,"STEP"           ; $e7 STEP
+	.text	5,$7b,"SOLID"          ; $e1 SOLID
+	.text	5,$89,"SOUND"          ; $e2 SOUND
+	.text	6,$d7,"SPRITE"         ; $e3 SPRITE
+	.text	4,$45,"TEXT"           ; $e4 TEXT
+	.text	2,$a3,"TO"             ; $e5 TO
+	.text	4,$3c,"STEP"           ; $e6 STEP
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

@@ -55,7 +55,7 @@ class TokenSource(object):
 				from		plot 		on 			off 		palette 	sound
 				poke 		pokew 		pokel 		poked 		memcopy 	clear
 				step~
-				name		size
+				name
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop
