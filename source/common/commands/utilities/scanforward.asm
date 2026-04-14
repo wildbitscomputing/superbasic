@@ -1,26 +1,34 @@
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		scanforward.asm
-;		Purpose:	Look for closing structures
-;		Created:	1st October 2022
-;		Reviewed: 	1st December 2022
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; Token scanning utilities
+;;
 
 		.section code
 
-; ************************************************************************************************
+;;
+; Scan forward to the next matching token at the current structure level.
 ;
-; 			Scan forward from current position looking for closing token A or X. 
-;			Return matching token in A
+; Scans program tokens starting at the current parsing position until one of
+; the two target tokens supplied in `A` and `X` is found at structure depth
+; zero. Nested structures are tracked via `zTemp1`, and complex tokens are
+; skipped by delegating to `ScanForwardOne`.
 ;
-; ************************************************************************************************
+; \in A         First token to match.
+; \in X         Second token to match.
+; \in Y         Current parsing position.
+; \out A        Matching token when a target is found.
+; \out Y        Parsing position at the matched token, or just before `KWC_EOL`
+;               when end-of-line is the matched target.
+; \sideeffects  - Resets `zTemp1` before scanning.
+;               - Uses `zTemp0`/`zTemp0+1` to store the target tokens.
+;               - Advances across lines and nested structures while scanning.
+;               - May raise a structure error via `ScanForwardOne` if program
+;                 end is reached without a top-level match.
+;               - Modifies registers `A`, `X`, and `Y`.
+; \see          ScanForwardOne, ScanGetCurrentLineStep
+;;
 
 ScanForward:
-		stz 	zTemp1 						; zero the structure count - goes up with WHILE/FOR down with WEND/NEXT etc. 
+		stz 	zTemp1 						; zero the structure count - goes up with WHILE/FOR down with WEND/NEXT etc.
 		stx 	zTemp0+1
 		sta 	zTemp0 						; save X & A as the two possible matches.
 		;
@@ -36,24 +44,39 @@ _ScanLoop:
 		cmp 	zTemp0 						; see if either matches
 		beq 	_ScanMatch
 		cmp 	zTemp0+1
-		bne 	_ScanGoNext		
+		bne 	_ScanGoNext
 _ScanMatch:									; if so, exit after skipping that token.
 		cmp 	#KWC_EOL 					; if asked for EOL, backtrack.
 		bne 	_ScanNotEndEOL
 		dey
-_ScanNotEndEOL:		
-		rts 					
+_ScanNotEndEOL:
+		rts
 _ScanGoNext:
 		jsr  	ScanForwardOne 				; allows for shifts and so on.
 		bra 	_ScanLoop
 
-; ************************************************************************************************
+;;
+; Advance scan state by one (already-consumed) token.
 ;
-;					Advance. Token in A, already consumed, adjust zTemp1.
+; Interprets the token currently in `A` and updates the forward-scan state.
+; Depending on token class, may skip additional bytes or data blocks, move to
+; the next line, adjust the nested structure depth in `zTemp1`, or record that
+; an `ELSE` was encountered while listing.
 ;
-; ************************************************************************************************
+; \in A         Token already consumed by the caller.
+; \in Y         Parsing position immediately after the consumed token.
+; \inout zTemp1 Current nested structure depth; incremented for opening
+;               structures and decremented for closing structures.
+; \out Y        Advanced past any additional bytes associated with the token.
+; \sideeffects  - May advance to the next program line for `KWC_EOL`.
+;               - May set `listElseFound` when `KWD_ELSE` is encountered.
+;               - May raise a structure error if scanning reaches program end
+;                 at top level without a match.
+;               - Modifies register `A` when using token/data skip helpers.
+; \see          ScanForward, ScanGetCurrentLineStep
+;;
 
-ScanForwardOne:		
+ScanForwardOne:
 		cmp 	#$40 						; if 00-3F, punctuation characters, already done.
 		bcc 	_SFWExit
 		;
@@ -79,7 +102,7 @@ ScanForwardOne:
 		;
 		;		+2 ; for 40-7F (Variable) 80 (New line) and 81-82 (Shifts)
 		;
-_ScanSkipOne:		
+_ScanSkipOne:
 		iny 								; consume the extra one.
 		cmp 	#KWC_EOL 					; if not EOL loop back
 		bne 	_SFWExit
@@ -110,12 +133,24 @@ _SFWCheckElse:
 _SFWExit:
 		rts
 
-; ************************************************************************************************
+;;
+; Calculate the indentation step contributed by the current line.
 ;
-;							Get Step of current line (e.g. adjust up or down)
-;						     This is used in the LIST code to get the indent.
+; Scans the current tokenized line and returns the net structure-depth change
+; it contributes for LIST indentation. Opening structures increase the step,
+; closing structures decrease it, and single-line `FN ... = expr` definitions
+; are treated specially so they do not affect indentation.
 ;
-; ************************************************************************************************
+; \out A        Net indentation adjustment for the current line.
+; \out zTemp1   Same adjustment value accumulated while scanning.
+; \sideeffects  - Clears `zTemp1` before scanning.
+;               - Clears `listElseFound` before scanning and may set it if an
+;                 `ELSE` token is encountered.
+;               - Resets `Y` to the line scan start position and advances it
+;                 while processing tokens.
+;               - Modifies registers `A` and `Y`.
+; \see          ScanForwardOne, SkipParamList
+;;
 
 ScanGetCurrentLineStep:
 		stz 	zTemp1
@@ -141,20 +176,12 @@ _SGCLSFnDone:
 _SGCLSLoop:
 		.cget 								; next and consume ?
 		iny
-		cmp 	#KWC_EOL	 				; if EOL exit	
-		beq 	_SGCLSExit 
+		cmp 	#KWC_EOL	 				; if EOL exit
+		beq 	_SGCLSExit
 		jsr 	ScanForwardOne
 		bra 	_SGCLSLoop
 _SGCLSExit:
 		lda 	zTemp1 						; return the adjustment
 		rts
-				
+
 		.send code
-
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-
