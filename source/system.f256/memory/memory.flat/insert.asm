@@ -32,7 +32,7 @@ _MDLIRetry:
 		plp
 		bcs 	_MDLICanAlloc 				; CS = append, can always allocate new page
 		lda 	(codePtr) 					; CC: check if at end of program
-		bne 	_MDLIError 					; non-zero = truly mid-page, cannot split
+		bne 	_MDLIPageSplit 				; non-zero = mid-page, split the page
 _MDLICanAlloc:
 		jsr 	MemoryAllocPage 			; allocate & initialize new page
 		bcs 	_MDLIError 					; out of memory
@@ -84,6 +84,13 @@ _MDLICopy:
 		dey
 		bpl 	_MDLICopy
 		rts
+
+_MDLIPageSplit:
+		jsr 	PageSplitImpl 				; split page via slot 3 module
+		bcs 	_MDLIError 					; out of memory
+		clc
+		php
+		jmp 	_MDLIRetry
 
 _MDLIError:
 		.error_memory
