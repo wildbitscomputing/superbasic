@@ -269,6 +269,24 @@ _CITRNormal:
 ;;
 
 NextCommand: ;; [next]
+		; 		Allow for an optional variable reference; no diagnostics for mismatched variable
+		; 		references for now
+		.cget 								; look at first character
+		cmp 	#KWC_EOL
+		beq 	_NCForCheck
+
+		cmp 	#KWD_COLON
+		beq 	_NCForCheck
+
+		cmp 	#$40 						; 40-7F => identifier reference
+		bcc 	_NCSyntaxError				; some other token, syntax error
+		cmp     #$7F
+		bcs 	_NCSyntaxError				; some other token, syntax error
+		iny 								; consume the identifier if it is there
+		iny
+
+_NCForCheck:
+		; 		Check that we have a FOR loop on the stack
 		lda 	#STK_FOR+11 				; check FOR is TOS
 		ldx 	#ERRID_FOR 					; this error
 		jsr 	StackCheckFrame
@@ -343,5 +361,8 @@ _NCNoOverflow:
 
 _NCLoopBack:
 		jmp 	STKLoadCodePosition 		; loop back
+
+_NCSyntaxError:
+		jmp 	SyntaxError
 
 		.send code
