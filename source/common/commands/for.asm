@@ -1,30 +1,43 @@
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; [for]/[next] loop implementation
+;;
+
+;;
+; `STK_FOR` frame layout in `basicStack`:
 ;
-;		Name:		for.asm
-;		Purpose:	For/Next loop
-;		Created:	1st October 2022
-;		Reviewed: 	1st December 2022
-;		Author:		Paul Robson (paul@robsons.org.uk)
+; The active [for] loop frame stores its payload in fixed byte offsets within
+; the return-stack frame pointed to by `basicStack`. The offsets used by this
+; module are:
 ;
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		+16..+19	Step value (in 2's complement format.)
-;		+12..+15	Terminal value (in 2's complement format.)
-;		+8..+11 	Value of index variable (in 2's complement format.)
-;		+6..+7 		Address of index variable
-;		+1..5 		Loop back address
-;
-; ************************************************************************************************
+; - `+16..+19` Step value in four-byte two's complement form.
+; - `+12..+15` Terminal value in four-byte two's complement form.
+; - `+8..+11` Current value of the loop index in four-byte two's complement
+;             form.
+; - `+6..+7`  Address of the loop index variable.
+; - `+1..+5`  Saved loop-back code position.
+;;
 
 		.section code
 
-; ************************************************************************************************
+;;
+; Handle the [for] statement.
 ;
-;										For command
+; Parses a [for] loop header, validates that the loop variable is an integer
+; reference, evaluates the initial and terminal values, determines the step
+; value (defaulting to `+1` for [to] and `-1` for [downto]), and builds the
+; corresponding `STK_FOR` frame on the return stack. Once the frame is set up,
+; it writes the initial loop index back to the referenced variable.
 ;
-; ************************************************************************************************
+; \in Y         Relative offset to the statement arguments.
+; \sideeffects  - Opens an `STK_FOR` frame on the return stack.
+;               - Evaluates expressions into number-stack slots `0..2`.
+;               - Stores loop metadata in `basicStack`.
+;               - Saves the loop-back code position.
+;               - Writes the initial loop index to the referenced variable.
+;               - Modifies registers `A`, `X`, and `Y`.
+;               - Raises `TypeError` or `SyntaxError` on invalid input.
+; \see          FCIntegerToStack, CopyIndexToReference, NextCommand
+;;
 
 ForCommand: ;; [for]
 		lda 	#STK_FOR+11 				; allocate 22 bytes on the return stack (see above).
@@ -134,11 +147,21 @@ _FCError:
 _FCSyntaxError:
 		jmp 	SyntaxError
 
-; ************************************************************************************************
+;;
+; Copy an integer number-stack value into the [for] frame.
 ;
-;						Copy stack element X to BasicStack offset Y
+; Converts the integer value in number-stack slot `X` to four-byte two's
+; complement form if necessary, then writes the four mantissa bytes to the
+; `basicStack` frame starting at offset `Y`.
 ;
-; ************************************************************************************************
+; \in X         Number-stack slot containing the integer value to copy.
+; \in Y         Destination offset within `basicStack`.
+; \sideeffects  - May negate `NSMantissa[0..3],x` in place for negative values
+;                 before copying them.
+;               - Advances `Y` while storing four bytes.
+;               - Modifies register `A`.
+; \see          ForCommand, NSMNegateMantissa
+;;
 
 FCIntegerToStack:
 		bit 	NSStatus,x 					; is the value negative
@@ -158,11 +181,21 @@ _FCNotNegative:
 		sta 	(basicStack),y
 		rts
 
-; ************************************************************************************************
+;;
+; Write the current [for] loop index back to the referenced variable.
 ;
-;					Copy the index register out to the variable referenced.
+; Reads the loop-variable address and current loop index from the active
+; `STK_FOR` frame in `basicStack`, converts the stored two's complement loop
+; value back into the variable's packed integer format, and writes it to the
+; referenced variable record.
 ;
-; ************************************************************************************************
+; \sideeffects  - Uses `zTemp0` as the destination pointer.
+;               - Reads the loop variable address and loop index from the
+;                 active `basicStack` frame.
+;               - Writes four bytes to the referenced variable storage.
+;               - Modifies registers `A`, `X`, and `Y`.
+; \see          ForCommand, NextCommand
+;;
 
 CopyIndexToReference:
 		phy
@@ -215,11 +248,25 @@ _CITRNormal:
 		ply 								; and exit.
 		rts
 
-; ************************************************************************************************
+;;
+; Handle the [next] statement.
 ;
-;										NEXT command
+; Validates that the top return-stack frame is a [for] frame, increments the
+; loop index by the stored step value, writes the updated index back to the
+; loop variable, and compares the new value against the terminal bound using a
+; signed comparison direction derived from the sign of the step. Control then
+; either loops back to the saved code position or closes the [for] frame.
 ;
-; ************************************************************************************************
+; \in Y         Relative offset to the statement arguments.
+; \sideeffects  - Verifies the top return-stack frame type.
+;               - Uses `zTemp1` as a temporary pointer and comparison offsets.
+;               - Updates the loop index stored in `basicStack`.
+;               - Writes the updated index to the referenced variable.
+;               - Either reloads the saved loop-back position or closes the
+;                 current [for] frame.
+;               - Modifies registers `A`, `X`, and `Y`.
+; \see          CopyIndexToReference, STKLoadCodePosition, StackClose
+;;
 
 NextCommand: ;; [next]
 		lda 	#STK_FOR+11 				; check FOR is TOS
@@ -298,15 +345,3 @@ _NCLoopBack:
 		jmp 	STKLoadCodePosition 		; loop back
 
 		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;		01/03/26 		Added support for optional use of STEP (from Kevin Cozens' patch)
-;
-; ************************************************************************************************
