@@ -44,10 +44,10 @@ CheckNextA:
 		iny 								; skip character
 		rts 								; and exit
 CNAFail:
-		jmp 	SyntaxError		
-		
+		jmp 	SyntaxError
+
 		.send 	code
-		
+
 ; ***************************************************************************************
 ;
 ;									Changes and Updates
@@ -58,4 +58,3 @@ CNAFail:
 ;		==== 			=====
 ;
 ; ***************************************************************************************
-		
