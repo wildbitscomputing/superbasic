@@ -97,6 +97,8 @@ _CPLoop:
 		beq 	_CPTab
 		cmp 	#KWD_AT 					; `at` modifier
 		beq 	_CPAtModifier
+		cmp 	#KWD_TABLPAREN 				; `tab` modifier
+		beq 	_CPTabModifier
 		dey 								; undo the get
 		jsr 	EvaluateExpressionAt0 		; evaluate expression at 0.
 		lda 	NSStatus,x 					; read the status
@@ -134,6 +136,9 @@ _CPNumber:
 		;
 _CPAtModifier:
 		jsr 	CPPrintAt			        ; subroutine to keep `_CPLoop` within branch range
+		bra 	Command_IP_Main
+_CPTabModifier:
+		jsr 	CPPrintTab			        ; subroutine to keep `_CPLoop` within branch range
 		bra 	Command_IP_Main
 		;
 		;		New line
@@ -361,5 +366,48 @@ CPPrintAt:
 
 _range_error:
 		jmp 	RangeError 					; branch to range error handler
+
+;;
+; Handle the `tab(column)` modifier for print/input statements.
+;
+; Parses the column coordinate from the statement and positions the cursor
+; accordingly. If the requested column is to the left of the current cursor
+; position, moves the cursor to the next line and then to the specified column.
+;
+; \in Y             Current parsing position in the statement.
+; \out Y            Updated parsing position after consuming column argument
+;                   and the closing parenthesis.
+; \out EXTRow       If newline occurred, set to the updated row coordinate.
+; \out EXTColumn    Set to the specified column coordinate.
+; \out EXTAddress   If newline occurred, updated to point to the start of the
+;                   current row.
+; \sideeffects      - Modifies registers `A` and `X`.
+; \see              Evaluate8BitInteger, CheckComma, EXTSetCurrentLine,
+;                   EXTScreenHeight, EXTScreenWidth, RangeError
+;;
+CPPrintTab:
+		; 		Parse
+		ldx		#0 							; bottom stack level
+		jsr		Evaluate8BitInteger			; parse column into `A`
+		sta		zTemp0                      ; save it in `zTemp0` for now
+		jsr		CheckRightBracket
+
+		; 		Set the cursor position
+		lda 	zTemp0
+		cmp 	EXTColumn 					; compare with current column
+		bcs 	_CPTabSetColumnOnly 		; if requested column is to the right, just move there
+
+		inc 	EXTRow						; move to next row
+		stz 	EXTPendingWrap				; clear pending wrap, if any
+
+		pha
+		phy
+		jsr 	EXTSetCurrentLine			; set current line address to `EXTRow`
+		ply
+		pla
+
+_CPTabSetColumnOnly:
+		sta		EXTColumn					; save column into `EXTColumn`
+		rts
 
 		.send code

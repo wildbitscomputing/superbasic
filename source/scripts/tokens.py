@@ -45,7 +45,7 @@ class TokenSource(object):
 				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
 				get$( 		inkey(		get( 		itemcount(	itemget$( 	keydown(
 				tile(		screen(	    screen$(	fre(~
-				cwd$(		dir$(		dir(
+				cwd$(		dir$(		dir(		tab(
 
 			{0}							// Set 0
 				data 		dim 		let 		rem  		else 		to
