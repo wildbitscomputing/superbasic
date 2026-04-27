@@ -4,3 +4,5 @@ __pycache__
 .release
 dist
 **/generated/timestamp.asm
+**/generated/version.asm
+uv.lock

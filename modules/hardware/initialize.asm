@@ -2,30 +2,30 @@
 ; External hardware functions
 ;;
 
-		.section code
+.section code
 
 ;;
 ; Initialize hardware display system.
 ;
-; Performs initialization of the F256 display hardware and text console
-; system. Sets up screen dimensions, cursor, colors, and clears the display.
+; Performs initialization of the display hardware and text console system.
+; Sets up screen dimensions, cursor, colors, and clears the display.
 ; This function must be called before using any other display functions.
 ;
 ; \out EXTTextColour	0x52
 ; \out EXTScreenWidth	80
 ; \out EXTScreenHeight	60
 ;
-; \sideeffects	- Sets `EXTTextColour` to $52 (default color).
-;				- Sets screen dimensions to 80×60 characters.
-;				- Enables hardware cursor with character 214.
-;				- Clears screen and positions cursor below header.
-;				- Uses registers `A`, `X`, `Y` and `zTemp0` for calculations.
-;				- Modifies hardware registers $D004, $D008, $D009, $D010, $D012, and $D658.
-;				- Calls `EXTClearScreenCode` and `EXTShowHeader`.
+; \sideeffects	- Sets `EXTTextColour` to $52 (default color)
+;				- Sets screen dimensions to 80×60 characters
+;				- Enables hardware cursor with character 214
+;				- Clears screen and homes cursor
+;				- Uses registers `A`, `X`, `Y` and `zTemp0`, `zTemp1` for calculations
+;				- Modifies hardware registers $D004, $D008, $D009, $D010, $D012, and $D658
+;				- Calls `EXTClearScreenCode`
 ;
-; \see;			EXTClearScreenCode, EXTShowHeader, EXTScreenWidth, EXTScreenHeight
+; \see;			EXTClearScreenCode, EXTLoadStartupPalette, EXTScreenWidth, EXTScreenHeight
 ;;
-Export_EXTInitialise:
+Export_EXTInitialize:
 		stz 	$0001 						; Access I/O page 0
 		stz 	$D004 						; Disable border
 		stz 	$D008
@@ -66,15 +66,9 @@ Export_EXTInitialise:
 		lda 	#214 						; cursor character
 		sta 	$D012
 
+		jsr 	EXTLoadStartupPalette		; load the boot palette
 		jsr 	EXTClearScreenCode 			; clear the screen and home cursor
-		jsr 	EXTShowHeader 				; display the header
 
-_EXMoveDown: 								; position cursor for printing hardware & ROM info
-		lda 	#13
-		jsr 	PAGEDPrintCharacter
-		cpy 	EXTRow
-		bne 	_EXMoveDown
-		stz 	$0001
 		rts
 
 ;;
@@ -129,4 +123,4 @@ _precompute_screen_row_offsets .macro
 		bne		next_row					; if not zero, precompute the next row's offset
 		.endmacro
 
-		.send code
+.send code

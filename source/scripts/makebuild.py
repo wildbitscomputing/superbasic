@@ -28,7 +28,9 @@ for s in sys.argv[1:]:
         if ":" in name:
             name, page_str = name.split(":", 1)
             if page_str == "2":
-                page2ModuleFiles.append("../modules/.build/{0}_p2.module.asm".format(name))
+                page2ModuleFiles.append(
+                    "../modules/.build/{0}_p2.module.asm".format(name)
+                )
                 modulesIntegrated[name] = True
                 continue
         moduleFiles.append("../modules/.build/{0}.module.asm".format(name))
@@ -93,14 +95,16 @@ for f in moduleFiles:
     else:
         h.write('\t.include\t"{0}"\n'.format(f.replace(os.sep, "/")))
 
-h.write('\n; --- Header data in boot section ($6000-$7FFF) ---\n')
-h.write('\t.include\t"../modules/hardware/header/.build/headerdata.dat"\n')
+h.write("\n; --- Startup banner data in boot section ($6000-$7FFF) ---\n")
+h.write('\t.include\t"../modules/hardware/startup/.build/banner.dat"\n')
 
 if page2ModuleFiles:
     h.write("\n; --- Module page 2 (slot 3) ---\n")
     h.write("; page2 section at $4000 (below boot section at $6000)\n")
-    h.write("; .logical * + $2000 in each block maps labels to $6000+ runtime addresses\n")
-    h.write('\n; --- Error text in slot 3 module page ---\n')
+    h.write(
+        "; .logical * + $2000 in each block maps labels to $6000+ runtime addresses\n"
+    )
+    h.write("\n; --- Error text in slot 3 module page ---\n")
     h.write('\t.include\t"./common/generated/_errortext_p2.asm"\n')
     for f in page2ModuleFiles:
         h.write('\t.include\t"{0}"\n'.format(f.replace(os.sep, "/")))

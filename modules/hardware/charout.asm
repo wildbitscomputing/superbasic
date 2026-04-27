@@ -675,35 +675,6 @@ ApplyPendingWrap:
 
 ; ************************************************************************************************
 ;
-;										Print Hex in space
-;
-; ************************************************************************************************
-
-PAGEDPrintHex:
-		pha
-		lda 	#' '
-		jsr 	PAGEDPrintCharacter
-		pla
-		pha
-		lsr 	a
-		lsr 	a
-		lsr 	a
-		lsr 	a
-		jsr 	_PPHNibble
-		pla
-_PPHNibble:
-		pha
-		and 	#15
-		cmp 	#10
-		bcc 	_PPHOut
-		adc 	#6
-_PPHOut:adc 	#48
-		jsr		PAGEDPrintCharacter
-		pla
-		rts
-
-; ************************************************************************************************
-;
 ;		Insert a blank line at the current cursor row
 ;		Scrolls content from current row down, blanks current row
 ;		Used by Shift+DEL (like C64 BASIC insert line)

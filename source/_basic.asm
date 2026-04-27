@@ -107,6 +107,7 @@
 	.include	"./common/generated/constants.asm"
 	.include	"./common/generated/errors.asm"
 	.include	"./common/generated/timestamp.asm"
+	.include	"./common/generated/version.asm"
 	.include	"./system.f256/memory/memory.flat/delete.asm"
 	.include	"./system.f256/memory/memory.flat/insert.asm"
 	.include	"./system.f256/memory/memory.flat/memory.asm"
@@ -168,8 +169,8 @@ StartModuleCode:
 	.include	"../modules/.build/tokeniser.module.asm"
 	.include	"../modules/.build/graphics.module.asm"
 
-; --- Header data in boot section ($6000-$7FFF) ---
-	.include	"../modules/hardware/header/.build/headerdata.dat"
+; --- Startup banner data in boot section ($6000-$7FFF) ---
+	.include	"../modules/hardware/startup/.build/banner.dat"
 
 ; --- Module page 2 (slot 3) ---
 ; page2 section at $4000 (below boot section at $6000)

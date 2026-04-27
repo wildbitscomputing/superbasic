@@ -1,0 +1,3 @@
+[default_config]
+assembler = "ca65"
+instruction_set = "6502"

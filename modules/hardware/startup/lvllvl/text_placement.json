@@ -1,0 +1,27 @@
+{
+  "machine_name": {
+    "colors": [6, 13],
+    "line": 2,
+    "column": 8
+  },
+  "machine_info": {
+    "color": 3,
+    "line": 2,
+    "column": 25
+  },
+  "kernel_info": {
+    "color": 3,
+    "line": 3,
+    "column": 25
+  },
+  "build_timestamp": {
+    "color": 3,
+    "line": 5,
+    "column": 25
+  },
+  "build_version": {
+    "color": 11,
+    "line": 5,
+    "column": 19
+  }
+}
