@@ -12,14 +12,9 @@ MAJOR_VERSION = 1
 MINOR_VERSION = 2
 VERSION ?= $(MAJOR_VERSION).$(MINOR_VERSION)
 
-# Hardware platform: 0 = F256
-HARDWARE = 0
-# Hardware generation: 1 = J/K, 2 = J2/K2
-HARDWARE_GEN ?= 1
 LANGUAGE = en
 DOLLAR = $$
-ASFLAGS += -D HARDWARE=$(HARDWARE) -D HARDWARE_GEN=$(HARDWARE_GEN) \
-			'-D MONITOR_ADDRESS=$(DOLLAR)$(LMONITOR)' '-D LOCKOUT_ADDRESS=$(DOLLAR)$(LLOCKOUT)' \
+ASFLAGS += '-D MONITOR_ADDRESS=$(DOLLAR)$(LMONITOR)' '-D LOCKOUT_ADDRESS=$(DOLLAR)$(LLOCKOUT)' \
 			'-D BASIC_ADDRESS=$(DOLLAR)$(LBASIC)' '-D SOURCE_ADDRESS=$(DOLLAR)$(LSOURCE)' \
 			'-D SPRITE_ADDRESS=$(DOLLAR)$(LSPRITES)' '-D TILEMAP_ADDRESS=$(DOLLAR)$(LTILEMAP)' \
 			'-D TILEIMAGES_ADDRESS=$(DOLLAR)$(LTILEIMAGES)' \
@@ -41,13 +36,6 @@ all:  build
 updatekernel:
 	$(call updatekernel,common$(S)api)
 	@echo "Updated kernel"
-
-#
-#		Update bootscreen assets
-#
-updateassets:
-	$(Q)$(MAKE) -B -C ..$(S)modules$(S)hardware$(S)header updateassets
-	@echo "Updated bootscreen assets"
 
 #
 #		Create sprites
@@ -125,12 +113,12 @@ versioncheck:
 log_step = @echo "> $1"
 
 #
-#		Build gen-specific release, copy to the corresponding release dir
+#		Build a release, copy to the corresponding release dir
 #
-build_release: OUTPUTDIR := $(RELEASEDIR)gen$(HARDWARE_GEN)$(S)
+build_release: OUTPUTDIR := $(RELEASEDIR)$(S)
 build_release:
-	$(call log_step, "Building gen $(HARDWARE_GEN) release")
-	$(Q)$(MAKE) -C . build VERSION=$(VERSION) HARDWARE_GEN=$(HARDWARE_GEN)
+	$(call log_step, "Building release build")
+	$(Q)$(MAKE) -C . build VERSION=$(VERSION)
 	$(call cleandir,$(OUTPUTDIR))
 	$(call cleandir,$(OUTPUTDIR)debug$(S))
 
@@ -144,8 +132,7 @@ build_release:
 release: VERSION := $(shell $(PYTHON) $(SCRIPTDIR)version.py)
 release: versioncheck
 	$(call log_step, "Creating v$(VERSION) release binaries")
-	$(Q)$(MAKE) -C . build_release VERSION=$(VERSION) HARDWARE_GEN=1
-	$(Q)$(MAKE) -C . build_release VERSION=$(VERSION) HARDWARE_GEN=2
+	$(Q)$(MAKE) -C . build_release VERSION=$(VERSION)
 
 	$(call cleandir,$(RELEASEDIR))
 	$(call cleandir,$(RELEASEDIR)syntax$(S))
@@ -211,4 +198,3 @@ emu2: build $(IMAGE)
 
 $(IMAGE): $(BASIC_TESTS_PATH)/ashanghai
 	$(PYTHON) $(BASIC_TESTS_PATH)/prepare-disk.py -t $<
-

@@ -116,10 +116,10 @@ EXTScreenHeight		.fill 	1
 ; Contains precomputed memory offsets for each screen row to enable fast row
 ; address calculation. Each entry is a 16-bit offset from the screen base
 ; address (`EXTMemory`) to the start of that row. The table is filled during
-; initialization by `EXTInitialise`.
+; initialization by `EXTInitialize`.
 ;
 ; \size    128 entries × 2 bytes = 256 bytes total
-; \see     EXTInitialise, EXTMemory, EXTAddress
+; \see     EXTInitialize, EXTMemory, EXTAddress
 ;;
 EXTScreenRowOffsets	.fill 	128 * 2
 

@@ -20,7 +20,7 @@
 ;
 ;		Variables that have to be in zero page because it's used in (xx),y
 ;
-ZeroPageMandatory = $30 
+ZeroPageMandatory = $30
 ;
 ; 		Variables that would be nice to be in zero page, but it's not required
 ;
@@ -31,7 +31,7 @@ ZeroPagePreference = $50
 ;
 ArgumentStorage = $200
 ;
-;		Control Variables - low usage control variables.	
+;		Control Variables - low usage control variables.
 ;
 ControlStorage = $400
 ;
@@ -79,7 +79,7 @@ BasicStackSize = 512
 BasicStackBase = $1000-BasicStackSize
 ;
 ;		Max Input Line Length
-;	
+;
 MaxLineSize = 80
 
 ; ************************************************************************************************
@@ -97,13 +97,13 @@ MaxLineSize = 80
 		* = ArgumentStorage 				; not required to be in zero page, but preferable
 		.dsection arguments
 
-		* = MemoryStorage 					; doesn't matter if zero page or not 
+		* = MemoryStorage 					; doesn't matter if zero page or not
 		.dsection storage
 
 		* = $4000							; page 2 modules at $4000 (output before boot)
 		.dsection page2
 
-		* = BootStart						; boot section at $6000 (F256Header + headerdata)
+		* = BootStart						; boot section at $6000 (KernelHeader + headerdata)
 		.dsection boot
 
 		* = CodeStart						; main code at $8000

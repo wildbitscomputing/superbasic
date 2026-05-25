@@ -18,7 +18,7 @@ BUILD_DIR = .build
 
 all:
 	$(Q)$(MAKE) -B -C graphics
-	$(Q)$(MAKE) -B -C hardware$(S)header
+	$(Q)$(MAKE) -B -C hardware$(S)startup
 
 	$(Q)$(CCOPY) ..$(S)source$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py tokeniser
@@ -32,7 +32,7 @@ all:
 
 clean:
 	$(Q)$(MAKE) -C graphics clean
-	$(Q)$(MAKE) -C hardware$(S)header clean
+	$(Q)$(MAKE) -C hardware$(S)startup clean
 
 	$(Q)$(CDEL) $(BUILD_DIR)$(S)*.*
 

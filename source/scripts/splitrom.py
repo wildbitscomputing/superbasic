@@ -2,7 +2,7 @@
 #
 # The assembler produces a binary spanning $4000-$DFFF:
 #   $4000-$5FFF: module page 2 code (page2 section)
-#   $6000-$7FFF: F256Header + headerdata (boot section)
+#   $6000-$7FFF: KernelHeader + headerdata (boot section)
 #   $8000-$9FFF: main code block 1 (code section)
 #   $A000-$BFFF: main code block 2 (code section)
 #   $C000-$DFFF: module page 1 (code section, paged via .offs)
