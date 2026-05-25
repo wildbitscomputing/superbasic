@@ -1,13 +1,15 @@
-# F256 SuperBASIC
-Improved BASIC for the F256 computers.
+# SuperBASIC
+
+Modern BASIC dialect for Wildbits/Foenix F256 computers.
 
 ## Usage
+
 SuperBASIC Reference Manual PDF:
 [reference/source/f256jr_basic_ref.pdf](reference/source/f256jr_basic_ref.pdf)
 
 ## Contributing
 
-We’d love your help in making SuperBASIC the best BASIC interpreter out there!
+We’d love your help in making SuperBASIC the best 8-/16-bit BASIC interpreter out there!
 
 Whether you’re fixing a bug, improving performance, or simply correcting a typo in the manual, your contribution is greatly appreciated. By contributing, you agree that your work will be licensed under the [MIT License](./LICENSE).
 
@@ -28,21 +30,21 @@ c21ae79 chore: enable line ending normalization
 When we generate release notes, the first four categories (`feat`, `fix`, `perf`, and `refmanual`) appear in their own sections, while everything else is grouped under _Internal_.
 
 ## Local development
+
 You need Make, Python and 64tass assembler on your machine.
 
 ### Building
+
+Standard development build:
+
 ```
-# all the builds are done from the `source` directory
-cd source
+make -C source -B build
+```
 
-# full rebuild, pulls latest kernel and bootscreens
-make -B updatekernel updateassets build
+Full rebuild, pulls latest kernel APIs:
 
-# standard development build
-make -B build
-
-# development build for F256Jr2/K2 hardware
-make -B build HARDWARE_GEN=2
+```
+make -C source -B updatekernel build
 ```
 
 The build output is stored in the `.build` directory at the repository root.
@@ -55,13 +57,13 @@ The build output is stored in the `.build` directory at the repository root.
 architectures, old and new alike. A work-in-progress fork of MAME for F256K is available
 at https://github.com/dtremblay/mame.
 
-Assuming you have the above repository cloned side-by-side with the `f256-superbasic` repo,
+Assuming you have the above repository cloned side-by-side with the `superbasic` repo,
 you can run the following commands to test your build in MAME F256K:
 
 ```
 cd mame
-cp -f ../f256-superbasic/.build/sb*.bin roms/f256k/    # copy over SuperBASIC ROMs
-./f256 f256 -window -resolution 1280x960               # run the emulator
+cp -f ../superbasic/.build/sb*.bin roms/f256k/    # copy over SuperBASIC ROMs
+./f256 f256 -window -resolution 1280x960          # run the emulator
 ```
 
 Note that because MAME embeds CRC checksums for all ROMs, you'll see warnings similar to
@@ -82,13 +84,15 @@ WARNING: the machine might not run correctly.
 
 These warnings can be safely ignored.
 
-#### Real Hardware
+#### Real hardware
+
 You can upload it over a USB cable to the debug port on your F256 machine using FoenixMgr.
 
 This doc doesn't cover setting that up, but once you have it set up you should be able to
 try out your build using the `--flash-bulk` command.
 
 Example on Mac:
+
 ```
 ❯ cd .build
 ❯ python3 ~/FoenixMgr/fnxmgr.py --port /dev/cu.usbmodemR23963534611 --flash-bulk bulk.csv
@@ -101,17 +105,17 @@ Attempting to program sector 0x01 with sb01.bin
 ```
 
 ## Releasing a new version
+
 To ensure quality and reproducibility, official releases are handled through GitHub workflows.
 
-The [release PR preparation](/.github/workflows/prepare-release-pr.yml) workflow monitors pushes to `main` and automatically creates or updates [a release PR](https://github.com/FoenixRetro/f256-superbasic/pulls?q=is%3Apr+is%3Aopen+label%3Arelease) that includes all unreleased changes. This PR includes a log of contributions and is assigned a version based on the major and minor numbers in [`source/Makefile`](/source/Makefile), with the patch number determined by the date of the latest contribution.
+The [release PR preparation](/.github/workflows/prepare-release-pr.yml) workflow monitors pushes to `main` and automatically creates or updates [a release PR](https://github.com/wildbitscomputing/superbasic/pulls?q=is%3Apr+is%3Aopen+label%3Arelease) that includes all unreleased changes. This PR includes a log of contributions and is assigned a version based on the major and minor numbers in [`source/Makefile`](/source/Makefile), with the patch number determined by the date of the latest contribution.
 
 Merging the release PR updates the [`VERSION`](/VERSION) and [`CHANGESET.md`](/CHANGESET.md) files, then triggers the [final release](/.github/workflows/release.yml) workflow, which publishes the GitHub release.
 
-### Additional References
+## Additional resources
 
-- [F256 Documentation Wiki](https://wiki.f256foenix.com)
-- [More information on flashing SuperBASIC to your machine](https://wiki.f256foenix.com/index.php?title=Kernel_%26_SuperBASIC_Updates)
-- [More information on MAME for F256](https://wiki.f256foenix.com/index.php?title=Emulation#MAME)
-- [F256 MicroKernel](https://github.com/FoenixRetro/f256-microkernel)
-- [F256 Boot Screens](https://github.com/FoenixRetro/f256-bootscreens)
-- [F256 Command Line USB upload tool](https://github.com/pweingar/FoenixMgr)
+- [Wildbits Documentation Wiki](https://f256wiki.wildbitscomputing.com)
+- [More information on flashing SuperBASIC to your machine](https://f256wiki.wildbitscomputing.com/index.php?title=Kernel_%26_SuperBASIC_Updates)
+- [More information on MAME for Wildbits/F256](https://f256wiki.wildbitscomputing.com/index.php?title=Emulation#MAME)
+- [MicroKernel](https://github.com/wildbitscomputing/MicroKernel)
+- [Command Line USB upload tool](https://github.com/pweingar/FoenixMgr)
