@@ -37,12 +37,15 @@ AssignNumber:
 		;
 		lda		NSExponent+1,x 				; is it a float
 		beq		_ANNotFloat
-;		inx
-;		jsr 	FloatIntegerPart 			; make it an integer (disabled)
-;		dex
-		jmp 	RangeError					; if it is, report an error.
 
-_ANNotFloat:		
+		; check if the float argument is in fact an integer
+		inx
+		jsr 	FloatIntegerPart 			; convert it to an integer
+		dex
+		bcc		_ANNotFloat					; no digits were lost, okay to proceed
+		jmp 	TypeError					; it was, in fact, a float, report an error
+
+_ANNotFloat:
 		lda 	NSStatus,x 					; check if byte/word reference.
 		and 	#3
 		bne 	_ANByteWord
@@ -50,7 +53,7 @@ _ANNotFloat:
 		;		4 byte integer assign
 		;
 		jsr 	_ANCopy4PackSign 			; copy all 4 bytes and sign
-		bra 	_ANExit 
+		bra 	_ANExit
 		;
 		;		1 or 2 byte/word assign
 		;
@@ -70,19 +73,19 @@ _ANByteWord:
 		;		Assign a float
 		;
 _ANFloat:
-		jsr 	_ANCopy4PackSign 			; write all 4 bytes and packed sign		
+		jsr 	_ANCopy4PackSign 			; write all 4 bytes and packed sign
 		lda 	NSExponent+1,x 				; copy exponent to slot 4
 		ldy 	#4
-		sta 	(zTemp0),y 
+		sta 	(zTemp0),y
 _ANExit:
 		ply
-		rts		
+		rts
 ;
 ;		Copy all 4 bytes, with sign bit, from (zTemp),y+3
 ;
 _ANCopy4PackSign:
 		ldy 	#3
-		lda 	NSStatus+1,x 				; sign bit into status		
+		lda 	NSStatus+1,x 				; sign bit into status
 		and 	#$80 						; put into high bit of mantissa 3
 		ora 	NSMantissa3+1,x
 		sta 	(zTemp0),y

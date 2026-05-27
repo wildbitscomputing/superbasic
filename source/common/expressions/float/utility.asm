@@ -28,19 +28,20 @@ FloatPrepare:
 _FDType:
 		jmp 	TypeError
 
-; ************************************************************************************************
+
+;;
+; Normalize floating-point entry at position X in the number stack.
 ;
-;									  Normalise Stack[X]
-;
-; ************************************************************************************************
+; \in X         Index of the entry in the number stack.
+;;
 
 NSNormalise:
 		lda 	NSStatus,x 					; make float, keep sign
 		and 	#$80
-		ora 	#NSTFloat  					
+		ora 	#NSTFloat
 		sta 	NSStatus,x
 
-		jsr 	NSMIsZero 					; if zero exit 
+		jsr 	NSMIsZero 					; if zero exit
 		bne 	_NSNormaliseOptimise 		; if so, normalise it.
 		asl 	NSStatus,x 					; clear the sign bit.
 		ror 	NSStatus,x 					; (no -0)
@@ -50,7 +51,7 @@ NSNormalise:
 		;		Normalise by byte if the MSB is zero we can normalise it
 		;		(providing bit 7 of 2nd byte is not set)
 		;
-_NSNormaliseOptimise:						
+_NSNormaliseOptimise:
 		lda 	NSMantissa3,x 				; upper byte zero ?
 		bne 	_NSNormaliseLoop
 		lda 	NSMantissa2,x 				; byte normalise
@@ -71,7 +72,7 @@ _NSNormaliseOptimise:
 		;
 		;		Normalise by bit
 		;
-_NSNormaliseLoop:		
+_NSNormaliseLoop:
 		bit 	NSMantissa3,x 				; bit 30 set ?
 		bvs 	_NSNExit 					; exit if so with Z flag clear
 		jsr 	NSMShiftLeft 				; shift mantissa left
@@ -82,7 +83,7 @@ _NSNExit:
 		rts
 
 		.send 	code
-		
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates
