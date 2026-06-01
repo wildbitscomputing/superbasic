@@ -26,9 +26,11 @@ UnaryJoyY: ;; [joyy(]
 JoyMain:
 		plx 								; get pos
 		php 								; save carry (set for Y)
-		jsr 	Evaluate8BitInteger 		; ignore the parameter
+		jsr 	Evaluate8BitInteger 		; read joystick number
+		sta 	zTemp0
 		jsr 	CheckRightBracket
 		;
+		lda		zTemp0
 		jsr 	KNLReadController 			; read the controller.
 		plp
 		bcs 	_JMNoShift 					; if X then shift bits 3,2 -> 1,0
@@ -48,8 +50,10 @@ JMIsRight:
 
 UnaryJoyB: ;; [joyb(]
 		plx 								; get pos
-		jsr 	Evaluate8BitInteger 		; ignore the parameter
+		jsr 	Evaluate8BitInteger 		; read joystick number
+		sta 	zTemp0
 		jsr 	CheckRightBracket
+		lda		zTemp0
 		jsr 	KNLReadController 			; read the controller.
 		and 	#$10
 		bne 	JMIsLeft

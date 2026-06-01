@@ -1,14 +1,6 @@
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		wrapper.asm
-;		Purpose:	Kernel functionality wrapper
-;		Created:	7th January 2023
-;		Reviewed: 	No.
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; Kernel wrappers
+;;
 
 		.section code
 
@@ -38,7 +30,7 @@ KNLSetDrive:
 ; ************************************************************************************************
 ;
 ;									Open file for input/output
-;		
+;
 ;		Succeeded : Carry Clear, A contains stream to read.
 ;		Failed :	Carry Set, A contains error event.
 ;
@@ -48,11 +40,11 @@ KNLOpenFileWrite:
 		pha
 		lda 	#kernel.args.file.open.WRITE
 		bra 	KNLOpenStart
-		
+
 KNLOpenFileRead:
 		pha
 		lda     #kernel.args.file.open.READ ; set READ mode.
-KNLOpenStart:   
+KNLOpenStart:
 		sta     kernel.args.file.open.mode
 		pla
 
@@ -67,7 +59,7 @@ KNLOpenStart:
 		jsr     kernel.File.Open 			; open the file and exit.
 		bcs     _kernel_error
 		tay
-		
+
 _loop
 		jsr     GetNextEvent
 		bcc     _process_event				; only yield when no events available
@@ -75,12 +67,12 @@ _loop
 		bra     _loop
 
 _process_event:
-		lda 	KNLEvent.type 
+		lda 	KNLEvent.type
 		cmp     #kernel.event.file.OPENED
 		beq 	_success
 		cmp     #kernel.event.file.NOT_FOUND
 		beq 	_error_exit
-		cmp     #kernel.event.file.ERROR 
+		cmp     #kernel.event.file.ERROR
 		bne 	_loop
 
 		;
@@ -128,13 +120,13 @@ KNLSetupFileName:
 		phy 								; save Y on stack
 		sta 	zTemp0 						; save filename position in temp, and in kenrel slot
 		stx 	zTemp0+1
-		sta     kernel.args.file.open.fname+0            
+		sta     kernel.args.file.open.fname+0
 		stx     kernel.args.file.open.fname+1
 		;
 		ldy 	#$FF 						; get the filename length => Kernel slot
 _KNLGetLength:
 		iny
-		lda 	(zTemp0),y 					
+		lda 	(zTemp0),y
 		bne 	_KNLGetLength
 		sty 	kernel.args.file.open.fname_len
 		ply
@@ -143,7 +135,7 @@ _KNLGetLength:
 
 ; ************************************************************************************************
 ;
-;				Read one block from stream A, X bytes. CC = succeeded, A = bytes read. 
+;				Read one block from stream A, X bytes. CC = succeeded, A = bytes read.
 ;				CS = failed, A = Event error
 ;              	CS when finished (A = EOF)
 ;
@@ -167,7 +159,7 @@ _KGRBEventLoop:
 		bra     _KGRBEventLoop
 
 _KNLRBProcessEvent:
-		lda 	KNLEvent.type 				; get event		
+		lda 	KNLEvent.type 				; get event
 
 		cmp     #kernel.event.file.DATA 	; data, return data
 		beq     _KNLRBGetNextByte
@@ -190,7 +182,7 @@ _KNLRBGetNextByte:
 		sta     kernel.args.recv.buf+1
 
 		lda     KNLEvent.file.data.read 	; Set the target length
-		sta     kernel.args.recv.buflen	  										
+		sta     kernel.args.recv.buflen
 
 		jsr     kernel.ReadData		       	; Get the data from the kernel  (Synchronous call, no error)
 		lda     KNLEvent.file.data.read 	; Return # of bytes read (in A)
@@ -222,7 +214,7 @@ KNLWriteBlock:
 		sta     kernel.args.file.write.buf+0
 		lda     zTemp0+1
 		sta     kernel.args.file.write.buf+1
-	  
+
 		stx     kernel.args.file.write.buflen ; Set the buffer length
 
 		jsr     kernel.File.Write 			; write it out.
@@ -245,7 +237,7 @@ _KNLWProcessEvent:
 		beq 	_KWBFailed
 
 		cmp     #kernel.event.file.WROTE 	; wait until block write succeeds
-		bne 	_KNLWLoop      
+		bne 	_KNLWLoop
 		clc
 		lda     KNLEvent.file.wrote.wrote 	; get bytes written.
 		bra 	_KWBExit
@@ -267,20 +259,28 @@ KNLCloseFile:
 		sta     kernel.args.file.close.stream
 		jmp     kernel.File.Close
 
-; ************************************************************************************************
-;
-;						Read Game Controller A -> A (Button1/Right/Left/Down/Up)
-;
-; ************************************************************************************************
 
+;;
+; Read game controller state
+;
+; \in A         Controller number (masked to 0 or 1)
+; \out A        Controller state
+;;
 KNLReadController:
 		phx
-		ldx 	1 							; save current I/O in X
+		and		#1							; mask controller number to be 1 or 0
+		eor		#1							; invert the number to match the ports:
+											; 	joystick A - $DC01
+											; 	joystick B - $DC00
+		tax
+		phy
+		ldy 	1 							; save current I/O in X
 		stz 	1 							; switch to I/O 0
-		lda 	$DC00  						; read VIA register
+		lda 	$DC00,x  					; read VIA register for the specified joystick
 		eor 	#$FF 						; make active '1'
 		ora 	KeyJoystick 				; use key joystick.
-		stx 	1 							; repair old I/O and exit
+		sty 	1 							; repair old I/O and exit
+		ply
 		plx
 		rts
 
@@ -289,21 +289,11 @@ KNLReadController:
 
 		.section storage
 
-KNLReadBuffer:      						; buffer 
-		.fill   256				
+KNLReadBuffer:      						; buffer
+		.fill   256
 KNLDefaultDrive: 							; current default drive.
-		.byte 	?							
-KNLEvent   .dstruct    kernel.event.event_t   
+		.byte 	?
+KNLEvent   .dstruct    kernel.event.event_t
 
-		.send storage       
+		.send storage
 
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
