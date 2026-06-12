@@ -22,48 +22,7 @@ def main(*, build_dir: Path) -> None:
     print(f"PagingEnabled = {1 if paging else 0}")
 
     has_page2 = any(exports[m]["page"] == 2 for m in exports)
-
-    if paging and has_page2:
-        # These routines are included inside an existing .section code block
-        # in 00start.asm, so no .section/.send wrappers are needed here.
-        # Slot3ModulePage/Slot3Depth/Slot3Saved are declared in 04data.inc
-        # (placed before numberBuffer/decimalBuffer to survive buffer overflows).
-        print("")
-        print("; --- Slot 3 module bank switching ---")
-        print("")
-        print("Slot3Init:")
-        print("\tstz Slot3Depth")
-        print("\tlda 8+4")
-        print("\tclc")
-        print("\tadc #3")
-        print("\tsta Slot3ModulePage")
-        print("\trts")
-        print("")
-        print("Slot3BankIn:")
-        print("\tphy")
-        print("\tpha")
-        print("\tinc Slot3Depth")
-        print("\tlda Slot3Depth")
-        print("\tcmp #1")
-        print("\tbne +")
-        print("\tldy 8+3")
-        print("\tsty Slot3Saved")
-        print("\tldy Slot3ModulePage")
-        print("\tsty 8+3")
-        print("+\tpla")
-        print("\tply")
-        print("\trts")
-        print("")
-        print("Slot3BankOut:")
-        print("\tpha")
-        print("\tphy")
-        print("\tdec Slot3Depth")
-        print("\tbne +")
-        print("\tldy Slot3Saved")
-        print("\tsty 8+3")
-        print("+\tply")
-        print("\tpla")
-        print("\trts")
+    print(f"HasPage2 = {1 if has_page2 else 0}")
 
     for module in exports:
         page = exports[module]["page"]
@@ -74,23 +33,37 @@ def main(*, build_dir: Path) -> None:
             print(f"{routine}:")
             if paging:
                 if page == 1:
-                    print("\tinc 8+5")
-                    print(f"\tjsr\tExport_{routine}")
-                    print("\tphp")
-                    print("\tdec 8+5")
-                    print("\tplp")
-                    print("\trts")
+                    print(page1_thunk(routine))
                 elif page == 2:
-                    print("\tjsr Slot3BankIn")
-                    print(f"\tjsr\tExport_{routine}")
-                    print("\tphp")
-                    print("\tjsr Slot3BankOut")
-                    print("\tplp")
-                    print("\trts")
+                    print(page2_thunk(routine))
+                else:
+                    raise RuntimeError(f"Unknown page #{page}")
             else:
                 print(f"\tjmp\tExport_{routine}")
 
         print("\t.endif")
+
+
+def page1_thunk(routine: str) -> str:
+    return f"""
+    inc 8+5
+    jsr Export_{routine}
+    php
+    dec 8+5
+    plp
+    rts
+"""
+
+
+def page2_thunk(routine: str) -> str:
+    return f"""
+    jsr Slot3BankIn
+    jsr Export_{routine}
+    php
+    jsr Slot3BankOut
+    plp
+    rts
+"""
 
 
 def read_exports(build_dir: Path) -> dict[str, dict]:
