@@ -159,15 +159,24 @@
 
 
 .section code
+    ; issuing a warning instead of an error so one can examine output listing for details
+    .cwarn * > $C000, "BROKEN BUILD: non-paged code overflows into kernel-reserved I/O space ($C000-$DFFF) by ", * - $C000," bytes"
+
 StartModuleCode:
-	.if PagingEnabled==1
-	* = $A000
-	.offs $2000
-	.endif
+    .if PagingEnabled==1
+        * = $A000
+        .offs $2000
+    .endif
 .send code
+
 	.include	"../modules/.build/hardware.module.asm"
 	.include	"../modules/.build/tokeniser.module.asm"
 	.include	"../modules/.build/graphics.module.asm"
+
+.section code
+    ; issuing a warning instead of an error so one can examine output listing for details
+    .cwarn * > $C000, "BROKEN BUILD: page 1 code overflows into kernel-reserved I/O space ($C000-$DFFF) by ", * - $C000," bytes"
+.send code
 
 ; --- Startup banner data in boot section ($6000-$7FFF) ---
 	.include	"../modules/hardware/startup/.build/banner.dat"
@@ -180,3 +189,10 @@ StartModuleCode:
 	.include	"./common/generated/_errortext_p2.asm"
 	.include	"../modules/.build/kernel_p2.module.asm"
 	.include	"../modules/.build/sound_p2.module.asm"
+
+.section page2
+.logical * + $2000
+    ; issuing a warning instead of an error so one can examine output listing for details
+    .cwarn * > $8000, "BROKEN BUILD: page 2 code overflows into SuperBASIC ROM space ($8000-$BFFF) by ", * - $8000," bytes"
+.endlogical
+.send page2
