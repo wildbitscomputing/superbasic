@@ -1,6 +1,7 @@
 ;
 ;	This is automatically generated.
 ;
+
 .section code
 ErrorText:
 	.text	"Break",0

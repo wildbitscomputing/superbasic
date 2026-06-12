@@ -11,12 +11,22 @@ Generated files:
 
 import os
 import re
-import sys
 from pathlib import Path
 from typing import TextIO
 
 # regex for exported labels
 export_re = re.compile(r"^\s*Export_(\w+)\s*:\s*(;.*)?$")
+
+
+PAGE2_BEGIN = """
+.section page2
+.logical * + $2000
+"""
+
+PAGE2_END = """
+.endlogical
+.send page2
+"""
 
 
 def main(*, module_name: str, build_dir: Path, page: int = 1) -> None:
@@ -59,12 +69,10 @@ def process_source(path: Path, out: TextIO, *, page: int = 1) -> list[str]:
             if page == 2:
                 normalized = " ".join(line.split())
                 if normalized == ".section code":
-                    out.write("\t\t.section page2\n")
-                    out.write("\t\t.logical * + $2000\n")
+                    out.write(PAGE2_BEGIN)
                     continue
                 elif normalized == ".send code":
-                    out.write("\t\t.here\n")
-                    out.write("\t\t.send page2\n")
+                    out.write(PAGE2_END)
                     continue
 
             out.write(f"{line.rstrip()}\n")
@@ -72,13 +80,17 @@ def process_source(path: Path, out: TextIO, *, page: int = 1) -> list[str]:
     return exports
 
 
-def dump_exports(build_dir: Path, module_name: str, exports: list[str], *, page: int = 1) -> None:
+def dump_exports(
+    build_dir: Path, module_name: str, exports: list[str], *, page: int = 1
+) -> None:
     """Save module exports to the corresponding `.exports` file."""
     if not exports:
         return
 
     suffix = "_p2" if page == 2 else ""
-    with open(build_dir / (module_name + suffix + ".exports"), "w", encoding="utf-8") as out:
+    with open(
+        build_dir / (module_name + suffix + ".exports"), "w", encoding="utf-8"
+    ) as out:
         for export in exports:
             out.write(f"{export}\n")
 
@@ -109,8 +121,12 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Build module assembly file")
     parser.add_argument("module_name", help="Name of the module to build")
-    parser.add_argument("build_dir", nargs="?", default=".build", help="Build output directory")
-    parser.add_argument("--page", type=int, default=1, choices=[1, 2], help="Module page (1 or 2)")
+    parser.add_argument(
+        "build_dir", nargs="?", default=".build", help="Build output directory"
+    )
+    parser.add_argument(
+        "--page", type=int, default=1, choices=[1, 2], help="Module page (1 or 2)"
+    )
     args = parser.parse_args()
 
     main(
