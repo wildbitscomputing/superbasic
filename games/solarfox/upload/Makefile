@@ -10,11 +10,11 @@
 # ************************************************************************************************
 
 ifeq ($(OS),Windows_NT)
-include ..\..\..\documents\common.make
+include ..\..\..\source\common.make
 else
-include ../../../documents/common.make
+include ../../../source/common.make
 endif
 
 all:
-	python sdcard.py fox	
+	python sdcard.py fox
 	sh upload.sh
