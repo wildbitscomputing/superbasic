@@ -9,9 +9,9 @@
 # within the interpreter's memory constraints.
 
 ifeq ($(OS),Windows_NT)
-include ..\documents\common.make
+include ..\..\documents\common.make
 else
-include ../documents/common.make
+include ../../documents/common.make
 endif
 
 BUILD_DIR = .build
@@ -20,7 +20,7 @@ all:
 	$(Q)$(MAKE) -B -C graphics
 	$(Q)$(MAKE) -B -C hardware$(S)startup
 
-	$(Q)$(CCOPY) ..$(S)source$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm
+	$(Q)$(CCOPY) ..$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py tokeniser
 
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py graphics $(BUILD_DIR)

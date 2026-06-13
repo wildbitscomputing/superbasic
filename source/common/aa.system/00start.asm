@@ -32,7 +32,7 @@ KernelHeader:
 ; Main Program (code section, slots 4-5)
 ;;
 Boot:	jmp 	Start
-		.include "../../../modules/.build/_exports.module.asm"
+		.include "../../modules/.build/_exports.module.asm"
 		.include "./_slot3banking.asm"
 
 Start:	ldx 	#$FF 						; stack reset
