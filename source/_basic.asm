@@ -169,9 +169,9 @@ StartModuleCode:
     .endif
 .send code
 
-	.include	"../modules/.build/hardware.module.asm"
-	.include	"../modules/.build/tokeniser.module.asm"
-	.include	"../modules/.build/graphics.module.asm"
+	.include	"./modules/.build/hardware.module.asm"
+	.include	"./modules/.build/tokeniser.module.asm"
+	.include	"./modules/.build/graphics.module.asm"
 
 .section code
     ; issuing a warning instead of an error so one can examine output listing for details
@@ -179,7 +179,7 @@ StartModuleCode:
 .send code
 
 ; --- Startup banner data in boot section ($6000-$7FFF) ---
-	.include	"../modules/hardware/startup/.build/banner.dat"
+	.include	"./modules/hardware/startup/.build/banner.dat"
 
 ; --- Module page 2 (slot 3) ---
 ; page2 section at $4000 (below boot section at $6000)
@@ -187,8 +187,8 @@ StartModuleCode:
 
 ; --- Error text in slot 3 module page ---
 	.include	"./common/generated/_errortext_p2.asm"
-	.include	"../modules/.build/kernel_p2.module.asm"
-	.include	"../modules/.build/sound_p2.module.asm"
+	.include	"./modules/.build/kernel_p2.module.asm"
+	.include	"./modules/.build/sound_p2.module.asm"
 
 .section page2
 .logical * + $2000

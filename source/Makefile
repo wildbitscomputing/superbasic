@@ -89,7 +89,7 @@ prelim:
 	$(Q)$(PYTHON) $(SCRIPTDIR)makebuild.py $(MODULES)
 
 	@echo "Building submodules"
-	$(Q)$(MAKE) -B -C ..$(S)modules clean all
+	$(Q)$(MAKE) -B -C modules clean all
 
 	$(Q)$(PYTHON) $(SCRIPTDIR)tokens.py
 	$(Q)$(PYTHON) $(SCRIPTDIR)constants.py
