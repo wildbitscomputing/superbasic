@@ -140,7 +140,7 @@ release: versioncheck
 
 	$(call log_step, "Copying common release artifacts")
 	$(Q)$(CCOPY) ..$(S)reference$(S)source$(S)*.pdf $(RELEASEDIR)manual
-	$(Q)$(CCOPY) ..$(S)documents$(S)superbasic.sublime-syntax $(RELEASEDIR)syntax
+	$(Q)$(CCOPY) ..$(S)syntax$(S)* $(RELEASEDIR)syntax
 
 	$(Q)$(PYTHON) -c "with open('$(RELEASEDIR)VERSION', 'w') as f: f.write('$(VERSION)')"
 
