@@ -33,6 +33,7 @@ KernelHeader:
 ;;
 Boot:	jmp 	Start
 		.include "../../../modules/.build/_exports.module.asm"
+		.include "./_slot3banking.asm"
 
 Start:	ldx 	#$FF 						; stack reset
 		txs
@@ -45,10 +46,11 @@ Start:	ldx 	#$FF 						; stack reset
 
 		jsr 	EXTInitialize 				; hardware initialization
 		jsr 	EXTShowStartupBanner        ; reads banner data from slot 3
-		jsr 	DisplayBannerText           ; print hardware, ROM & build info
 
 		lda 	#3 							; remap slot 3 to RAM page 3
 		sta 	$0008+3 					; (frees $6000-$7FFF for arrays/temp buffers)
+
+		jsr 	DisplayBannerText           ; print hardware, ROM & build info
 
 		lda 	0  							; turn on editing of MMU LUT
 		ora 	#$80

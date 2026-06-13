@@ -1,8 +1,9 @@
 ;
 ;	This is automatically generated.
 ;
-	.section page2
-	.logical * + $2000
+
+.section page2
+.logical * + $2000
 ErrorText:
 	.text	"Break",0
 	.text	"Syntax error",0
@@ -35,5 +36,5 @@ ErrorText:
 	.text	"Too many parameters",0
 	.text	"Formula too complex",0
 	.text	"Initialization error",0
-	.here
-	.send page2
+.endlogical
+.send page2
