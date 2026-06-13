@@ -10,9 +10,9 @@
 # ************************************************************************************************
 
 ifeq ($(OS),Windows_NT)
-include ..\..\..\documents\common.make
+include ..\..\..\source\common.make
 else
-include ../../../documents/common.make
+include ../../../source/common.make
 endif
 
 GRAPHICS = alien11:21,16 alien12:59,11 alien21:31,50 alien22:68,50 saucer:142,42 \

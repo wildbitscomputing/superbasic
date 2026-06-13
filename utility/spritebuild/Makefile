@@ -10,12 +10,12 @@
 # ************************************************************************************************
 
 ifeq ($(OS),Windows_NT)
-include ..\..\documents\common.make
+include ..\..\source\common.make
 else
-include ../../documents/common.make
+include ../../source/common.make
 endif
 
-all :  
+all :
 	python spritebuild.py sprites.def
 	$(CCOPY) graphics.bin ..$(S)..$(S)bin
 	$(CCOPY) spritebuild.py ..$(S)..$(S)bin
