@@ -1,14 +1,6 @@
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		01common.inc
-;		Purpose:	Common includes/defines/setups
-;		Created:	18th September 2022
-;		Reviewed: 	17th November 2022
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; Common includes/defines/setups
+;;
 
 ; ************************************************************************************************
 ;
@@ -20,24 +12,28 @@
 ;
 ;		Variables that have to be in zero page because it's used in (xx),y
 ;
-ZeroPageMandatory = $30
+ZeroPageMandatory = $0030
 ;
 ; 		Variables that would be nice to be in zero page, but it's not required
 ;
-ZeroPagePreference = $50
+ZeroPagePreference = $0050
+
+; 6502 hardware stack ($0100-$01FF)
+HardwareStack = $0100
+
 ;
 ;		Command line arguments for pexec - page aligned, and by convention these should reside
 ;       at $200 for maximum compatibility
 ;
-ArgumentStorage = $200
+ArgumentStorage = $0200
 ;
 ;		Control Variables - low usage control variables.
 ;
-ControlStorage = $400
+ControlStorage = $0400
 ;
 ;		Variables that can go anywhere
 ;
-MemoryStorage = $420
+MemoryStorage = $0420
 ;
 ;		Where program memory starts and stops (banked through MMU slot 1)
 ;
@@ -108,15 +104,3 @@ MaxLineSize = 80
 
 		* = CodeStart						; main code at $8000
 		.dsection code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;		26/11/22 		Stack moved into Zero Page for speed/space, okayed by Jessie O.
-;
-; ************************************************************************************************

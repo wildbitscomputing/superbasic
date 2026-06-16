@@ -196,3 +196,4 @@ StartModuleCode:
     .cwarn * > $8000, "BROKEN BUILD: page 2 code overflows into SuperBASIC ROM space ($8000-$BFFF) by ", * - $8000," bytes"
 .endlogical
 .send page2
+	.include	"./common/aa.system/_dataoverflowchecks.asm"
