@@ -148,5 +148,9 @@ if page2ModuleFiles:
 .send page2
 """)
 
+# data overflow checks; keep these at the end!
+h.write(
+    include_directive(root_dir / "common" / "aa.system" / "_dataoverflowchecks.asm")
+)
 
 h.close()

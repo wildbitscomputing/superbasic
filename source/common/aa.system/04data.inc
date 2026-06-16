@@ -1,14 +1,6 @@
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		04data.inc
-;		Purpose:	Main Data
-;		Created:	18th September 2022
-;		Reviewed: 	23rd November 2022
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; Main data declarations
+;;
 
 ; ************************************************************************************************
 ;
@@ -21,7 +13,7 @@
 codePtr:	 								; address of current line (allow for 32 bit)
 		.fill 	4
 basicStack: 								; BASIC stack address
-		.fill 	2		
+		.fill 	2
 zTemp0: 									; temporary words used in the interpreter.
 		.fill 	2
 zTemp1:
@@ -32,9 +24,14 @@ zsTemp:	 									; allocated string temporary.
 		.fill 	2
 zaTemp: 									; allocated array temporary
 		.fill 	2
-		
+
 safePtr = codePtr 							; minimise direct tinkering
-			
+
+; unused reserve; declared for visibility, adjust accordingly when adding new variables;
+; overflows are diagnosed automatically, see `makebuild.py`
+_zeropageReserve:
+		.fill	14
+
 		.send zeropage
 
 ; ************************************************************************************************
@@ -79,6 +76,11 @@ NSExponent: 								; Exponent , 0 = Mantissa is integer
 fnStackLevel:								; saved stack level for function evaluation
 		.fill 	1
 
+; unused reserve; declared for visibility, adjust accordingly when adding new variables;
+; overflows are diagnosed automatically, see `makebuild.py`
+_zeroprefReserve:
+		.fill	79
+
 		.send zeropref
 
 
@@ -95,7 +97,7 @@ identStart: 								; start of identifier in line buffer
 identTypeStart: 							; start of type information (#$ and ( in the line buffer)
 		.fill 	1
 identTypeEnd: 								; character after end of type information in the line buffer
-		.fill 	1		
+		.fill 	1
 identHash: 									; hash of identifier (including the type characters)
 		.fill 	1
 identTypeByte: 								; type descriptor in format used in identifier record
@@ -113,43 +115,43 @@ lowMemPtr: 									; memory allocation after program.
 arrayMemPtr: 								; array/alloc storage pointer (slots 2-3, $4000-$7FFF)
 		.fill 	2
 stringMemory: 								; allocate concrete strings from here
-		.fill 	2			
-stringInitialised: 							; string 
-		.fill 	1		
+		.fill 	2
+stringInitialised: 							; string
+		.fill 	1
 stringTempPointer:							; temporary string
-		.fill 	2		
+		.fill 	2
 
 breakCheck:									; break check counter/shift
 		.fill 	1
-		
+
 decimalPlaces: 								; no of decimals.
 		.fill 	1
 dbOffset:									; offset into decimal buffer.
-		.fill 	1		
+		.fill 	1
 
 lastParameter: 								; final stack offset when all parameters handled.
 		.fill 	1
-		
+
 dataPointer:								; operates like code pointer for DATA statements
 		.fill 	5
 inDataStatement:							; non zero when in data statement, e.g. pointing to data
-		.fill 	1				
+		.fill 	1
 
 tbOffset:									; offset into token buffer
-		.fill 	1		
+		.fill 	1
 
 AssemblerAddress:							; address being assembled at
 		.fill 	2
 AssemblerControl:							; assembler control byte - bit 0 (errors ok), bit 1 (listing on)
-		.fill 	1			
+		.fill 	1
 ParamStart: 								; offset of parameter.
-		.fill 	2	
+		.fill 	2
 IsGroup1:		 							; flag set if group.1
-		.fill 	1		
+		.fill 	1
 BaseOpcode: 								; base opcode
-		.fill 	1		
+		.fill 	1
 ModeMask: 									; modes allowed
-		.fill 	1		
+		.fill 	1
 listIndent:	 								; list indent level.
 		.fill 	1
 listElseFound:								; flag set when ELSE found on line (for indent fix)
@@ -157,19 +159,19 @@ listElseFound:								; flag set when ELSE found on line (for indent fix)
 listEndToken:								; closing token for LIST proc/fn
 		.fill 	1
 lcLastCharacter: 							; last character output.
-		.fill 	1	
+		.fill 	1
 isPrintFlag:	 							; zero if input, non-zero if print, bit 6 zero = character print
-		.fill 	1			
+		.fill 	1
 currentListColour: 							; current set colour when listing.
 		.fill 	1
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
-;		
+;
 tokenOffset: 								; used for tokenising - tokenised result goes here
-		.fill 	1		
+		.fill 	1
 tokenLineNumber:
-		.fill 	2		
-tokenBuffer: 	
+		.fill 	2
+tokenBuffer:
 		.fill 	253
 
 lineBuffer: 								; used for input - ASCII line goes here
@@ -193,19 +195,4 @@ decimalBuffer: 								; buffer for number -> string conversion.
 		.fill 	24
 
 		.send 	storage
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;		1/12/2022 		Changed the recorded values used in the reference byte size which were
-;						incorrect, no code change.
-;		2/12/2022 		Made line buffer long again, as long lines can be entered via cross 
-;						development which would crash the interpreter.
-;
-; ************************************************************************************************
 
