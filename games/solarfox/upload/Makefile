@@ -10,9 +10,9 @@
 # ************************************************************************************************
 
 ifeq ($(OS),Windows_NT)
-include ..\..\..\source\common.make
+include ..\..\..\source\definitions.mk
 else
-include ../../../source/common.make
+include ../../../source/definitions.mk
 endif
 
 all:

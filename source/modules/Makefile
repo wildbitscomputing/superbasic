@@ -9,9 +9,9 @@
 # within the interpreter's memory constraints.
 
 ifeq ($(OS),Windows_NT)
-include ..\common.make
+include ..\definitions.mk
 else
-include ../common.make
+include ../definitions.mk
 endif
 
 BUILD_DIR = .build

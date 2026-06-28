@@ -10,9 +10,9 @@
 # ************************************************************************************************
 
 ifeq ($(OS),Windows_NT)
-include ..\..\..\source\common.make
+include ..\..\..\source\definitions.mk
 else
-include ../../../source/common.make
+include ../../../source/definitions.mk
 endif
 
 GRAPHICS = up:29,17 right:63,18 down:95,18 left:122,18

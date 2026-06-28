@@ -1,9 +1,9 @@
 # Makefile for F256 SuperBASIC
 
 ifeq ($(OS),Windows_NT)
-include .\common.make
+include .\definitions.mk
 else
-include ./common.make
+include ./definitions.mk
 endif
 #
 #		Current version
