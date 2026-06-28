@@ -1,4 +1,4 @@
-#		Common command/variable definitions
+#		Shared command/variable definitions
 #
 ifeq ($(OS),Windows_NT)
 CCOPY = copy

@@ -1,9 +1,9 @@
 # Boot Header Data Generator
 
 ifeq ($(OS),Windows_NT)
-include ..\..\..\common.make
+include ..\..\..\definitions.mk
 else
-include ../../../common.make
+include ../../../definitions.mk
 endif
 
 INPUT_DIR = lvllvl

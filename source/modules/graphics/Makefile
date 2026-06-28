@@ -1,7 +1,7 @@
 ifeq ($(OS),Windows_NT)
-include ..\..\common.make
+include ..\..\definitions.mk
 else
-include ../../common.make
+include ../../definitions.mk
 endif
 
 all:
