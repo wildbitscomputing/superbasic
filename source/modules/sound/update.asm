@@ -19,7 +19,6 @@
 ; ************************************************************************************************
 
 Export_SNDUpdate:
-PagedSNDUpdate:
 		lda 	SNDTimeLeft+0 				; look at time remaining
 		beq 	_SNDUNot0 					; not playing
 		ldx 	#0 							; so we know which channel to update
@@ -55,7 +54,7 @@ SNDUpdateChannel:
 		cmp 	#$FF 						; sound $FF play forever until turned off manually
 		beq 	_SNDUCExit
 		dec 	a 							; decrement and update timer
-		sta 	SNDTimeLeft,x 
+		sta 	SNDTimeLeft,x
 		beq 	_SNDUCUpdate 				; if zero, silence channel
 		;
 		lda 	SNDAdjustLow,x 				; adjust ?
@@ -78,7 +77,7 @@ _SNDUCUpdate:
 		pla
 		jsr 	SNDCheckChannel 			; more to do ?
 _SNDUCExit:
-		rts		
+		rts
 		.send code
 
 ; ************************************************************************************************

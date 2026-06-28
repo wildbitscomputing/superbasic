@@ -4,75 +4,60 @@ Reads exported function names from `.exports` files in the build directory
 and generates corresponding entry points. If paging is enabled, includes
 the necessary assembly code to handle memory bank switching.
 
-Page 1 modules use slot 5 (inc/dec 8+5).
-Page 2 modules use slot 3 (save/restore 8+3 with depth counter).
-
 Outputs the entry points code to standard output.
 """
 
 import sys
 from pathlib import Path
+from dataclasses import dataclass
+
+from pages import Page, PAGES
+
+
+@dataclass
+class ModuleExports:
+    module_name: str
+    exports: list[str]
 
 
 def main(*, build_dir: Path) -> None:
-    """Generate module entry points and write to standard output."""
-    exports = read_exports(build_dir)
     paging = True
+    if paging:
+        for page_name, page in PAGES.items():
+            generate_exports(build_dir=build_dir / page_name, page=page)
+    else:
+        generate_exports(build_dir=build_dir)
 
-    print(f"PagingEnabled = {1 if paging else 0}")
 
-    has_page2 = any(exports[m]["page"] == 2 for m in exports)
-    print(f"HasPage2 = {1 if has_page2 else 0}")
+def generate_exports(*, build_dir: Path, page: Page | None = None) -> None:
+    """Collect module entry points in the specified dir and write them to _exports.asm"""
+    exports = read_exports(build_dir)
 
-    for module in exports:
-        page = exports[module]["page"]
-        routines = exports[module]["routines"]
-        module_name = exports[module]["name"]
-        print(f"\t.if {module_name}Integrated == 1")
-        for routine in routines:
-            print(f"{routine}:")
-            if paging:
-                if page == 1:
-                    print(page1_thunk(routine))
-                elif page == 2:
-                    print(page2_thunk(routine))
+    with open(build_dir / "_exports.asm", "w") as out:
+        if page:
+            out.write(f"{page.thunk_namespace}\t.namespace\n")
+
+        for module in exports:
+            module_name = exports[module].module_name
+            out.write(f".if {module_name}Integrated == 1\n")
+
+            routines = exports[module].exports
+            for routine in routines:
+                out.write(f"\n{routine}:\n")
+                if page:
+                    out.write(page.thunk(routine))
                 else:
-                    raise RuntimeError(f"Unknown page #{page}")
-            else:
-                print(f"\tjmp\tExport_{routine}")
+                    out.write(f"\tjmp\tExport_{routine}\n")
 
-        print("\t.endif")
+            out.write(".endif\n")
 
-
-def page1_thunk(routine: str) -> str:
-    return f"""
-    inc 8+5
-    jsr Export_{routine}
-    php
-    dec 8+5
-    plp
-    rts
-"""
+        if page:
+            out.write(".endnamespace\n")
 
 
-def page2_thunk(routine: str) -> str:
-    return f"""
-    jsr Slot3BankIn
-    jsr Export_{routine}
-    php
-    jsr Slot3BankOut
-    plp
-    rts
-"""
-
-
-def read_exports(build_dir: Path) -> dict[str, dict]:
-    """Read all `.exports` files from the build directory.
-
-    Files named `<module>_p2.exports` are treated as page 2 exports
-    (slot 3 via save/restore 8+3). All others are page 1 (slot 5 via inc/dec 8+5).
-    """
-    all_exports: dict[str, dict] = {}
+def read_exports(build_dir: Path) -> dict[str, ModuleExports]:
+    """Read all `.exports` files from the build directory."""
+    all_exports: dict[str, ModuleExports] = {}
 
     if not build_dir.exists():
         return all_exports
@@ -80,19 +65,13 @@ def read_exports(build_dir: Path) -> dict[str, dict]:
     # Find all .exports files in the build directory
     for file_path in build_dir.glob("*.exports"):
         if module_exports := read_module_exports(file_path):
-            stem = file_path.stem  # filename without extension
-            if stem.endswith("_p2"):
-                module_name = stem[:-3]  # strip _p2 suffix
-                page = 2
-            else:
-                module_name = stem
-                page = 1
+            module_name = file_path.stem  # filename without extension
+
             module_exports.sort()
-            all_exports[stem] = {
-                "name": module_name,
-                "page": page,
-                "routines": module_exports,
-            }
+            all_exports[module_name] = ModuleExports(
+                module_name=module_name,
+                exports=module_exports,
+            )
 
     return all_exports
 

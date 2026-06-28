@@ -49,7 +49,6 @@ Export_EXTPrintNoControl:
 ; ************************************************************************************************
 
 Export_EXTPrintCharacter:
-PAGEDPrintCharacter:
 		pha
 		phx
 		phy

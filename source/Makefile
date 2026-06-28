@@ -21,7 +21,6 @@ ASFLAGS += '-D MONITOR_ADDRESS=$(DOLLAR)$(LMONITOR)' '-D LOCKOUT_ADDRESS=$(DOLLA
 			-L $(BUILDDIR)debug$(S)basic.lst -l $(BUILDDIR)debug$(S)basic.lbl
 
 MODULES = +hardware +tokeniser +graphics +kernel:2 +sound:2
-BUILD_OUT = $(BUILDDIR)basic.rom
 SCRIPTDIR = scripts$(S)
 MAME_PATH=../../mame
 KERNEL_PATH=../../F256_MicroKernel
@@ -74,10 +73,20 @@ build: prelim
 	$(call cleandir,$(BUILDDIR)debug$(S))
 
 	@echo "Compiling assembly"
-	$(Q)$(ASM) $(ASFLAGS) _basic.asm -o $(BUILD_OUT)
+	$(Q)$(ASM) -b $(ASFLAGS) _basic.asm \
+		--output-section boot								-o $(BUILDDIR)sb01.bin \
+		--output-section resident_shared		-o $(BUILDDIR)sb02.bin \
+		--output-section resident_swappable	-o $(BUILDDIR)sb03.bin \
+		--output-section page1							-o $(BUILDDIR)sb04.bin \
+		--output-section page2							-o $(BUILDDIR)sb05.bin \
+		--output-section zeropage 					-o $(BUILDDIR)zeropage.ram \
+		--output-section zeropref 					-o $(BUILDDIR)zeropref.ram \
+		--output-section arguments 					-o $(BUILDDIR)arguments.ram \
+		--output-section storage 						-o $(BUILDDIR)storage.ram
 
-	@echo "Splitting ROM"
-	$(Q)$(PYTHON) $(SCRIPTDIR)splitrom.py $(BUILDDIR)
+	@echo "Checking constraints"
+	$(Q)$(PYTHON) $(SCRIPTDIR)verifyblank.py $(BUILDDIR)
+
 
 #
 #		Scripts run in advance generating tables etc.
@@ -123,7 +132,7 @@ build_release:
 	$(call cleandir,$(OUTPUTDIR)debug$(S))
 
 	@echo "Copying build artifacts"
-	$(Q)$(CCOPY) $(BUILDDIR)*.* $(OUTPUTDIR)
+	$(Q)$(CCOPY) $(BUILDDIR)*.bin $(OUTPUTDIR)
 	$(Q)$(CCOPY) $(BUILDDIR)debug$(S)*.* $(OUTPUTDIR)debug
 
 #
@@ -170,9 +179,6 @@ paging:
 #
 #		Test on real hardware
 #
-run: build
-	foenixmgr binary --address 5000 $(BUILD_OUT)
-
 flash: build
 	foenixmgr flash-bulk build/basic.csv
 
