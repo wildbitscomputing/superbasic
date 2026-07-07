@@ -80,6 +80,7 @@ Export_DirImpl:
 		bcs     _RDExit
 
 _RDEventLoop:
+		stz 	KNLEvent.directory.file.flags ; clear for older kernels that don't set flags
 		jsr     GetNextEvent
 		bcc     _RDProcessEvent
 		jsr     kernel.Yield
