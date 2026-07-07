@@ -6,3 +6,4 @@ dist
 **/generated/timestamp.asm
 **/generated/version.asm
 uv.lock
+sphinx-docs/_build/
