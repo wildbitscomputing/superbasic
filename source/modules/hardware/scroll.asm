@@ -50,11 +50,11 @@ _EXSFCopy1: 								; do one page
 
 		ldy 	EXTScreenWidth 				; blank the bottom line.
 		txa
-_EXSFFill1:	
-		dey 
-		sta 	(EXTAddress),y		
+_EXSFFill1:
+		dey
+		sta 	(EXTAddress),y
 		cpy 	#0
-		bpl 	_EXSFFill1
+		bne 	_EXSFFill1
 
 		pla 	
 		sta 	zTemp1+1
