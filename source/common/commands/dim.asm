@@ -125,7 +125,7 @@ _DCGetSize:
 		ldx 	#0 						; get first index.
 		jsr 	Evaluate8BitInteger 	; get array dimension (Z set by lda)
 		beq 	_DCSize 				; must be 1-254
-		cmp 	#254
+		cmp 	#255 					; reject 255: size+1 wraps to 0 elements
 		beq 	_DCSize
 		rts
 
