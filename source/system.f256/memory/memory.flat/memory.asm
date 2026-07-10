@@ -233,7 +233,7 @@ maxUsablePages:								; runtime max logical pages (updated by LOMEM)
 
 ProgramPage0 = BasicStart >> 13 			; physical page for slot 1 at boot (identity mapping)
 FirstFreePage = 48 							; first safe physical page for program data ($60000)
-MaxPhysPage = 63 							; 64×8KB pages; page 63 ($3f) reserved for the NMI break monitor
+MaxPhysPage = 60 							; 64×8KB pages; $3d-$3f reserved for the NMI break monitor (screen save + code)
 _AvailablePages = MaxPhysPage - FirstFreePage + 1 ; dynamic pages + page 0
 .if _AvailablePages < MaxPages
 MaxUsablePages = _AvailablePages
