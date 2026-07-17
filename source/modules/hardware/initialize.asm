@@ -11,11 +11,11 @@
 ; Sets up screen dimensions, cursor, colors, and clears the display.
 ; This function must be called before using any other display functions.
 ;
-; \out EXTTextColour	0x12
+; \out EXTTextColour	0x92
 ; \out EXTScreenWidth	80
 ; \out EXTScreenHeight	60
 ;
-; \sideeffects	- Sets `EXTTextColour` to $12 (default color)
+; \sideeffects	- Sets `EXTTextColour` to $92 (default color)
 ;				- Sets screen dimensions to 80×60 characters
 ;				- Enables hardware cursor with character 214
 ;				- Clears screen and homes cursor
@@ -36,7 +36,7 @@ Export_EXTInitialize:
 		;
 		; Set text color
 		;
-		lda 	#$12 						; grey foreground on blue background
+		lda 	#$92 						; light grey foreground on blue background
 		sta 	EXTTextColour
 
 		;
