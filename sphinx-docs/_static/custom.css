@@ -14,12 +14,12 @@ table.docutils {
 }
 
 /* Mermaid diagram sizing */
-.mermaid {
-    margin: 0.75em 0;
-}
-
-.mermaid svg {
+object[data*="mermaid-"] {
+    display: block;
+    width: 100%;
+    height: auto;
     max-height: 180px;
+    margin: 0.75em 0;
 }
 
 /* Admonition styling — note */

@@ -1,11 +1,12 @@
 # Configuration file for the Sphinx documentation builder.
 
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.abspath("."))
 
-from superbasic_lexer import SuperBASICLexer
 from sphinx.highlighting import lexers
+from superbasic_lexer import SuperBASICLexer
 
 _lexer = SuperBASICLexer()
 lexers["basic"] = _lexer
@@ -133,23 +134,26 @@ latex_elements = {
 
 # -- Mermaid options ---------------------------------------------------------
 
-mermaid_init_js = """mermaid.initialize({
-  startOnLoad: true,
-  theme: 'base',
-  themeVariables: {
-    primaryColor: '#272662',
-    primaryTextColor: '#fff',
-    primaryBorderColor: '#1a1a4a',
-    secondaryColor: '#F1632B',
-    secondaryTextColor: '#fff',
-    secondaryBorderColor: '#d14a1a',
-    tertiaryColor: '#44A348',
-    tertiaryTextColor: '#fff',
-    tertiaryBorderColor: '#358a38',
-    lineColor: '#272662',
-    textColor: '#272662',
-    nodeBorder: '#272662',
-  },
-  themeCSS: '.node .label { color: #fff !important; } .edgeLabel { color: #272662 !important; }'
-});"""
-mermaid_pdfcrop = "pdfcrop"
+mermaid_cmd = "mermaidx"
+mermaid_output_format = "svg"
+mermaid_config = {
+    "theme": "base",
+    "themeVariables": {
+        "primaryColor": "#272662",
+        "primaryTextColor": "#fff",
+        "primaryBorderColor": "#1a1a4a",
+        "secondaryColor": "#F1632B",
+        "secondaryTextColor": "#fff",
+        "secondaryBorderColor": "#d14a1a",
+        "tertiaryColor": "#44A348",
+        "tertiaryTextColor": "#fff",
+        "tertiaryBorderColor": "#358a38",
+        "lineColor": "#272662",
+        "textColor": "#272662",
+        "nodeBorder": "#272662",
+    },
+    "themeCSS": (
+        ".node .label { color: #fff !important; } "
+        ".edgeLabel { color: #272662 !important; }"
+    ),
+}

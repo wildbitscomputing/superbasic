@@ -1,9 +1,5 @@
 .PHONY: html pdf livehtml clean
 
-# Mermaid CLI needs a Chrome headless shell; point it at whatever is cached.
-CHROME_HS := $(firstword $(wildcard $(HOME)/.cache/puppeteer/chrome-headless-shell/*/chrome-headless-shell-*/chrome-headless-shell))
-export PUPPETEER_EXECUTABLE_PATH := $(CHROME_HS)
-
 html:
 	uv run sphinx-build -b html . _build/html
 
