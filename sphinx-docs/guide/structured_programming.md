@@ -1,19 +1,22 @@
 # Structured Programming
 
-SuperBASIC is built to help you write programs that are easy to read and easy to change later. If you’ve
-used BASIC on another computer, you might be used to steering your program with commands like
-`goto`, `gosub`, and `return`. These work fine in small programs, but once your code grows, they can
-make things messy and hard to follow.
+SuperBASIC is built to help you write programs that are easy to read and easy to
+change later. If you’ve used BASIC on another computer, you might be used to
+steering your program with commands like `goto`, `gosub`, and `return`. These
+work fine in small programs, but once your code grows, they can make things
+messy and hard to follow.
 
-SuperBASIC still lets you use those commands if you want, but it also offers tools you’ll probably prefer
-as your programs get bigger. With loops, procedures, functions, and multi-step conditionals, your code
-can flow more naturally—making it simpler to read, easier to fix, and more fun to work with.
+SuperBASIC still lets you use those commands if you want, but it also offers
+tools you’ll probably prefer as your programs get bigger. With loops,
+procedures, functions, and multi-step conditionals, your code can flow more
+naturally—making it simpler to read, easier to fix, and more fun to work with.
 
 ## Named Procedures
 
-A _named procedure_ is simply a block of code that has a name. Once you’ve defined a procedure, you can
-run it—also called _calling it_—anywhere in your program just by using its name. This often makes your
-code easier to follow (assuming you choose clear, descriptive names), and saves you from writing the
+A _named procedure_ is simply a block of code that has a name. Once you’ve
+defined a procedure, you can run it—also called _calling it_—anywhere in your
+program just by using its name. This often makes your code easier to follow
+(assuming you choose clear, descriptive names), and saves you from writing the
 same steps over and over again.
 
 ```{mermaid}
@@ -27,9 +30,9 @@ flowchart LR
     ENDP --> RET["Return to caller"]:::primary
 ```
 
-A procedure is defined using the `proc` keyword, followed by the procedure’s name and a pair of
-parentheses, followed by the code to be executed when the procedure is called. The definition is closed
-with the `endproc` keyword:
+A procedure is defined using the `proc` keyword, followed by the procedure’s
+name and a pair of parentheses, followed by the code to be executed when the
+procedure is called. The definition is closed with the `endproc` keyword:
 
 ```basic
 200   proc greet()
@@ -38,13 +41,14 @@ with the `endproc` keyword:
 230   endproc
 ```
 
-The code inside a procedure—in this case, lines 210–220—is called the _body_ of the procedure. This is
-the part that actually runs when the procedure is called. Note that the body does not execute until you
-explicitly call the procedure.
+The code inside a procedure—in this case, lines 210–220—is called the _body_ of
+the procedure. This is the part that actually runs when the procedure is called.
+Note that the body does not execute until you explicitly call the procedure.
 
-Procedure definitions are automatically skipped during normal execution, so they can appear anywhere
-in your program—before or after the code that calls them, or even in the middle. You can call a
-procedure from anywhere in your code, including from within other procedures.
+Procedure definitions are automatically skipped during normal execution, so they
+can appear anywhere in your program—before or after the code that calls them, or
+even in the middle. You can call a procedure from anywhere in your code,
+including from within other procedures.
 
 A procedure is called by writing its name followed by parentheses:
 
@@ -58,14 +62,16 @@ A procedure is called by writing its name followed by parentheses:
 230   endproc
 ```
 
-Here, lines 200–230 define the procedure, and line 100 calls it. When the program encounters the
-`greet()` call in line 100, it jumps to the first line of the procedure’s body (line 210, `print "Hello!"`),
-executes the entire body, and then returns to line 110 to continue with the rest of the program.
+Here, lines 200–230 define the procedure, and line 100 calls it. When the
+program encounters the `greet()` call in line 100, it jumps to the first line of
+the procedure’s body (line 210, `print "Hello!"`), executes the entire body, and
+then returns to line 110 to continue with the rest of the program.
 
 ### Procedures with parameters
 
-Procedures become even more useful when they can accept _parameters_. A parameter is simply a
-placeholder for a value that we’ll pass to the procedure when we call it.
+Procedures become even more useful when they can accept _parameters_. A
+parameter is simply a placeholder for a value that we’ll pass to the procedure
+when we call it.
 
 Let’s tweak our `greet` procedure to greet someone by name:
 
@@ -79,18 +85,19 @@ Let’s tweak our `greet` procedure to greet someone by name:
 220   endproc
 ```
 
-Here, we’ve added a parameter called `$name`, indicating that the procedure expects to receive a
-string value that is a person’s name. 
+Here, we’ve added a parameter called `$name`, indicating that the procedure
+expects to receive a string value that is a person’s name.
 
-
-When the procedure is called on line 100 with the argument `"Alice"` , `name$` is assigned that value,
-and line 210 prints `Hello, Alice!` . When control returns to line 110 and the procedure is called with
-`"Bob"` , `name$` becomes `"Bob"` , and line 210 prints `Hello, Bob!`.
+When the procedure is called on line 100 with the argument `"Alice"` , `name$`
+is assigned that value, and line 210 prints `Hello, Alice!` . When control
+returns to line 110 and the procedure is called with `"Bob"` , `name$` becomes
+`"Bob"` , and line 210 prints `Hello, Bob!`.
 
 ### Multiple parameters
 
-To define a procedure that takes more than one parameter, simply separate the parameter names with
-commas, and do the same when providing arguments in the procedure call:
+To define a procedure that takes more than one parameter, simply separate the
+parameter names with commas, and do the same when providing arguments in the
+procedure call:
 
 ```basic
 100   greet("Alice", "morning")       ' prints "Good morning, Alice! "
@@ -105,7 +112,9 @@ commas, and do the same when providing arguments in the procedure call:
 A procedure can accept up to 13 parameters.
 
 ```{admonition} Summary
-:class: seealso
+---
+class: seealso
+---
 - A named procedure is a snippet of code that has a name.
 - When you call a procedure, you give it values (called arguments), which get assigned to the parameters. A parameter is like a local variable that lives inside a procedure.
 - A procedure can have no parameters, one parameter, or as many as you need.
@@ -115,8 +124,9 @@ different inputs.
 
 ## User-Defined Functions
 
-A _user-defined function_ is like a procedure, but it returns a value. This means you can use it
-inside expressions—anywhere you'd normally write a number or a string.
+A _user-defined function_ is like a procedure, but it returns a value. This
+means you can use it inside expressions—anywhere you'd normally write a number
+or a string.
 
 ### Single-line functions
 
@@ -152,8 +162,9 @@ flowchart LR
 
 ### Multi-line functions
 
-When a function's logic is too complex for a single expression, you can write a multi-line function
-using `fn` ... `endfn`. Use `return expr` inside the body to return a value:
+When a function's logic is too complex for a single expression, you can write a
+multi-line function using `fn` ... `endfn`. Use `return expr` inside the body to
+return a value:
 
 ```basic
 100   print absval(-7)                   ' prints 7
@@ -167,8 +178,8 @@ using `fn` ... `endfn`. Use `return expr` inside the body to return a value:
 260   endfn
 ```
 
-The `endfn` keyword closes the function body. If execution reaches `endfn` without hitting a
-`return`, the function returns zero.
+The `endfn` keyword closes the function body. If execution reaches `endfn`
+without hitting a `return`, the function returns zero.
 
 A simple multi-line function can use `return` on its own line:
 
@@ -178,13 +189,15 @@ A simple multi-line function can use `return` on its own line:
 320   endfn
 ```
 
-Like procedures, function definitions are automatically skipped during normal execution, so they
-can appear anywhere in your program. Parameters are local to the function—they don't affect
-variables of the same name elsewhere in your program.
+Like procedures, function definitions are automatically skipped during normal
+execution, so they can appear anywhere in your program. Parameters are local to
+the function—they don't affect variables of the same name elsewhere in your
+program.
 
 ### Nested and recursive function calls
 
-Functions can be nested—you can pass the result of one function as an argument to another:
+Functions can be nested—you can pass the result of one function as an argument
+to another:
 
 ```basic
 100   print add(square(2), square(3))    ' prints 13  (4 + 9)
@@ -203,11 +216,13 @@ Functions can also call themselves recursively:
 160   print fact(5)                      ' prints 120
 ```
 
-Functions can also be used inside control structures, results assigned to variables, or combined with any
-other expression.
+Functions can also be used inside control structures, results assigned to
+variables, or combined with any other expression.
 
 ```{admonition} Functions vs. Procedures
-:class: seealso
+---
+class: seealso
+---
 - A **procedure** (`proc`/`endproc`) performs an action but does not return a value. You call it as
   a standalone statement.
 - A **function** (`fn`/`endfn`) computes and returns a value. You call it inside an expression.
@@ -216,10 +231,11 @@ other expression.
 
 ## `for` loops
 
-A `for` loop repeats a block of code a fixed number of times. When you know in advance how many
-times you want something to run, a `for` loop is usually the clearest and most concise option.
-The loop definition starts with the `for` keyword, followed by a loop variable, an equals sign, and a
-range of values to count over:
+A `for` loop repeats a block of code a fixed number of times. When you know in
+advance how many times you want something to run, a `for` loop is usually the
+clearest and most concise option. The loop definition starts with the `for`
+keyword, followed by a loop variable, an equals sign, and a range of values to
+count over:
 
 ```basic
 100   for i = 1 to 10
@@ -227,12 +243,13 @@ range of values to count over:
 120   next
 ```
 
-The loop is closed with the `next` keyword. The code inside the loop—in this case, line 110—is called
-the _body_ of the loop. The body executes once for each value in the loop variable’s range. In the example
-above, the loop runs ten times, with `i` taking on the values 1 through 10, so the program prints `"Hello,
-World!"` ten times.
-Because the loop variable changes each time, you can use it inside the body to produce different results
-on each pass. For example, this program prints the numbers 1 through 10:
+The loop is closed with the `next` keyword. The code inside the loop—in this
+case, line 110—is called the _body_ of the loop. The body executes once for each
+value in the loop variable’s range. In the example above, the loop runs ten
+times, with `i` taking on the values 1 through 10, so the program prints
+`"Hello, World!"` ten times. Because the loop variable changes each time, you
+can use it inside the body to produce different results on each pass. For
+example, this program prints the numbers 1 through 10:
 
 ```basic
 100   for i = 1 to 10
@@ -253,12 +270,11 @@ flowchart LR
     CHECK -->|yes| DONE["Done"]:::primary
 ```
 
-
 ### Nested loops
 
-A loop can contain another loop inside its body. This is called a _nested loop_. Nested loops are especially
-useful when you need to repeat an action across two or more dimensions—for example, filling rows
-and columns of a table.
+A loop can contain another loop inside its body. This is called a _nested loop_.
+Nested loops are especially useful when you need to repeat an action across two
+or more dimensions—for example, filling rows and columns of a table.
 
 For instance, to display a multiplication table, you could write:
 
@@ -273,19 +289,22 @@ For instance, to display a multiplication table, you could write:
 80   next                           ' go to the next row
 ```
 
-As indicated by indentation, lines 30–70 form the body of the _outer loop_, while line 40 is the body of the
-_inner loop_.
-Let’s break down how this program executes, step by step:
+As indicated by indentation, lines 30–70 form the body of the _outer loop_,
+while line 40 is the body of the _inner loop_. Let’s break down how this program
+executes, step by step:
 
-- When the program first enters the outer loop (`i=1`), the inner loop in lines 30-50 runs through all
-values of `j` from 1 to 9, printing the results of `1 × j`.
-- After the inner loop finishes, execution returns to the outer loop’s body. Lines 60 and 70 add row
-spacing, and then the `next` statement in line 80 increases `i` by one, and the process repeats
-with `i=2`.
-- This continues until the outer loop has cycled through all its values, producing the full table.
+- When the program first enters the outer loop (`i=1`), the inner loop in lines
+  30-50 runs through all values of `j` from 1 to 9, printing the results of
+  `1 × j`.
+- After the inner loop finishes, execution returns to the outer loop’s body.
+  Lines 60 and 70 add row spacing, and then the `next` statement in line 80
+  increases `i` by one, and the process repeats with `i=2`.
+- This continues until the outer loop has cycled through all its values,
+  producing the full table.
 
-Notice that the inner loop restarts for each new row, allowing the program to cover every combination
-of two ranges of values, creating 81 multiplication facts in total:
+Notice that the inner loop restarts for each new row, allowing the program to
+cover every combination of two ranges of values, creating 81 multiplication
+facts in total:
 
 ```text
 1x1=1   1x2=2   1x3=3   1x4=4   1x5=5   1x6=6   1x7=7   1x8=8   1x9=9
@@ -295,14 +314,15 @@ of two ranges of values, creating 81 multiplication facts in total:
 9x1=9   9x2=18  9x3=27  9x4=36  9x5=45  9x6=54  9x7=63  9x8=72  9x9=81
 ```
 
-Nested loops aren’t limited to two levels—you can nest three or more if the problem naturally has more
-dimensions. Be aware, though, that readability drops quickly as nesting grows. In such cases, it is often
-clearer to move the inner logic into a _named procedure_. This allows the outer loop to function as a
-high-level outline, while the steps of the inner loops are contained in a separate, well-labeled block of
-code.
+Nested loops aren’t limited to two levels—you can nest three or more if the
+problem naturally has more dimensions. Be aware, though, that readability drops
+quickly as nesting grows. In such cases, it is often clearer to move the inner
+logic into a _named procedure_. This allows the outer loop to function as a
+high-level outline, while the steps of the inner loops are contained in a
+separate, well-labeled block of code.
 
-For example, our multiplication-table program can be rewritten to move the inner loop into its own
-procedure:
+For example, our multiplication-table program can be rewritten to move the inner
+loop into its own procedure:
 
 ```basic
 10     cls                          ' clear the screen
@@ -319,13 +339,15 @@ procedure:
 150    endproc
 ```
 
-This version produces the same results as before, but the outer loop now reads like a high-level outline:
-“for each row, print the row, then add spacing.” Meanwhile, the detailed logic for printing a row is
-encapsulated in a self-contained named procedure.
+This version produces the same results as before, but the outer loop now reads
+like a high-level outline: “for each row, print the row, then add spacing.”
+Meanwhile, the detailed logic for printing a row is encapsulated in a
+self-contained named procedure.
 
 ### Counting backwards
-You can also make a loop count backwards by using the `downto` keyword instead of `to`. This version
-prints the numbers from 10 down to 1:
+
+You can also make a loop count backwards by using the `downto` keyword instead
+of `to`. This version prints the numbers from 10 down to 1:
 
 ```basic
 100   for i = 10 downto 1
@@ -334,7 +356,9 @@ prints the numbers from 10 down to 1:
 ```
 
 ```{admonition} Compatibility with other BASICs
-:class: seealso
+---
+class: seealso
+---
 In some BASIC dialects, the loop variable must be written again after the `next` keyword
 (for example, `next i`), and intricate behaviors are triggered if a loop is closed out of order.
 SuperBASIC simplifies this by requiring only a plain `next`, with no variable name, and it
@@ -343,7 +367,8 @@ does not support or allow those peculiar behaviors.
 
 ## `while` and `repeat` loops
 
-`while` and `repeat` are a structured way of doing something repeatedly, until a condition becomes either true or false.
+`while` and `repeat` are a structured way of doing something repeatedly, until a
+condition becomes either true or false.
 
 A `while` loop checks its condition before entering the loop. For example:
 
@@ -354,9 +379,10 @@ A `while` loop checks its condition before entering the loop. For example:
 130   wend
 ```
 
-Here, the program keeps calling `playgame()` while the variable `lives` is greater than zero. If the test
-on line 110 fails immediately, the loop body will never run. Notice how indentation, shown when the
-program is listed, helps to make the repeated block visually clear.
+Here, the program keeps calling `playgame()` while the variable `lives` is
+greater than zero. If the test on line 110 fails immediately, the loop body will
+never run. Notice how indentation, shown when the program is listed, helps to
+make the repeated block visually clear.
 
 ```{mermaid}
 flowchart LR
@@ -369,9 +395,8 @@ flowchart LR
     TEST -->|no| WEND["WEND"]:::primary
 ```
 
-
-A `repeat` loop, on the other hand, always runs its body at least once, because the test is checked only
-at the end:
+A `repeat` loop, on the other hand, always runs its body at least once, because
+the test is checked only at the end:
 
 ```basic
 100   lives = 3
@@ -380,8 +405,9 @@ at the end:
 130   until lives = 0
 ```
 
-This example produces the same behaviour as the `while` loop above, but with a different control flow:
-The loop executes `playgame()` once before checking whether `lives  = 0`.
+This example produces the same behaviour as the `while` loop above, but with a
+different control flow: The loop executes `playgame()` once before checking
+whether `lives  = 0`.
 
 ```{mermaid}
 flowchart LR
@@ -396,7 +422,8 @@ flowchart LR
 
 ## `if` ... `else` ... `endif`
 
-`if` is a conditional test, allowing code to be run if some test is satisfied, e.g.:
+`if` is a conditional test, allowing code to be run if some test is satisfied,
+e.g.:
 
 ```basic
 100   if count = 0 then explode
@@ -405,9 +432,11 @@ flowchart LR
 
 (the built-in instruction `explode` plays a simple explosion effect).
 
-This is standard BASIC — `if` the test 'passes' the code following the `then` is executed.
+This is standard BASIC — `if` the test 'passes' the code following the `then` is
+executed.
 
-However, there is an alternate form, more in tune with modern programming: `if ... else ... endif`:
+However, there is an alternate form, more in tune with modern programming:
+`if ... else ... endif`:
 
 ```basic
 100   for n = 1 to 10
@@ -419,8 +448,8 @@ However, there is an alternate form, more in tune with modern programming: `if .
 160   next
 ```
 
-This prints whether a number is even or odd, based on the value of `n`. You can include multiple lines
-of code in either the `if` or `else` clause.
+This prints whether a number is even or odd, based on the value of `n`. You can
+include multiple lines of code in either the `if` or `else` clause.
 
 The `else` part is optional.
 
@@ -438,9 +467,10 @@ You cannot write, as you can in some BASIC interpreters, the following:
 100   if a = 2 then print "A is two" else print "A is not two"
 ```
 
-Once you have a `then` you are locked into the simple form; no `else` or `endif`.
+Once you have a `then` you are locked into the simple form; no `else` or
+`endif`.
 
-Generally when programming you use the `then` short version for simple tests, and the `if..else..endif` for more complicated ones.
+Generally when programming you use the `then` short version for simple tests,
+and the `if..else..endif` for more complicated ones.
 
 Here endeth the lesson.
-

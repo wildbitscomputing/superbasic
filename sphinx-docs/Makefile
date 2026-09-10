@@ -1,4 +1,7 @@
-.PHONY: html pdf livehtml clean
+.PHONY: format html pdf livehtml clean
+
+format:
+	uv run mdformat .
 
 html:
 	uv run sphinx-build -b html . _build/html

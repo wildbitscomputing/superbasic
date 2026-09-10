@@ -6,7 +6,7 @@
 A modernised BASIC interpreter for the 65C02-based Wildbits/K2 retro computers.
 ```
 
-````{only} html
+```{only} html
 ::::{grid} 2
 :gutter: 3
 
@@ -83,12 +83,13 @@ Complete A–Z reference for every SuperBASIC keyword.
 :::
 
 ::::
-````
+```
 
 ```{toctree}
-:hidden:
-:caption: User Guide
-
+---
+hidden:
+caption: User Guide
+---
 guide/introduction
 guide/getting_started
 guide/variables
@@ -103,8 +104,9 @@ guide/crossdev
 ```
 
 ```{toctree}
-:hidden:
-:caption: Reference
-
+---
+hidden:
+caption: Reference
+---
 reference/keywords
 ```
