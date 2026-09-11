@@ -1,4 +1,4 @@
-# Operator and symbol reference
+# Operators and symbols
 
 This section lists all the operators and symbols used in SuperBASIC.
 
