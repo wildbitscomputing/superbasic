@@ -156,3 +156,8 @@ error_initerror .macro
 	lda	#31
 	jmp	ErrorHandler
 	.endm
+ERRID_DIRFULL = 32
+error_dirfull .macro
+	lda	#32
+	jmp	ErrorHandler
+	.endm

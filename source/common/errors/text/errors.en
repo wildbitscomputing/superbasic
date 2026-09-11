@@ -34,3 +34,4 @@ NoProgram:  Program not found
 Parameters: Too many parameters
 TooComplex: Formula too complex
 InitError:  Initialization error
+DirFull:    Directory buffer full
