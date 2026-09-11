@@ -36,5 +36,6 @@ ErrorText:
 	.text	"Too many parameters",0
 	.text	"Formula too complex",0
 	.text	"Initialization error",0
+	.text	"Directory buffer full",0
 .endlogical
 .send page2

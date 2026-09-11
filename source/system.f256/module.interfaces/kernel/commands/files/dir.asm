@@ -15,21 +15,22 @@
 
 ; ************************************************************************************************
 ;
-;		DIR [LOAD] [path] [,sortmode]
-;		sortmode: 1 = by name, 2 = by size (descending)
+;		DIR [LOAD] [path]
+;
+;		DIR streams entries directly to the display. DIR LOAD stores entries
+;		for later access through DIR$() and DIR().
 ;
 ; ************************************************************************************************
 
 Command_Dir:	;; [dir]
 		stz 	dirLoadOnly
-		stz 	dirSortMode
 		stz 	kernel.args.directory.open.path_len
 		;
 		.cget
 		cmp 	#KWC_EOL
 		beq 	_CDGo
 		cmp 	#KWD_COMMA
-		beq 	_CDParseSort
+		beq 	_CDSyntax
 		cmp 	#KWC_SHIFT1 				; extended keyword prefix?
 		bne 	_CDEvalPath
 		;
@@ -45,7 +46,7 @@ Command_Dir:	;; [dir]
 		cmp 	#KWC_EOL
 		beq 	_CDGo
 		cmp 	#KWD_COMMA
-		beq 	_CDParseSort
+		beq 	_CDSyntax
 		;
 		;		Evaluate path string
 		;
@@ -65,15 +66,7 @@ _CDLen:	iny
 		ply
 		.cget
 		cmp 	#KWD_COMMA
-		bne 	_CDGo
-		;
-		;		Parse sort mode after comma
-		;
-_CDParseSort:
-		iny 								; consume comma
-		ldx 	#0
-		jsr 	Evaluate8BitInteger
-		sta 	dirSortMode
+		beq 	_CDSyntax
 _CDGo:
 		jmp 	DirImpl
 
