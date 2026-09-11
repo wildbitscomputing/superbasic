@@ -1,7 +1,7 @@
-# SuperBASIC User and Reference Manual
+# SuperBASIC Manual
 
 ```{only} html
-A modernised BASIC interpreter for the 65C02-based Wildbits and Foenix F256 series of personal computers.
+User and reference manual for a modernized BASIC interpreter for the Wildbits and Foenix F256 series of personal computers.
 ```
 
 ```{only} html

@@ -359,10 +359,7 @@ instead of {kwd}`to`. This version prints the numbers from 10 down to 1:
 
 ```{admonition} Compatibility
 
--   There is currently no {kwd}`step` keyword. Loops always count either upwards by 1 or downwards by 1.
-
--   In some BASIC dialects, the loop variable must be written again after the {kwd}`next` keyword (for example, {kwd}`next`{code}` i`), and intricate behaviors are triggered if a loop is closed out of order. SuperBASIC simplifies this by requiring only a plain {kwd}`next`, with no variable name, and it does not support or allow those peculiar behaviors.
-
+In some BASIC dialects, the loop variable must be written again after the {kwd}`next` keyword (for example, {kwd}`next`{code}` i`), and intricate behaviors are triggered if a loop is closed out of order. SuperBASIC simplifies this by requiring only a plain {kwd}`next`, with no variable name, and it does not support or allow those peculiar behaviors.
 ```
 
 ## {kwd}`while` and {kwd}`repeat` loops

@@ -1,4 +1,4 @@
-# Keyword and function reference
+# Keywords and functions
 
 This section lists all the keywords and functions used in SuperBASIC. Note that
 some topical keywords---such as graphics commands---are explained in more detail
