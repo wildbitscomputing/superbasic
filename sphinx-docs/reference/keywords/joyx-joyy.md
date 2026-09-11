@@ -1,9 +1,16 @@
-# joyx() joyy()
+# {kwd}`joyx()` {kwd}`joyy()`
 
-Returns the directional value of a gamepad in the x and y axes respectively as
-−1, 0 or 1, with 1 being right and down. Each takes a single parameter which is
-the number of the pad. Keyboard keys are also mapped.
+Return the directional value of a joystick or gamepad along the X or Y axis. A
+value of `1` indicates movement to the right (X) or down (Y), `-1` indicates
+movement to the left or up, and `0` means no movement. Each function takes a
+single argument, the gamepad number.
+
+Keyboard keys Z / X / K / M / L (left / right / up / down / fire) are also
+mapped to this input, so a physical gamepad is not required.
 
 ```basic
-100   x = x + joyx(0)
+100   cls: cursor off
+110   while true
+120     print at 0,0;"x:";joyx(0);" y:";joyy(0);"  ";
+130   wend
 ```

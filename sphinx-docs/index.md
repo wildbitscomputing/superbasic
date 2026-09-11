@@ -1,9 +1,7 @@
-# F256 SuperBASIC Reference Manual
+# SuperBASIC User and Reference Manual
 
 ```{only} html
-*By Paul Robson*
-
-A modernised BASIC interpreter for the 65C02-based Wildbits/K2 retro computers.
+A modernised BASIC interpreter for the 65C02-based Wildbits and Foenix F256 series of personal computers.
 ```
 
 ```{only} html
@@ -13,37 +11,37 @@ A modernised BASIC interpreter for the 65C02-based Wildbits/K2 retro computers.
 :::{grid-item-card} Introduction
 :link: guide/introduction
 :link-type: doc
-Overview, memory layout, and storage format.
+What is SuperBASIC?
 :::
 
 :::{grid-item-card} Getting started
 :link: guide/getting_started
 :link-type: doc
-Line-number editing, screen editor keys, and cross-development.
+Writing your first program.
 :::
 
-:::{grid-item-card} Variables & Types
+:::{grid-item-card} Identifiers, variables and typing
 :link: guide/variables
 :link-type: doc
-Integers, floats, strings, and arrays.
+Naming rules, variable types, and arrays.
 :::
 
-:::{grid-item-card} Structured Programming
+:::{grid-item-card} Structured programming
 :link: guide/structured_programming
 :link-type: doc
-Procedures, functions, WHILE, REPEAT, FOR, and IF/ELSE/ENDIF.
+Procedures, functions, and structured loops.
 :::
 
 :::{grid-item-card} Graphics
 :link: guide/graphics
 :link-type: doc
-Bitmap drawing, modifiers, colours, and the graphics pipeline.
+Bitmap drawing, graphics modifiers, colors, and the graphics pipeline.
 :::
 
-:::{grid-item-card} Tiles & Tile Maps
+:::{grid-item-card} Tiles and tile maps
 :link: guide/tiles
 :link-type: doc
-8×8 tile maps, scrolling, and data formats.
+8×8-pixel tiles, scrolling, and data formats.
 :::
 
 :::{grid-item-card} Sprites
@@ -58,28 +56,34 @@ Hardware sprites, building sprite sets, and collision detection.
 SN76489 channels, sound queuing, and easy sound effects.
 :::
 
-:::{grid-item-card} Inline Assembly
+:::{grid-item-card} Inline assembly
 :link: guide/assembler
 :link-type: doc
-65C02 inline assembler modelled on the BBC Micro.
+65C02 inline assembler.
 :::
 
 :::{grid-item-card} Memory
 :link: guide/memory
 :link-type: doc
-Physical memory map, program paging, and the LOMEM command.
+Physical memory map, program paging, and the {kwd}`lomem` command.
 :::
 
-:::{grid-item-card} Cross Development
+:::{grid-item-card} Cross-development
 :link: guide/crossdev
 :link-type: doc
-USB uploading and FnxMgr.
+Developing in SuperBASIC on a "big" PC.
 :::
 
-:::{grid-item-card} Keyword Reference
+:::{grid-item-card} Keyword and function reference
 :link: reference/keywords
 :link-type: doc
-Complete A–Z reference for every SuperBASIC keyword.
+Complete A–Z reference for SuperBASIC keywords and functions.
+:::
+
+:::{grid-item-card} Operator and symbol reference
+:link: reference/operators
+:link-type: doc
+Reference for every SuperBASIC operator and syntax symbol.
 :::
 
 ::::
@@ -109,4 +113,6 @@ hidden:
 caption: Reference
 ---
 reference/keywords
+reference/operators
+reference/key-bindings
 ```

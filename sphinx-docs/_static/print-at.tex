@@ -1,0 +1,208 @@
+\documentclass[tikz,border=12pt]{standalone}
+\usetikzlibrary{decorations.pathmorphing}
+\definecolor{raspberry}{rgb}{0.65,0.2,0.4}
+\begin{document}
+{ % begin diagram
+    % ===== Parameters you can tweak =====
+    % Cell size (increase these to make characters larger)
+    \newcommand{\cellw}{0.38cm}
+    \newcommand{\cellh}{0.38cm}
+
+    % Cross-cut position (how much of left/top to keep)
+    \newcommand{\cutX}{25}   % show 0..cutX columns on the left
+    \newcommand{\cutY}{15}   % show 0..cutY rows on the top
+
+    % Cutline params
+ %   0.35mm, segment length=3mm
+    \newcommand{\amp}{0.09}   % amplitude (cells)
+    \newcommand{\lam}{1}    % wavelength (cells) 0.789
+    \newcommand{\step}{0.25}  % sampling step (cells): smaller = smoother
+    \newcommand{\samps}{400}  % smoothness
+
+    % Corner patch sizes on the far sides
+    \newcommand{\rightW}{3}  % width of right-side patches (near col 79)
+    \newcommand{\bottomH}{3} % height of bottom-side patches (near row 59)
+
+    % Tiny visual gaps (kept small even if many cells omitted)
+    \newcommand{\gapX}{0.5}
+    \newcommand{\gapY}{0.5}
+
+    % Size of the compressed drawing
+    \pgfmathsetmacro{\TotalW}{\cutX + \gapX + \rightW}
+    \pgfmathsetmacro{\TotalH}{\cutY + \gapY + \bottomH}
+
+    % Margins for outside labels (cells). Increase if your labels are longer.
+    \newcommand{\padL}{2}   % left margin
+    \newcommand{\padR}{2}   % right margin
+    \newcommand{\padT}{2}   % top margin
+    \newcommand{\padB}{2}   % bottom margin
+
+    % Letter H coordinates
+    \newcommand{\rowH}{4}
+    \newcommand{\colH}{9}
+
+    \begin{tikzpicture}[x=\cellw, y=-\cellh, line cap=rect] % negative y so (0,0) is top-left
+      % Clamp bbox to include outside labels as well
+      \path[use as bounding box]
+        (-\padL, -\padT) rectangle (\TotalW+\padR, \TotalH+\padB);
+
+      % Keep nodes from adding unexpected extra space
+      \tikzset{every node/.style={outer sep=0pt}}
+
+      % Cell coordinate
+      \newcommand{\coord}[3]{%
+        \node[font=\ttfamily\fontsize{2mm}{2mm}\selectfont] at (#2 + 0.5, #1 + 0.5) {#3};}
+
+      % Monospace cell text centered in a cell
+      \newcommand{\cell}[3]{%
+        \node[font=\ttfamily\fontsize{4.4mm}{4.4mm}\selectfont,text=raspberry] at (#2 + 0.5, #1 + 0.5) {#3};}
+
+      % Draw grid over integer-inclusive rectangle
+      \newcommand{\gridrect}[4]{
+        \pgfmathtruncatemacro{\xa}{#1}\pgfmathtruncatemacro{\ya}{#2}
+        \pgfmathtruncatemacro{\xb}{#3}\pgfmathtruncatemacro{\yb}{#4}
+        \foreach \x in {\xa,...,\xb}{\draw[gray!45, line width=0.15pt] (\x,\ya) -- (\x,\yb);}
+        \foreach \y in {\ya,...,\yb}{\draw[gray!45, line width=0.15pt] (\xa,\y) -- (\xb,\y);}
+      }
+
+      % Curvy cutline
+      \tikzset{cutline/.style={decorate, decoration={snake, amplitude=0.35mm, segment length=3.8mm}, draw=gray!45, thin}}
+
+      % === HIGHLIGHT LAYER (drawn before the grid) ===
+      % highlight H
+      \fill[gray!10] (0,\rowH) rectangle (\colH+1,\rowH+1);
+      \fill[gray!10] (\colH,0) rectangle (\colH+1,\rowH+1);
+
+      % ===== TOP-LEFT (0..cutX, 0..cutY) =====
+       \begin{scope}
+          \clip
+            (0,0) -- (\cutX,0)
+            % Right (vertical) wavy edge: zero at y=0 and y=cutY
+            -- plot[domain=0:\cutY, samples=\samps, variable=\t]
+                 ({\cutX + \amp*sin(360*(\t - \cutY + 0.04)/\lam)}, {\t})
+            % Bottom (horizontal) wavy edge: zero at x=cutX and x=0
+            -- (\cutX,\cutY) % ensure we are exactly at the corner
+            -- plot[domain=\cutX:0, samples=\samps, variable=\u]
+                 ({\u}, {\cutY + \amp*sin(360*(\u - \cutX + 0.58)/\lam)})
+            -- (0,\cutY) -- cycle;
+
+          \gridrect{0}{0}{\cutX}{\cutY}
+        \end{scope}
+
+      % wavy edges
+      \draw[cutline] (\cutX,\cutY) -- (\cutX,0) ;  % right wavy
+      \draw[cutline] (\cutX,\cutY) -- (0,\cutY);  % bottom wavy
+
+      % true outer borders
+      \draw[thick] (0,0) -- (\cutX,0);    % top
+      \draw[thick] (0,0) -- (0,\cutY);    % left
+
+      % column coordinates up to H
+      \foreach \x in {0,...,\colH}{\coord{-1}{\x}{\x};}
+      \coord{-1}{\colH+1}{\raisebox{-1.25ex}{$\cdots$}}
+
+      % row coordinates up to H
+      \foreach \y in {0,...,\rowH}{\coord{\y}{-1}{\y};}
+      \coord{\rowH+1}{-1}{$\vdots$}
+
+      % ===== TOP-RIGHT (near top-right corner), compressed rightward =====
+      % Size: rightW × (cutY+1 rows high)
+      \begin{scope}[shift={(\cutX+\gapX, 0)}]
+        \begin{scope}
+            \clip
+                (0,0) -- (\rightW,0) -- (\rightW,\cutY)                 % outer top & right
+                % bottom wavy edge: from right->left, zero at u=0 (seam)
+                -- plot[domain=\rightW:0, samples=\samps, variable=\u]
+                     ({\u}, {\cutY + \amp*sin(360*(\u - 0 - 0.58)/\lam)})
+                -- (0,\cutY) % ensure we are exactly at the corner
+                % left wavy edge: from bottom->top, same phase as TL’s vertical
+                -- plot[domain=\cutY:0, samples=\samps, variable=\t]
+                     ({0 + \amp*sin(360*(\t - \cutY + 0.04)/\lam)}, {\t})
+                -- cycle;
+
+          \gridrect{0}{0}{\rightW}{\cutY}
+        \end{scope}
+
+        % wavy edges
+        \draw[cutline] (0,\cutY) -- (0,0);        % faces vertical gap
+        \draw[cutline] (0,\cutY) -- (\rightW,\cutY); % faces horizontal gap
+
+        % true outer borders (top and right outer edge)
+        \draw[thick] (0,0) -- (\rightW,0);
+        \draw[thick] (\rightW,0) -- (\rightW,\cutY);
+      \end{scope}
+
+      % ===== BOTTOM-LEFT (near bottom-left corner), compressed downward =====
+      % Size: (cutX+1 cols wide) × bottomH
+      \begin{scope}[shift={(0, \cutY+\gapY)}]
+        \begin{scope}
+          \clip
+            (0,\bottomH) -- (0,0)
+            % top wavy edge: left->right, same phase as TL’s horizontal
+            -- plot[domain=0:\cutX, samples=\samps, variable=\u]
+                 ({\u}, {0 + \amp*sin(360*(\u - \cutX + 0.58)/\lam)})
+            -- (\cutX,0) % ensure we are exactly at the corner
+            % right wavy edge: top->bottom, zero at t=0 (seam)
+            -- plot[domain=0:\bottomH, samples=\samps, variable=\t]
+                 ({\cutX + \amp*sin(360*(\t - 0 - 0.04)/\lam)}, {\t})
+            -- (\cutX,\bottomH) -- cycle;                        % outer bottom
+
+          \gridrect{0}{0}{\cutX}{\bottomH}
+        \end{scope}
+
+        % wavy edges
+        \draw[cutline] (\cutX,0) -- (0,0);        % faces horizontal gap
+        \draw[cutline] (\cutX,0) -- (\cutX,\bottomH); % faces vertical gap
+
+        % true outer borders (left and bottom outer edge)
+        \draw[thick] (0,0) -- (0,\bottomH);
+        \draw[thick] (0,\bottomH) -- (\cutX,\bottomH);
+      \end{scope}
+
+      % ===== BOTTOM-RIGHT (near bottom-right corner), compressed both ways =====
+      \begin{scope}[shift={(\cutX+\gapX, \cutY+\gapY)}]
+        \begin{scope}
+          \clip
+            (\rightW,\bottomH) -- (\rightW,0)
+            % top wavy edge: right->left, zero at u=0 (seam with TR)
+            -- plot[domain=\rightW:0, samples=\samps, variable=\u]
+                 ({\u}, {0 + \amp*sin(360*(\u - 0 - 0.58)/\lam)})
+            -- (0,0) % ensure we are exactly at the corner
+            % left wavy edge: bottom->top (go up to close), zero at t=0 (seam with BL)
+            -- plot[domain=0:\bottomH, samples=\samps, variable=\t]
+                 ({0 + \amp*sin(360*(\t - 0 - 0.04)/\lam)}, {\t})
+            -- (0,\bottomH) -- cycle;                           % outer bottom
+
+          \gridrect{0}{0}{\rightW}{\bottomH}
+        \end{scope}
+
+        % wavy edges
+        \draw[cutline] (0,0) -- (0,\bottomH);     % faces vertical gap
+        \draw[cutline] (0,0) -- (\rightW,0);      % faces horizontal gap
+
+        % true outer borders (right and bottom outer edges)
+        \draw[thick] (\rightW,0) -- (\rightW,\bottomH);
+        \draw[thick] (0,\bottomH) -- (\rightW,\bottomH);
+
+      \end{scope}
+
+      % ===== "Hello" at (rowH, colH) =====
+      \cell{\rowH}{\colH + 0}{H}
+      \cell{\rowH}{\colH + 1}{E}
+      \cell{\rowH}{\colH + 2}{L}
+      \cell{\rowH}{\colH + 3}{L}
+      \cell{\rowH}{\colH + 4}{O}
+
+    % ==== Corner labels ====
+      \node[anchor=south east] at (0, 0) {\scriptsize (0,0)};
+      \node[anchor=south west] at (\TotalW, 0) {\scriptsize (0,79)};
+      \node[anchor=north east] at (0, \TotalH) {\scriptsize (59,0)};
+      \node[anchor=north west] at (\TotalW, \TotalH) {\scriptsize (59,79)};
+
+      % Axis captions
+      \node at (\TotalW/2, -\padT/2 - 0.2) {\scriptsize 80 columns};
+      \node[rotate=90] at (-\padT/2, \TotalH/2) {\scriptsize 60 rows};
+
+    \end{tikzpicture}
+} % end diagram
+\end{document}

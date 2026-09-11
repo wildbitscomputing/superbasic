@@ -1,11 +1,16 @@
 # Configuration file for the Sphinx documentation builder.
 
-import os
 import sys
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath("."))
+config_dir = Path(__file__).resolve().parent
+sys.path.insert(0, str(config_dir))
+sys.path.append(str(config_dir / "ext"))
+sys.path.append(str(config_dir / "ext" / "wildbits-help"))
 
+from docutils import nodes
 from sphinx.highlighting import lexers
+from sphinx.roles import SphinxRole
 from superbasic_lexer import SuperBASICLexer
 
 _lexer = SuperBASICLexer()
@@ -13,8 +18,11 @@ lexers["basic"] = _lexer
 lexers["superbasic"] = _lexer
 
 project = "Wildbits SuperBASIC"
-copyright = "2023-2026, Paul Robson & Wildbits Computing Company"
-author = "Paul Robson & Wildbits Computing Company"
+copyright = (
+    "2022-2023 Paul Robson",
+    "2026 Wildbits Computing Company",
+)
+author = "Paul Robson; Wildbits Computing Company"
 release = "1.1"
 
 extensions = [
@@ -34,6 +42,21 @@ myst_enable_extensions = [
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+
+class KeywordRole(SphinxRole):
+    def run(self):
+        node = nodes.inline(
+            self.rawtext,
+            self.text,
+            classes=["kwd"],
+        )
+        return [node], []
+
+
+def setup(app):
+    app.add_role("kwd", KeywordRole())
+
+
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "furo"
@@ -47,89 +70,62 @@ html_theme_options = {
 
 # -- Options for LaTeX output ------------------------------------------------
 
+
 latex_documents = [
     (
-        "index",
-        "f256-superbasic.tex",
-        "Wildbits SuperBASIC Reference Manual",
-        "Paul Robson",
-        "manual",
+        "index",  # master document
+        "f256-superbasic.tex",  # output file name
+        "SuperBASIC Reference Manual",  # title
+        r"Paul Robson \\ Wildbits Computing Company",  # author
+        "manual",  # Sphinx document class, 'howto' or 'manual'
     ),
 ]
 
+latex_docclass = {
+    "manual": "book",
+}
+
+# Additional files that are referenced in `latex_elements` below and will be
+# copied to the build directory when building LaTeX output. Sphinx tries to run
+# `pdflatex` on all `.tex` files in the build directory, so we use the `.texp`
+# extension for the partials.
+latex_additional_files = list(
+    str(path.relative_to(config_dir)) for path in (config_dir / "latex").glob("*")
+)
+
 latex_elements = {
     "papersize": "letterpaper",
-    "pointsize": "11pt",
-    "fncychap": r"\usepackage[Bjornstrup]{fncychap}",
-    "fontpkg": r"""
-\usepackage{fontspec}
-\setmainfont{NotoSerif}[
-  Extension=.ttf,
-  UprightFont=*-Regular,
-  BoldFont=*-Bold,
-  ItalicFont=*-Italic,
-  BoldItalicFont=*-BoldItalic,
-]
-\setsansfont{NotoSans}[
-  Extension=.ttf,
-  UprightFont=*-Regular,
-  BoldFont=*-Bold,
-  ItalicFont=*-Italic,
-  BoldItalicFont=*-BoldItalic,
-]
-\setmonofont{NotoSansMono}[
-  Extension=.ttf,
-  UprightFont=*-Regular,
-  BoldFont=*-Bold,
-]
-""",
-    "geometry": r"\usepackage[letterpaper,inner=1.5in,outer=1.0in,top=0.75in,bottom=0.75in]{geometry}",
-    "preamble": r"""
-% Match original reference manual styling
-\definecolor{darkblue}{rgb}{0.1, 0.0, 0.6}
+    "pointsize": "10pt",
+    "fncychap": r"\usepackage[Sonny]{fncychap}",
+    "fontpkg": r"\usepackage[T1]{fontenc}",
+    "geometry": r"\usepackage[letterpaper,inner=1.5in,outer=1.0in,top=0.75in,bottom=0.75in,twoside]{geometry}",
+    # loaded before hyperref package and packages loaded from Sphinx extensions
+    "extrapackages": r"""
+\usepackage{xcolor}
+\definecolor{primary}{rgb}{0.2, 0.2, 0.6}
 \definecolor{silver}{rgb}{0.85, 0.85, 0.85}
-\ChNumVar{\color{darkblue}\fontsize{76}{80}\usefont{OT1}{pzc}{m}{n}\selectfont}
-\ChTitleVar{\color{darkblue}\raggedleft\Huge\sffamily\bfseries}
-
-% Dark blue section headings
-\usepackage{sectsty}
-\allsectionsfont{\color{darkblue}\bfseries\sffamily}
-
-% Tighter TOC spacing
-\usepackage{tocloft}
-\setlength{\cftbeforechapskip}{6pt}
-\setlength{\cftbeforesecskip}{2pt}
-\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
-
-% Reduce float spacing
-\setlength{\floatsep}{8pt plus 2pt minus 2pt}
-\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
-\setlength{\intextsep}{8pt plus 2pt minus 2pt}
-
-% Black hyperlinks like the original
-\hypersetup{colorlinks=true,linkcolor=black,urlcolor=darkblue}
-
-% Plain code blocks — no frame, no background (like the original verbatim style)
-\sphinxsetup{
-  VerbatimColor={rgb}{1,1,1},
-  VerbatimBorderColor={rgb}{1,1,1},
-  verbatimborder=0pt,
-}
-\fvset{fontsize=\small}
+\definecolor{raspberry}{rgb}{0.65, 0.2, 0.4}
 """,
+    "hyperref": r"\usepackage[colorlinks=true, linkcolor=black, urlcolor=primary]{hyperref}",
+    # loaded after hyperref
+    "preamble": r"\input{preamble.texp}",
+    # "document_TeXextras": r"\lstset{language=BASIC}",
     "maketitle": r"""
 \begin{titlepage}
     \colorbox{silver}{\makebox[\textwidth][r]{
     \shortstack{
         \vspace{3cm} \\
-        \color{darkblue}\bfseries\sffamily\Huge Wildbits SuperBASIC Reference Manual}} \\
+        \color{primary}\bfseries\sffamily\Huge SuperBASIC User and Reference Manual}} \\
     }
+
     \vfill
-    \hfill\mbox{\color{darkblue}\bfseries\sffamily\Large Paul Robson}
-    \hfill\mbox{\color{darkblue}\bfseries\sffamily\large \today}
 \end{titlepage}
 """,
-    "tableofcontents": r"\sphinxtableofcontents",
+    "tableofcontents": r"""
+\tableofcontents
+\updatechaptername
+""",
+    "atendofbody": r"",
 }
 
 # -- Mermaid options ---------------------------------------------------------

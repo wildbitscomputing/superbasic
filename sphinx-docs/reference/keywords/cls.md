@@ -1,4 +1,4 @@
-# cls
+# {kwd}`cls`
 
 Clears the text screen.
 

@@ -1,11 +1,14 @@
-# hit()
+# {kwd}`hit()`
 
-Tests if two sprites overlap. This is done using a box test based on the size of
-the sprite (e.g. 8×8, 16×16, 24×24, 32×32). The value returned is zero for no
-collision, or the lower of the two coordinate differences from the centre,
-approximately. This only works if sprites are positioned via the graphics
-system.
+Tests whether two sprites overlap, using a bounding box test based on their size
+(e.g., 8×8, 16×16, 24×24, or 32×32).
+
+Returns zero if there is no collision, or the smaller of the two coordinate
+differences from the center.
+
+This function only works for sprites positioned using the graphics system; there
+is no way to read sprite memory directly to determine their on-screen positions.
 
 ```basic
-100   print hit(1,2)
+100 print hit(1,2)
 ```

@@ -1,8 +1,8 @@
-# get() and get\$()
+# {kwd}`get()`{code}` `{kwd}`get$()`
 
-Wait for the next key press then return either the character as a string, or as
+Wait for the next key press, then return either the character as a string, or as
 the ASCII character code.
 
 ```basic
-100   print "Letter ";get$()
+100 print "Letter ";get$()
 ```

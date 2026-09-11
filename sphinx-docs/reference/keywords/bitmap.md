@@ -1,11 +1,13 @@
-# bitmap
+# {kwd}`bitmap`
 
-Turns the bitmap on or off, or clears it, or sets its address (the default
-address is `$10000`). Only one bitmap is used in BASIC, but you can use others
-by accessing I/O. Keywords are `ON`, `OFF`, `CLEAR <colour>`, `AT <address>` and
-can be chained. On or Off without an `AT` will reset the address.
+Turns the bitmap layer on or off, clears it, or sets its memory address
+(`$10000` by default). Only one bitmap layer is supported. Modifier keywords
+include {kwd}`on`, {kwd}`off`, {kwd}`clear` *\<color>*, and {kwd}`at`
+*\<address>*, and may be chained as shown in the example below. Using {kwd}`on`
+or {kwd}`off` without {kwd}`at` will reset the bitmap address to its default.
+See Chapter {ref}`chap:graphics` for more details.
 
 ```basic
-100   bitmap at $18000 on clear $03
-110   bitmap at $18000 on:bitmap clear $03
+100 bitmap at $18000 on clear $03
+110 bitmap at $18000 on: bitmap clear $03
 ```

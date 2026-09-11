@@ -1,7 +1,7 @@
-# new
+# {kwd}`new`
 
-Erases the current program.
+Erases the current program
 
 ```basic
-100   new
+100 new
 ```

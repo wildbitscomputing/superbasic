@@ -1,8 +1,9 @@
-# gosub
+# {kwd}`gosub`
 
-Call a routine at a given line number. Provided for compatibility with older
-programs; use named procedures instead for new code.
+Calls a routine at the specified line number. Provided for compatibility with
+classic BASIC listings. For new code, use named procedures instead (see
+Chapter {ref}`chap:structured`).
 
 ```basic
-100   gosub 1000
+100 gosub 1000
 ```

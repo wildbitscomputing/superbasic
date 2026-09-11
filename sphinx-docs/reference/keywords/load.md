@@ -1,4 +1,4 @@
-# load
+# {kwd}`load`
 
 Loads a BASIC program from the current drive.
 

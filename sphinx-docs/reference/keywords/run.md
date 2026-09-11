@@ -1,9 +1,9 @@
-# run
+# {kwd}`run`
 
-Runs the current program after clearing variables as for `CLEAR`. Can also have
-a parameter which does a `LOAD` and then `RUN`.
+Runs the current program after clearing variables as for {kwd}`clear`. Can also
+have a parameter which does a {kwd}`load` and then {kwd}`run`.
 
 ```basic
-100   run
-110   run "demo.bas"
+100 run
+110 run "demo.bas"
 ```
