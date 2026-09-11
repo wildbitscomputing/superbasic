@@ -1,32 +1,16 @@
-# Keyword Reference
+# Keyword and function reference
 
-This describes the keywords in SuperBASIC. Some that are naturally grouped
-together, such as graphics, have their own section.
+This section lists all the keywords and functions used in SuperBASIC. Note that
+some topical keywords---such as graphics commands---are explained in more detail
+in their dedicated chapters.
 
 ```{toctree}
 ---
 maxdepth: 1
 ---
-keywords/exclamation-mark
-keywords/apostrophe
 keywords/abs
 keywords/alloc
 keywords/asc
-keywords/number-sign
-keywords/question-mark
-keywords/dollar-sign
-keywords/asterisk
-keywords/plus
-keywords/minus
-keywords/percent-sign
-keywords/period
-keywords/forward-slash
-keywords/less-than
-keywords/at-sign
-keywords/ampersand
-keywords/caret
-keywords/vertical-bar
-keywords/left-shift
 keywords/assemble
 keywords/assert
 keywords/bitmap
@@ -38,13 +22,13 @@ keywords/circle
 keywords/cls
 keywords/cprint
 keywords/cursor
-keywords/dir
-keywords/fn-endfn
 keywords/dim
+keywords/dir
 keywords/drive
 keywords/end
 keywords/event
 keywords/false
+keywords/fn-endfn
 keywords/for-next
 keywords/frac
 keywords/fre
@@ -55,7 +39,7 @@ keywords/gfx
 keywords/gosub
 keywords/goto
 keywords/hit
-keywords/if-then
+keywords/if-else-endif
 keywords/image
 keywords/inkey
 keywords/input
@@ -66,17 +50,17 @@ keywords/itemget
 keywords/joyb
 keywords/joyx-joyy
 keywords/keydown
-keywords/load
 keywords/left
 keywords/len
 keywords/let
 keywords/line
 keywords/list
+keywords/load
 keywords/local
-keywords/min-max
 keywords/mdelta
 keywords/memcopy
 keywords/mid
+keywords/min-max
 keywords/mouse
 keywords/new
 keywords/not
@@ -88,13 +72,14 @@ keywords/plot
 keywords/poke
 keywords/print
 keywords/proc-endproc
-keywords/rnd-random
 keywords/read-data
 keywords/rect
-keywords/restore
+keywords/rem
 keywords/repeat-until
+keywords/restore
 keywords/return
 keywords/right
+keywords/rnd-random
 keywords/run
 keywords/save
 keywords/screen

@@ -1,0 +1,310 @@
+% \documentclass[oneside]{book}
+\usepackage[toc]{appendix}
+\usepackage{tocloft}
+\usepackage{datetime2}
+\DTMsetdatestyle{ddmmyyyy}
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+\usetikzlibrary{decorations.pathmorphing}
+\usepackage{caption}
+\usepackage{changepage}
+\usepackage{amssymb}
+% \usepackage{footnote}
+\setlength{\skip\footins}{20pt}
+\usepackage{notomath}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{graphbox}
+\usepackage{sectsty}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{fancyvrb}
+\usepackage[most]{tcolorbox}
+\usepackage{svg}
+\usepackage{enumitem}
+
+%%% Typography
+% Default line height
+\usepackage{setspace}
+\setstretch{1}
+
+% Space between paragraphs
+\setlength{\parskip}{0.75em}
+
+% Scale main font to 90% to match `notomath`'s default config
+\setmainfont{NotoSerif}[
+  Extension=.ttf,
+  Scale=0.9,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ItalicFont=*-Italic,
+  BoldItalicFont=*-BoldItalic,
+  Numbers={Monospaced,Lining},
+  Ligatures=TeX
+]
+
+% set monospace font to Inconsolatazi4
+\setmonofont{Inconsolatazi4}[
+  Extension=.otf,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold
+]
+
+\ChNumVar{\color{primary}\fontsize{76}{80}\usefont{OT1}{pzc}{m}{n}\selectfont}
+\ChTitleVar{\color{primary}\raggedleft\Huge\sffamily\bfseries}
+
+\setlength{\parindent}{0pt}
+\allsectionsfont{\color{primary}\bfseries\sffamily}
+\newcommand{\microsec}{$\mu$s}
+\newcommand{\example}[1]{\subsection*{Example: #1}}
+\newcommand{\stab}{\hspace*{0.8em}}
+\newcommand{\refentry}[1]{
+  \section*{#1}
+  \addcontentsline{toc}{section}{#1}
+}
+\newcommand{\refentrycompact}[1]{
+  \vspace{-1.4em}
+  \refentry{#1}
+}
+\newenvironment{entry}{%
+  \begin{adjustwidth}{4em}{0pt}
+}{%
+  \end{adjustwidth}
+}
+
+\newtcolorbox{infobox1}[2][]
+{
+  colframe = silver!25,
+  colback  = silver!10,
+  coltitle = silver!20!black,
+  title    = #2,
+  #1,
+}
+
+\newtcolorbox{implnote}[1][]{
+  colframe= silver!19,
+  colback=silver!10,
+  boxrule=1pt,
+  enhanced,
+  left=15mm, % add space for the icon
+  overlay={
+    \node[anchor=west, xshift=4mm] at (frame.west) {
+      \includesvg[width=6mm]{icons/binary-code}
+    };
+  },
+  #1
+}
+
+\newcommand{\bookmarkicon}[2][1]{%
+  % #1 = scale factor (1.0 ≈ 32pt wide)
+  % #2 = color
+  \tikz[baseline=-1.7ex, yscale=-1, scale=#1]{
+    \path[fill=#2] svg "m21,5H7c-2.206,0-4,1.794-4,4v22.921l11-7.7,11,7.7V9c0-2.206-1.794-4-4-4Z";
+    \path[fill=#2] svg "m29,27h-2V9c0-3.309-2.691-6-6-6h-11V1h11c4.411,0,8,3.589,8,8v18Z";
+  }%
+}
+
+\newtcolorbox{summarynote}[1][]{
+  colframe=silver!10,
+  colback=silver!10,
+  colbacktitle=silver!10,
+  coltitle=primary,
+  boxrule=1pt,
+  toptitle=6pt,
+  enhanced,
+  fonttitle=\bfseries\scshape\sffamily,
+  title={\bookmarkicon[0.35]{primary}\hspace{1mm} summary},
+  #1
+}
+
+
+\newcommand{\compassicon}[2][1]{%
+  % #1 = scale factor (1.0 ≈ 32pt wide)
+  % #2 = color
+  \tikz[baseline=-1.7ex, yscale=-1, scale=#1]{%
+    \tikzset{svgstroke/.style={draw=#2, line width=1pt, line cap=rect, miter limit=10}}
+    \path[svgstroke] svg "M17.8921 30.1799V33.2276V32.4656";
+    \path[svgstroke] svg "M17.8921 4.27516V1.22754V1.98944";
+    \path[svgstroke] svg "M4.93971 17.2275H1.89209H2.65399";
+    \path[svgstroke] svg "M30.8445 17.2275H33.8921H33.1302";
+    \path[svgstroke, fill=none]
+      svg "M17.8921 33.2275C26.7287 33.2275 33.8921 26.0641 33.8921 17.2275C33.8921 8.39097 26.7287 1.22754 17.8921 1.22754C9.05552 1.22754 1.89209 8.39097 1.89209 17.2275C1.89209 26.0641 9.05552 33.2275 17.8921 33.2275Z";
+    \path[fill=#2, draw=none]
+      svg "M14.3788 14.6275L25.9017 6.40525L21.2297 19.6978L9.88247 28.05L14.3788 14.6275Z";
+  }%
+}
+
+\newtcolorbox{compatibilitynote}[1][]{
+  colframe=silver!10,
+  colback=silver!10,
+  colbacktitle=silver!10,
+  coltitle=primary,
+  boxrule=1pt,
+  toptitle=6pt,
+  enhanced,
+  fonttitle=\bfseries\scshape\sffamily,
+  title={\compassicon[0.35]{primary}\hspace{0.8mm} compatibility with other basics},
+  #1
+}
+
+\tcbset{tt box/.style={
+  on line,
+  boxrule=0pt,
+  boxsep=1.8pt,
+  colback=primary!8,
+  colframe=primary!8,
+  arc=3pt,
+  left=0pt,
+  right=0pt,
+  top=0.5pt,
+  bottom=0.5pt
+}}
+
+\newtcbox{\ttbox}{tt box}
+\newcommand{\code}[1]{\hspace{0.1em}\ttbox{\ttfamily#1}\hspace{0.1em}}
+\newcommand{\kwd}[1]{\code{\color{primary}\bfseries#1}}
+\newcommand{\keybd}[1]{\hspace{0.1em}\ttbox{\ttfamily#1}\hspace{0.1em}}
+\newtcbox{\screenout}{
+  enhanced,
+  boxrule=0pt,
+  frame hidden,
+  colback=white,
+  fontupper=\ttfamily,
+  before skip=1em,
+  after skip=1em,
+  left=1.6em,
+  right=2.4em,
+  top=1.2em,
+  bottom=0.6em,
+  sharp corners,
+  rounded corners=northwest,
+  arc=3pt,
+  boxsep=0pt,
+  valign=center,
+  interior style={top color=silver!18,bottom color=white,left color=silver!18,right color=white},
+  overlay={
+    \draw[color=silver!65, line width=0.8pt, rounded corners=3pt]
+      ([xshift=0.8pt,yshift=0.8pt]frame.south west) --
+      ([xshift=0.8pt,yshift=-0.8pt]frame.north west) --
+      ([xshift=-0.8pt,yshift=-0.8pt]frame.north east);
+  }}
+
+\lstdefinelanguage{BASIC}{
+  morekeywords={
+    ABS, ALLOC, ASC, CHR\$, EVENT, FALSE, FRAC,
+    GET\$, GET, GETDATE\$, GETTIME\$, HIT, INKEY\$, INKEY, INT, ISVAL,
+    ITEMCOUNT, ITEMGET\$, JOYB, JOYX, JOYY, KEYDOWN, LEFT\$, LEN,
+    MAX, MID\$, MIN, NOT, PEEK, PEEKD, PEEKL, PEEKW, PLAYING,
+    RANDOM, RIGHT\$, RND, SGN, SPC, STR\$, TILE, TIMER, TRUE, VAL,
+    FOR, IF, PROC, REPEAT, WHILE, ENDIF, ENDPROC, NEXT, THEN, UNTIL,
+    WEND, AT, BY, CALL, CIRCLE, CLEAR, COLOR, COLOUR, DATA, DIM,
+    DOWNTO, ELSE, FROM, GFX, HERE, IMAGE, LET, LINE, LOCAL, MEMCOPY,
+    OFF, ON, OUTLINE, PALETTE, PLOT, POKE, POKED, POKEL, POKEW, READ,
+    RECT, REM, SOLID, SOUND, SPRITE, TEXT, TO,
+    ASSEMBLE, ASSERT, BITMAP, BLOAD, BSAVE, CLS,
+    CPRINT, CURSOR, DIR, DRIVE, END, EXPLODE, GO, GOSUB, GOTO, HIMEM,
+    INPUT, LIST, LOAD, MDELTA, MOUSE, NEW, OPTION, PING, PRINT, RESTORE,
+    RETURN, RUN, SAVE, SETDATE, SETTIME, SHOOT, SPRITES, STOP, TILE,
+    TILES, TRY, VERIFY, XGO, XLOAD, ZAP,
+    ADC, AND, ASL, BCC, BCS, BEQ, BIT, BMI, BNE,
+    BPL, BRA, BRK, BVC, BVS, CLC, CLD, CLI, CLV, CMP, CPX, CPY,
+    DEC, DEX, DEY, EOR, INC, INX, INY, JMP, JSR, LDA, LDX, LDY,
+    LSR, NOP, ORA, PHA, PHP, PHX, PHY, PLA, PLP, PLX, PLY, ROL,
+    ROR, RTI, RTS, SBC, SEC, SED, SEI, STA, STP, STX, STY, STZ,
+    TAX, TAY, TRB, TSB, TSX, TXA, TXS, TYA,
+  },
+  sensitive=false,
+  morecomment=[l]{REM},
+  morecomment=[l]{'},
+  morestring=[b]",
+}
+
+\DeclareCaptionLabelFormat{nolabel}{}
+\captionsetup[lstlisting]{
+  labelformat=nolabel,
+  justification=raggedright,
+  singlelinecheck=false,
+  margin=4em,
+  font=it,
+}
+
+\lstnewenvironment{lst}
+  {\lstset{
+     language=BASIC,
+     basicstyle=\fontsize{10pt}{11pt}\selectfont\ttfamily,
+     keywordstyle=\color{primary}\bfseries,
+     commentstyle=\color{darkgray}\itshape\sffamily,
+     stringstyle=\color{raspberry}\ttfamily,
+     breaklines=true,
+     breakatwhitespace=false,
+     xleftmargin=1em,
+     showstringspaces=false
+   }}
+  {}
+
+\lstnewenvironment{lstexample}
+  {\lstset{
+     language=BASIC,
+     basicstyle=\fontsize{10pt}{11pt}\selectfont\ttfamily,
+     keywordstyle=\color{primary}\bfseries,
+     commentstyle=\color{darkgray}\itshape\sffamily,
+     stringstyle=\color{raspberry}\ttfamily,
+     breaklines=true,
+     breakatwhitespace=false,
+     xleftmargin=1em,
+     showstringspaces=false,
+     caption={Example},
+     captionpos=t
+   }}
+  {}
+
+
+\lstdefinestyle{output}{
+  basicstyle=\ttfamily\small,
+  showstringspaces=false,
+  breaklines=true,
+  xleftmargin=1.5em
+}
+
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftchappagefont}{\bfseries}
+\renewcommand{\cftchapaftersnum}{:}
+\renewcommand{\cftchapnumwidth}{7em}
+\makeatletter
+\newcommand*\updatechaptername{%
+	\addtocontents{toc}{\protect\renewcommand*\protect\cftchappresnum{\@chapapp\ }}
+}
+\newcommand{\compactappendixheader}[1]{%
+  \refstepcounter{chapter}%
+  \addcontentsline{toc}{chapter}{\appendixname~\thechapter: #1}%
+  \markboth{\appendixname~\thechapter: #1}{\appendixname~\thechapter: #1}%
+  {\color{primary}\raggedleft\sffamily\bfseries
+  {\large \appendixname~\thechapter\par}
+  \vspace{0.2em}
+  \mghrulefill{\RW}\par
+  \vspace{0.2em}
+  {\Huge #1\par}
+  \vspace{1em}
+  \mghrulefill{\RW}\par}
+  \vspace{2em}
+}
+\makeatother
+
+%%% Hyphenation
+% Prefer adjusted word spacing before considering hyphenation.
+\pretolerance=1000
+\tolerance=1500
+\emergencystretch=1em
+
+% Permit hyphenation only when it substantially improves the paragraph.
+\hyphenpenalty=3000
+\exhyphenpenalty=3000
+
+% Strongly discourage hyphenation on consecutive lines.
+\doublehyphendemerits=100000
+\finalhyphendemerits=50000
+
+%%% Sphinx to LaTeX
+\newcommand{\DUrolekwd}[1]{\kwd{#1}}
+\renewcommand{\sphinxkeyboard}[1]{\keybd{#1}}
+\renewcommand{\sphinxcode}[1]{\code{#1}}

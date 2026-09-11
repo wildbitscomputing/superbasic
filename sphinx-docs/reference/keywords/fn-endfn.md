@@ -1,4 +1,4 @@
-# fn endfn
+# {kwd}`fn` {kwd}`endfn`
 
 Define a user function. Single-line functions use `= expr`; multi-line functions
 use `endfn` to close the body. Use `return expr` inside a multi-line function to

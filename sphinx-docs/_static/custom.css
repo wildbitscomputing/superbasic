@@ -131,3 +131,14 @@ body[data-theme="dark"] .admonition:not(.note):not(.warning):not(.tip):not(.hint
     background: color-mix(in srgb, var(--wb-teal) 20%, transparent);
     color: var(--wb-teal);
 }
+
+/* Inline markup roles */
+.kwd {
+    font-family: var(--font-stack--monospace);
+    font-weight: bold;
+    color: var(--wb-navy);
+}
+
+body[data-theme="dark"] .kwd {
+    color: var(--wb-teal);
+}

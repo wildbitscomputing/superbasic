@@ -1,8 +1,8 @@
-# val()
+# {kwd}`val()`
 
 Converts a string to a number. There must be some number there, e.g. `"-42xxx"`
 works and returns −42 but `"xxx"` returns an error. To make it usable, use
-`isval()` which checks validity first.
+{kwd}`isval()` which checks validity first.
 
 ```basic
 100   print val("42")

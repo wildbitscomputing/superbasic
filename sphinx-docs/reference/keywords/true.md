@@ -1,7 +1,7 @@
-# true
+# {kwd}`true`
 
-Returns the constant −1.
+Returns the constant `-1`.
 
 ```basic
-100   print true
+100 true
 ```

@@ -1,7 +1,7 @@
-# dir
+# {kwd}`dir`
 
-Shows all the files in the current drive.
+Lists all the files in the current drive.
 
 ```basic
-100   dir
+100 dir
 ```

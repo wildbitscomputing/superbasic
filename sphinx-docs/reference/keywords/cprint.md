@@ -1,10 +1,10 @@
-# cprint
+# {kwd}`cprint`
 
-Operates the same as the `print` command, but control characters (e.g.
-`00`–`1F`, `80`–`FF`) are printed using the characters from the FONT memory, not
-as control characters. The example below prints a horizontal upper bar
-character, not a new line.
+Behaves like {kwd}`print`, except that control-character values `$00`–`$1F` and
+`$80`–`$FF` are displayed as their corresponding font symbols rather than being
+interpreted as control characters. The example below prints a horizontal upper
+bar character, not a newline.
 
 ```basic
-100   cprint chr$(13);
+100 cprint chr$(13)
 ```

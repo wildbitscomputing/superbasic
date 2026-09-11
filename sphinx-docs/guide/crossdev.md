@@ -1,40 +1,51 @@
-# Cross Development of BASIC Programs
+(chap:crossdev)=
 
-Cross development is an alternative to the classic way of programming a Home
-Computer, where the programmer types code directly into the machine. Cross
-development allows you to write the code on a Personal Computer, and upload it
-through the USB debug port. It is also possible to do this with machine code and
-graphic and other data.
+# Cross-development
+
+Cross-development offers an alternative to the classic approach of developing
+directly on the Wildbits machine. Instead, you write the code on a modern PC
+using your standard development tools, then upload it through the USB debug
+port. You can use this workflow for BASIC programs, machine-code programs,
+graphics, and other data.
 
 ## Assistance
 
-In the SuperBASIC git, <https://github.com/wildbitscomputing/superbasic>, each
-release contains a file `howto-crossdev-basic.zip` which gives everything you
-need to cross develop in BASIC and some example programs.
+Each release in the SuperBASIC GitHub repository includes the file
+{file}`howto-crossdev-basic.zip`, which contains everything you need to
+cross-develop in BASIC, along with some example programs.
+
+<https://github.com/wildbitscomputing/superbasic>
 
 ## Connection
 
-To connect your Wildbits/K2 to a PC (Windows, Linux, Mac) you need a USB data
-cable — Micro USB for the Wildbits/Jr or Wildbits/K, or USB-C for the
-Wildbits/Jr2 or Wildbits/K2. Some cables only provide power; make sure yours
-supports data. The USB plug connects to the board, and the other end to the PC.
+To connect your Wildbits or Foenix machine to a PC (Windows, Linux, or Mac),
+you'll need a standard USB data cable: Micro USB for the F256 Jr/K, or USB-C for
+the Wildbits/Jr2 or Wildbits/K2. Some cables only provide power; make sure yours
+supports data.
 
-## Software
+## Utility software
 
-There are two ways of programming the board. I prefer FnxMgr
-(<https://github.com/pweingar/FoenixMgr>) which is a Python script which runs on
-all platforms, and can easily automate uploading. It can also be uploaded
-through the Foenix IDE on Windows.
+There are two ways to program the machine over USB. We recommend using
+FnxMgr,[^1] a Python script that runs on all platforms and allows you to
+automate code uploading. Alternatively, cross-developed code can be uploaded
+using the Foenix IDE on Windows.
 
 Besides Python version 3, the FnxMgr script requires `pyserial`.
 
-## BASIC
+## Cross-developing in SuperBASIC
 
-The input to the program is standard ASCII files, with line numbers. Line
-numbers are required for editing only. (The `number.py` script on the SuperBASIC
-GitHub adds line numbers and the end-of-file marker automatically.) However, you
-do not need to use line numbers in programming, though `GOTO` and `GOSUB` are
-implemented if you wish, or want to port old software.
+You can cross-develop your program using any standard text editor. Line numbers
+aren't required during development, but you can include them if you prefer or
+need to—for example, when porting older code.
+
+However, line numbers must be added before uploading, as the SuperBASIC
+interpreter on the machine uses them to organize and edit the program. The file
+must also end with a character whose ASCII code is greater than 127. Running
+your program through the `number.py` script in the
+{file}`howto-crossdev-basic.zip` archive ensures both requirements are met.
+
+If your program already includes line numbers, you can add the end-of-file
+marker manually by copying it from one of the examples in the archive.
 
 I would start with something simple though:
 
@@ -43,38 +54,40 @@ I would start with something simple though:
 20    zap
 ```
 
-Each file should end in a character with an ASCII code greater than 127, which
-marks the end of the file. You can copy one from the software in GitHub.
+## Uploading and running
 
-## Uploading and Running
+Note that this section assumes you're using a machine that starts up directly
+into SuperBASIC. If you're booting from RAM, the process may differ slightly.
 
-This is written for boards which automatically start up into BASIC.
+Uploading works by loading an ASCII text file into memory, which is then
+effectively “typed in” via either the {kwd}`xload` or {kwd}`xgo` command.
+{kwd}`xload` loads the program into the interpreter, allowing you to list, edit,
+or run it as usual. {kwd}`xgo` does the same but immediately runs the program
+afterward.
 
-Uploading works by loading the ASCII text into memory. It is then effectively
-"typed in" by either the `xload` command or the `xgo` command. The first loads
-the program in (and it can then be listed or edited or run in the normal way).
-The second loads and runs it.
+To load your program into memory for use with {kwd}`xload` or {kwd}`xgo`, use a
+command like one of the following. On Windows, you can identify the correct COM
+port using Device Manager; on Linux, use `lsusb` or `dmesg`.
 
-To load the program into memory to be "loaded" you need something like the
-below.
-
-### Linux Upload
-
-```bash
-python ../bin/fnxmgr.zip --port /dev/ttyUSB0 --binary load.bas --address 28000
-```
-
-### Windows Upload
+### Example: Linux upload
 
 ```text
-python ..\bin\fnxmgr.zip --port COM1 --binary load.bas --address 28000
+python fnxmgr.zip --port /dev/ttyUSB0 --binary load.bas --address 28000
 ```
 
-## Memory Use
+### Example: Windows upload
 
-Program text is uploaded to physical address `$28000` onwards. The `xload` and
-`xgo` commands read from this address until they encounter the end-of-file
-marker, so the upload area grows with the size of your source file. Be aware
-that very large files may overlap with sprite memory at `$30000`. For the full
-memory map including program pages, graphics regions, and the `LOMEM` command,
-see {doc}`memory`.
+```text
+python fnxmgr.zip --port COM1 --binary load.bas --address 28000
+```
+
+## Memory use
+
+Program text is uploaded to physical address `$28000` onwards. The {kwd}`xload`
+and {kwd}`xgo` commands read from this address until they encounter the
+end-of-file marker, so the upload area grows with the size of your source file.
+Be aware that very large files may overlap with sprite memory at `$30000`. For
+the full memory map including program pages, graphics regions, and the
+{kwd}`lomem` command, see {doc}`memory`.
+
+[^1]: https://github.com/pweingar/FoenixMgr

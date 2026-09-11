@@ -1,7 +1,7 @@
-# restore
+# {kwd}`restore`
 
-Resets the data pointer to the start of the program.
+Resets the {kwd}`data` pointer to the start of the program.
 
 ```basic
-100   restore
+100 restore
 ```

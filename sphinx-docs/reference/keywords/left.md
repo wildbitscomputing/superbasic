@@ -1,7 +1,7 @@
-# left\$()
+# {kwd}`left$()`
 
-Returns several characters from a string counting from the left.
+Returns a specified number of characters from the beginning of a string.
 
 ```basic
-100   print left$("mystring",4)
+100 print left$("mystring",4)
 ```

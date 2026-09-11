@@ -1,8 +1,9 @@
-# goto
+# {kwd}`goto`
 
-Transfer execution to given line number. Provided for compatibility with older
-programs; use structured control flow instead for new code.
+Transfers execution to the specified line number. Consider using structured
+programming constructs (Chapter {ref}`chap:structured`) instead.
 
 ```basic
-100   goto 200
+10 print "Hi there! ";
+20 goto 10
 ```
