@@ -9,6 +9,10 @@
 ; buffer overflows).
 ;;
 
+; Page 1 modules use slot 5 (inc/dec 8+5).
+; Page 2 modules use slot 3 (save/restore 8+3 with depth counter).
+
+
 .if PagingEnabled==1 && HasPage2==1
 
 Slot3Init:

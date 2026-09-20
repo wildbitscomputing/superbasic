@@ -14,19 +14,10 @@ import re
 from pathlib import Path
 from typing import TextIO
 
+from pages import Page, PAGE1, PAGE2
+
 # regex for exported labels
 export_re = re.compile(r"^\s*Export_(\w+)\s*:\s*(;.*)?$")
-
-
-PAGE2_BEGIN = """
-.section page2
-.logical * + $2000
-"""
-
-PAGE2_END = """
-.endlogical
-.send page2
-"""
 
 
 def main(*, module_name: str, build_dir: Path, page: int = 1) -> None:
@@ -36,10 +27,9 @@ def main(*, module_name: str, build_dir: Path, page: int = 1) -> None:
 
     sources = collect_sources(module_name)
 
-    if page == 2:
-        output_path = build_dir / (module_name + "_p2.module.asm")
-    else:
-        output_path = build_dir / (module_name + ".module.asm")
+    output_page = PAGE2 if page == 2 else PAGE1
+    output_path = build_dir / output_page.name / (module_name + ".module.asm")
+    output_path.parent.mkdir(exist_ok=True)
 
     with open(output_path, "w", encoding="utf-8") as out:
         # Write the output assembly file header
@@ -50,14 +40,14 @@ def main(*, module_name: str, build_dir: Path, page: int = 1) -> None:
         for src in sources:
             # Scan each source file line-by-line, accumulating its exports
             # and writing its contents to the output.
-            file_exports = process_source(src, out, page=page)
+            file_exports = process_source(src, out, page=output_page)
             module_exports.extend(file_exports)
 
         # Dump the collected exports to a file
-        dump_exports(build_dir, module_name, module_exports, page=page)
+        dump_exports(build_dir, module_name, module_exports, page=output_page)
 
 
-def process_source(path: Path, out: TextIO, *, page: int = 1) -> list[str]:
+def process_source(path: Path, out: TextIO, *, page: Page) -> list[str]:
     """Process a single source file, extracting exports and writing to output."""
     exports: list[str] = []
 
@@ -66,14 +56,13 @@ def process_source(path: Path, out: TextIO, *, page: int = 1) -> list[str]:
             if m := export_re.match(line):
                 exports.append(m.group(1))
 
-            if page == 2:
-                normalized = " ".join(line.split())
-                if normalized == ".section code":
-                    out.write(PAGE2_BEGIN)
-                    continue
-                elif normalized == ".send code":
-                    out.write(PAGE2_END)
-                    continue
+            normalized = " ".join(line.split())
+            if normalized == ".section code":
+                out.write(page.begin())
+                continue
+            elif normalized == ".send code":
+                out.write(page.end())
+                continue
 
             out.write(f"{line.rstrip()}\n")
 
@@ -81,15 +70,14 @@ def process_source(path: Path, out: TextIO, *, page: int = 1) -> list[str]:
 
 
 def dump_exports(
-    build_dir: Path, module_name: str, exports: list[str], *, page: int = 1
+    build_dir: Path, module_name: str, exports: list[str], *, page: Page
 ) -> None:
     """Save module exports to the corresponding `.exports` file."""
     if not exports:
         return
 
-    suffix = "_p2" if page == 2 else ""
     with open(
-        build_dir / (module_name + suffix + ".exports"), "w", encoding="utf-8"
+        build_dir / page.name / (module_name + ".exports"), "w", encoding="utf-8"
     ) as out:
         for export in exports:
             out.write(f"{export}\n")

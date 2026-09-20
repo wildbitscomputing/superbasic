@@ -18,5 +18,5 @@
 .send storage
 
 .section boot
-    .cwarn * > CodeStart, "BROKEN BUILD: boot section overflowed into code by ", * - CodeStart," bytes"
+    .cwarn * > ResidentSharedStart, "BROKEN BUILD: boot section overflowed into resident code by ", * - ResidentSharedStart," bytes"
 .send boot

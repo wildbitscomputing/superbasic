@@ -21,14 +21,14 @@ all:
 	$(Q)$(MAKE) -B -C hardware$(S)startup
 
 	$(Q)$(CCOPY) ..$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm
-	$(Q)$(PYTHON) _scripts$(S)makebuild.py tokeniser
 
+	$(Q)$(PYTHON) _scripts$(S)makebuild.py tokeniser $(BUILD_DIR)
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py graphics $(BUILD_DIR)
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py hardware $(BUILD_DIR)
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py kernel $(BUILD_DIR) --page 2
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py sound $(BUILD_DIR) --page 2
 
-	$(Q)$(PYTHON) _scripts$(S)makeexport.py >$(BUILD_DIR)$(S)_exports.module.asm
+	$(Q)$(PYTHON) _scripts$(S)makeexport.py $(BUILD_DIR)
 
 clean:
 	$(Q)$(MAKE) -C graphics clean
