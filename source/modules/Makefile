@@ -27,6 +27,8 @@ all:
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py hardware $(BUILD_DIR)
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py kernel $(BUILD_DIR) --page 2
 	$(Q)$(PYTHON) _scripts$(S)makebuild.py sound $(BUILD_DIR) --page 2
+	$(Q)$(PYTHON) math$(S)make-tables.py >math$(S)anchors.inc
+	$(Q)$(PYTHON) _scripts$(S)makebuild.py math $(BUILD_DIR) --page 2
 
 	$(Q)$(PYTHON) _scripts$(S)makeexport.py >$(BUILD_DIR)$(S)_exports.module.asm
 
@@ -36,4 +38,9 @@ clean:
 
 	$(Q)$(CDEL) $(BUILD_DIR)$(S)*.*
 
-.PHONY: all clean
+# Refresh after tokens.py has generated the keyword table for this build.
+tokeniser:
+	$(Q)$(CCOPY) ..$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm
+	$(Q)$(PYTHON) _scripts$(S)makebuild.py tokeniser
+
+.PHONY: all clean tokeniser

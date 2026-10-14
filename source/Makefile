@@ -20,7 +20,7 @@ ASFLAGS += '-D MONITOR_ADDRESS=$(DOLLAR)$(LMONITOR)' '-D LOCKOUT_ADDRESS=$(DOLLA
 			'-D TILEIMAGES_ADDRESS=$(DOLLAR)$(LTILEIMAGES)' \
 			-L $(BUILDDIR)debug$(S)basic.lst -l $(BUILDDIR)debug$(S)basic.lbl
 
-MODULES = +hardware +tokeniser +graphics +kernel:2 +sound:2
+MODULES = +hardware +tokeniser +graphics +kernel:2 +sound:2 +math:2
 BUILD_OUT = $(BUILDDIR)basic.rom
 SCRIPTDIR = scripts$(S)
 MAME_PATH=../../mame
@@ -92,6 +92,7 @@ prelim:
 	$(Q)$(MAKE) -B -C modules clean all
 
 	$(Q)$(PYTHON) $(SCRIPTDIR)tokens.py
+	$(Q)$(MAKE) -C modules tokeniser
 	$(Q)$(PYTHON) $(SCRIPTDIR)constants.py
 	$(Q)$(PYTHON) $(SCRIPTDIR)version.py $(VERSION)
 

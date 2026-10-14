@@ -146,6 +146,7 @@
 	.include	"./system.f256/module.interfaces/kernel/functions/keydown.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/rnd.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/screen.asm"
+	.include	"./system.f256/module.interfaces/math/trig.asm"
 	.include	"./system.f256/module.interfaces/sound/effects.asm"
 	.include	"./system.f256/module.interfaces/sound/playing.asm"
 	.include	"./system.f256/module.interfaces/sound/sound.asm"
@@ -189,6 +190,7 @@ StartModuleCode:
 	.include	"./common/generated/_errortext_p2.asm"
 	.include	"./modules/.build/kernel_p2.module.asm"
 	.include	"./modules/.build/sound_p2.module.asm"
+	.include	"./modules/.build/math_p2.module.asm"
 
 .section page2
 .logical * + $2000

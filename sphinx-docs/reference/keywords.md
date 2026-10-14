@@ -21,6 +21,7 @@ keywords/chr
 keywords/circle
 keywords/cls
 keywords/cprint
+keywords/cos
 keywords/cursor
 keywords/dim
 keywords/dir
@@ -67,6 +68,7 @@ keywords/not
 keywords/option
 keywords/palette
 keywords/peek
+keywords/pi
 keywords/playing
 keywords/plot
 keywords/poke
@@ -86,8 +88,10 @@ keywords/screen
 keywords/setdate
 keywords/settime
 keywords/sgn
+keywords/sin
 keywords/sound
 keywords/spc
+keywords/tan
 keywords/sprite
 keywords/sprites
 keywords/stop

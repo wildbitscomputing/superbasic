@@ -46,6 +46,7 @@ class TokenSource(object):
 				get$( 		inkey(		get( 		itemcount(	itemget$( 	keydown(
 				tile(		screen(	    screen$(	fre(~
 				cwd$(		dir$(		dir(		tab(
+				sin(        cos(        tan(        pi
 
 			{0}							// Set 0
 				data 		dim 		let 		rem  		else 		to
