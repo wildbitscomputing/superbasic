@@ -21,6 +21,7 @@
 WarmStart:
 		ldx 	#$FF
 		txs
+		jsr BranchCacheClear
 		;
 		;		Reset slot 3 module state in case an error left it mapped.
 		;		(Error paths in slot 3 modules jump to ErrorHandler/WarmStart,

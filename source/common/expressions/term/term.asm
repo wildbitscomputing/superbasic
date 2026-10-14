@@ -42,13 +42,8 @@ EvaluateTerm:
 		;
 		; ----------------------------------------------------------------------------------------
 
-		jsr 	EncodeNumberStart 			; can't fail as it's 0-9 !
-_ETNumber:
-		iny 								; keep encoding until we have the numbers
-		.cget
-		jsr 	EncodeNumberContinue
-		bcs 	_ETNumber 					; go back if accepted.
-		rts
+		jsr 	EncodeNumber._ENStartDigit 	; already validated as 0-9
+		jmp _ETNumber
 
 		; ----------------------------------------------------------------------------------------
 		;
@@ -223,5 +218,28 @@ _ETDereference:
 _ETParenthesis:
 		jsr 	EvaluateExpression 			; evaluate here, from lowest precedence
 		jmp 	CheckRightBracket 			; check for )
+
+_ETNumber:
+		iny
+		.cget
+		; Integer delimiters need not enter the generic number state machine.
+		; Decimal numbers retain its original finalisation and rounding path.
+		cmp #'0'
+		bcc _ETNumberDot
+		cmp #'9'+1
+		bcs _ETNumberDone
+		jsr EncodeNumber._ENNoRestart ; digit already validated above
+		bra _ETNumber
+_ETNumberDot:
+		cmp #'.'
+		bne _ETNumberDone
+		jsr EncodeNumberContinue
+_ETDecimal:
+		iny
+		.cget
+		jsr EncodeNumberContinue
+		bcs _ETDecimal
+_ETNumberDone:
+		rts
 
 		.send code

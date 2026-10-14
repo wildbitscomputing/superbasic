@@ -61,7 +61,8 @@ Dereference:
 		; ------------------------------------------------------------------------
 
 		lda 	NSStatus,x 					; get status byte.
-		and 	#NSBTypeMask 				; what type is it ?
+		and 	#NSBTypeMask+3 				; type and byte/word indirection width
+		beq 	_DRFFull 					; common full integer reference
 		cmp 	#NSTString 					; if string, dereference two
 		beq 	_DRFDereferenceTwo
 		cmp 	#NSTFloat 					; if float, do full dereference.		
@@ -69,9 +70,7 @@ Dereference:
 		;
 		;		Dereference integer
 		;
-		lda 	NSStatus,x 					; must be integer - how many bytes ?
-		and 	#3
-		beq 	_DRFFull 					; the whole word
+		; A is already the byte/word width (1 or 2).
 
 		; ------------------------------------------------------------------------
 		;

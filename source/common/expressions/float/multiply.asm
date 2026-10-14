@@ -31,7 +31,11 @@ FloatMultiply:
 		cmp 	#0
 		beq 	_FDSetZero 					
 
-		jsr 	MultiplyShort 				; calculate the result.		
+		.if mathIntegrated == 1
+		jsr 	MathMultiplyMantissa 		; hardware path for normalised mantissas
+		.else
+		jsr 	MultiplyShort 				; portable software fallback
+		.endif
 		adc 	NSExponent,x 				; calculate exponent including the shift.
 		clc
 		adc 	NSExponent+1,x

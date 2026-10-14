@@ -382,8 +382,16 @@ _TAReady:
 
 ; Signed Q2.30 work *= delta. |delta| <= PI/256, so its magnitude fits
 ; in 24 bits. Exact unsigned 32x24 multiply, rounded at bit 29, then
-; restore sign. Uses a seven-byte product and 24 shift/add iterations.
+; restore sign. Four unsigned 16x16 hardware multiplies form the full
+; seven-byte product, including carries below the eventual rounding bit.
 ; Preserves X, angle/index, delta and the outer sine/cosine signs.
+; The page-0 integer multiplier is shared: mask IRQs while using it and
+; restore both operands and the original I/O mapping before restoring I.
+; Like other shared I/O operations, this must not be interrupted by an NMI
+; handler that changes the I/O mapping or uses the math coprocessor.
+TrigMulA = $de00
+TrigMulB = $de02
+TrigMulResult = $de10
 TrigFixedMultiply:
 		lda trigWork+3
 		and #$80
@@ -393,52 +401,72 @@ TrigFixedMultiply:
 		bpl _TMPositive
 		jsr TrigNegateWork
 _TMPositive:
-		lda trigWork+0
-		sta trigFactor+0
-		stz trigProduct+0
+		php
+		sei
+		lda $01
+		pha
+		stz $01
+		ldy #0
+_TMSave:
+		lda TrigMulA,y
+		pha
+		iny
+		cpy #4
+		bne _TMSave
+; A low * B low -> product bytes 0..3.
+		lda trigWork
+		sta TrigMulA
 		lda trigWork+1
-		sta trigFactor+1
-		stz trigProduct+1
-		lda trigWork+2
-		sta trigFactor+2
-		stz trigProduct+2
-		lda trigWork+3
-		sta trigFactor+3
-		stz trigProduct+3
-		lda trigDelta+0
-		sta trigLow+0
+		sta TrigMulA+1
+		lda trigDelta
+		sta TrigMulB
 		lda trigDelta+1
-		sta trigLow+1
-		lda trigDelta+2
-		sta trigLow+2
-		ldy #24
-_TMLoop:
-		lda trigLow
-		lsr a
-		bcc _TMShift
-		clc
-		lda trigProduct+0
-		adc trigFactor+0
-		sta trigProduct+0
-		lda trigProduct+1
-		adc trigFactor+1
-		sta trigProduct+1
-		lda trigProduct+2
-		adc trigFactor+2
-		sta trigProduct+2
-		lda trigProduct+3
-		adc trigFactor+3
-		sta trigProduct+3
-_TMShift:
-		ror trigProduct+3
-		ror trigProduct+2
-		ror trigProduct+1
-		ror trigProduct
-		ror trigLow+2
-		ror trigLow+1
-		ror trigLow
+		sta TrigMulB+1
+		ldy #3
+_TMLow:
+		lda TrigMulResult,y
+		sta trigFullProduct,y
 		dey
-		bne _TMLoop
+		bpl _TMLow
+		stz trigFullProduct+4
+		stz trigFullProduct+5
+		stz trigFullProduct+6
+; A high * B low -> add at byte 2.
+		lda trigWork+2
+		sta TrigMulA
+		lda trigWork+3
+		sta TrigMulA+1
+		jsr TrigAddMiddleProduct
+; A high * B high -> add at byte 4. B high has only eight bits,
+; so this partial product has at most three bytes.
+		lda trigDelta+2
+		sta TrigMulB
+		stz TrigMulB+1
+		clc
+		lda TrigMulResult
+		adc trigFullProduct+4
+		sta trigFullProduct+4
+		lda TrigMulResult+1
+		adc trigFullProduct+5
+		sta trigFullProduct+5
+		lda TrigMulResult+2
+		adc trigFullProduct+6
+		sta trigFullProduct+6
+; A low * B high -> add at byte 2, carrying through byte 6.
+		lda trigWork
+		sta TrigMulA
+		lda trigWork+1
+		sta TrigMulA+1
+		jsr TrigAddMiddleProduct
+		ldy #3
+_TMRestore:
+		pla
+		sta TrigMulA,y
+		dey
+		bpl _TMRestore
+		pla
+		sta $01
+		plp
 ; Product currently holds floor(full_product/2^24).
 		clc
 		lda trigProduct
@@ -471,6 +499,24 @@ _TMRound:
 		sta trigWork+3
 		lda trigProductSign
 		bmi TrigNegateWork
+		rts
+TrigAddMiddleProduct:
+		clc
+		lda TrigMulResult
+		adc trigFullProduct+2
+		sta trigFullProduct+2
+		lda TrigMulResult+1
+		adc trigFullProduct+3
+		sta trigFullProduct+3
+		lda TrigMulResult+2
+		adc trigFullProduct+4
+		sta trigFullProduct+4
+		lda TrigMulResult+3
+		adc trigFullProduct+5
+		sta trigFullProduct+5
+		lda trigFullProduct+6
+		adc #0
+		sta trigFullProduct+6
 		rts
 TrigNegateWork:
 		sec
@@ -598,8 +644,10 @@ trigProductSign: .fill 1
 trigAngle: .fill 4
 trigWork: .fill 4
 trigFactor: .fill 4
-trigProduct: .fill 4
+; Contiguous little-endian 56-bit product; trigProduct is its high 32 bits.
+trigFullProduct:
 trigLow: .fill 3
+trigProduct: .fill 4
 trigDelta: .fill 3
 TrigInput = 0
 TrigResult = 6

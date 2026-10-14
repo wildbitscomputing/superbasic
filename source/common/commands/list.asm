@@ -69,6 +69,17 @@ _CLSecond:
 		;		Loop through the whole program
 		;
 _CLStart
+		; Decode range expressions with the caller's array RAM still mapped.
+		; The cold listing walk itself only touches program/identifier memory.
+		jsr Slot3BankIn
+		jmp _CLStartPaged
+_CLListProcedure:
+		jsr Slot3BankIn
+		jmp _CLListProcedurePaged
+		.send code
+		.section page2
+		.logical * + $2000
+_CLStartPaged:
 		.cresetcodepointer
 		;
 _CLLoop:
@@ -102,7 +113,7 @@ _CLBreak:
 ;
 ; ************************************************************************************************
 
-_CLListProcedure:
+_CLListProcedurePaged:
 		.cget 								; get the reference - look for this (4000-7FFF) in the code.
 		sta 	zTemp1
 		iny
@@ -183,6 +194,9 @@ _CLLPListLoop:
 _CLLPSingleLine:
 		jsr 	CLListOneLineShift
 		jmp 	WarmStart
+		.endlogical
+		.send page2
+		.section code
 
 ; ************************************************************************************************
 ;

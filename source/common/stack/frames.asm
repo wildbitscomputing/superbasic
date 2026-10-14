@@ -29,7 +29,7 @@ StackOpen:
 		adc 	basicStack 	 				; basicStack
 		sta 	basicStack
 		bcs 	_SONoBorrow
-		.debug
+		; Crossing a page is normal within the two-page BASIC stack.
 		dec 	basicStack+1
 		lda 	basicStack+1 				; have we reached stack overflow
 		cmp 	#BasicStackBase >> 8
