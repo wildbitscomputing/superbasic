@@ -56,10 +56,56 @@ IntegerModulus: ;; [%]
 		.dispatchintegeronly
 IntegerModulusNoCheck:		
 		jsr 	CheckDivideZero 			; do div zero check
+		jsr Slot3BankIn
+		jsr ModulusPowerOfTwo
+		php
+		jsr Slot3BankOut
+		plp
+		bcs _IMDone
 		jsr 	Int32Divide 				; do the division
+_IMDone:
 		asl 	NSStatus,x 					; clear the sign bit.
 		lsr 	NSStatus,x
 		rts
+
+		.send code
+		.section page2
+		.logical * + $2000
+; A 32-bit magnitude modulo a 16-bit power of two is just a mask.
+; This also accelerates RANDOM(n) without changing its distribution or seed.
+; The caller has already rejected a zero divisor. Carry signals a handled case.
+ModulusPowerOfTwo:
+		lda NSMantissa2+1,x
+		ora NSMantissa3+1,x
+		bne _MPFallback
+		sec
+		lda NSMantissa0+1,x
+		sbc #1
+		sta zTemp0
+		lda NSMantissa1+1,x
+		sbc #0
+		sta zTemp0+1
+		and NSMantissa1+1,x
+		bne _MPFallback
+		lda zTemp0
+		and NSMantissa0+1,x
+		bne _MPFallback
+		lda NSMantissa0,x
+		and zTemp0
+		sta NSMantissa0,x
+		lda NSMantissa1,x
+		and zTemp0+1
+		sta NSMantissa1,x
+		stz NSMantissa2,x
+		stz NSMantissa3,x
+		sec
+		rts
+_MPFallback:
+		clc
+		rts
+		.endlogical
+		.send page2
+		.section code
 
 ; ************************************************************************************************
 ;
@@ -69,6 +115,16 @@ IntegerModulusNoCheck:
 ; ************************************************************************************************
 
 Int32Divide:
+		.if mathIntegrated == 1
+		pha
+		jsr Slot3BankIn
+		jsr DivideInteger16
+		php
+		jsr Slot3BankOut
+		plp
+		pla
+		bcs _I32FastExit
+		.endif
 		pha 								; save AXY
 		phy
 		jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
@@ -92,6 +148,7 @@ _I32DivideNoCarryIn:
 
 		ply 								; restore AXY and exit
 		pla
+_I32FastExit:
 		rts
 
 ; ************************************************************************************************
@@ -144,6 +201,69 @@ _DCSExit:
 		rts		
 
 		.send 	code
+
+		.if mathIntegrated == 1
+		.section page2
+		.logical * + $2000
+; Same contract as Int32Divide: remainder at X, quotient at X+2.
+; Carry clear leaves operands untouched for the 32-bit software fallback.
+DivideInteger16:
+		lda NSMantissa2,x
+		ora NSMantissa3,x
+		ora NSMantissa2+1,x
+		ora NSMantissa3+1,x
+		bne _DI16Fallback
+		php
+		sei
+		lda $01
+		pha
+		stz $01
+		lda $de04
+		pha
+		lda $de05
+		pha
+		lda $de06
+		pha
+		lda $de07
+		pha
+		; Unlike the multiplier, divisor precedes dividend in this unit.
+		lda NSMantissa0+1,x
+		sta $de04
+		lda NSMantissa1+1,x
+		sta $de05
+		lda NSMantissa0,x
+		sta $de06
+		lda NSMantissa1,x
+		sta $de07
+		lda $de14
+		sta NSMantissa0+2,x
+		lda $de15
+		sta NSMantissa1+2,x
+		stz NSMantissa2+2,x
+		stz NSMantissa3+2,x
+		lda $de16
+		sta NSMantissa0,x
+		lda $de17
+		sta NSMantissa1,x
+		pla
+		sta $de07
+		pla
+		sta $de06
+		pla
+		sta $de05
+		pla
+		sta $de04
+		pla
+		sta $01
+		plp
+		sec
+		rts
+_DI16Fallback:
+		clc
+		rts
+		.endlogical
+		.send page2
+		.endif
 
 ; ************************************************************************************************
 ;

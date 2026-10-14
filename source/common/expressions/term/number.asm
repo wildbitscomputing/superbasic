@@ -67,6 +67,7 @@ _ENIsOkay:
 _ENStartEncode:
 		cmp 	#'.'						; first is decimal place, go straight to that.
 		beq 	_ENFirstDP
+_ENStartDigit:                          ; EvaluateTerm already checked '0'..'9'.
 		and 	#15 						; put digit in mantissa, initially a single digit constant
 		jsr 	NSMSetByte 					; in single byte mode.
 		lda 	#ESTA_Low

@@ -49,7 +49,7 @@ _IfStructured:
 		bne 	_IfExit 					; if not, then continue normally.
 		lda 	#KWD_ELSE 					; look for else/endif 
 		ldx 	#KWD_ENDIF
-		jsr 	ScanForward 				; and run from there
+		jsr 	BranchScanForward 			; and run from there
 _IfExit: 
 		rts
 
@@ -62,7 +62,7 @@ _IfExit:
 ElseCode: ;; [else] 					
 		lda 	#KWD_ENDIF 					; else is only run after the if clause succeeds
 		tax 								; so just go to the structure exit
-		jmp 	ScanForward
+		jmp 	BranchScanForward
 
 ; ************************************************************************************************
 ;

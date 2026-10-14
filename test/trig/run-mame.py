@@ -12,9 +12,10 @@ The ROM directory must contain the machine's supporting kernel/font ROMs.
 Current .build/sb01.bin through sb05.bin override its SuperBASIC images.
 Logs and the temporary disk are retained in the printed temporary directory.
 Use --firmware-dir to compare a saved build and --case to select a test.
-MULTIPLY exercises the fixed-point kernel directly against exact integer
-results, including carry/tie cases and I/O/IRQ/register preservation. It needs
-matching debug/basic.lbl (or --labels); saved builds omit it without --labels.
+MULTIPLY and FLOATMUL exercise the machine-code kernels directly against exact
+integer results, including carry/tie cases and I/O/IRQ/register preservation.
+They need matching debug/basic.lbl (or --labels); saved builds omit these cases
+without --labels. FLOATMUL also checks legacy truncation and nested bank entry.
 RUN_FRAMES excludes disk loading; printed seconds assume the 60 Hz display.
 """
 
@@ -36,8 +37,8 @@ def main():
     parser.add_argument("--firmware-dir", type=Path, help="Use a saved build for comparison")
     parser.add_argument("--labels", type=Path, help="Matching basic.lbl for direct-code tests")
     parser.add_argument("--case", action="append",
-                        choices=["TEST", "ANCHORS", "POLE", "TYPE", "SYNTAX", "BUBBLE",
-                                 "MULTIPLY"])
+                        choices=["TEST", "ANCHORS", "FLOATS", "MULOVF", "POLE", "TYPE", "SYNTAX", "BUBBLE",
+                                 "MULTIPLY", "FLOATMUL"])
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     mame = args.mame.resolve()
@@ -62,12 +63,15 @@ def main():
     cases = [
         ("TEST", "TRIG PASS", 180),
         ("ANCHORS", "ANCHORS PASS", 600),
+        ("FLOATS", "FLOATS PASS", 180),
+        ("MULOVF", "Out of Range at line 10", 30),
         ("POLE", "Division by zero at line 30", 30),
         ("TYPE", "Type mismatch at line 10", 30),
         ("SYNTAX", "Syntax error at line 10", 30),
     ]
     # Saved firmware needs its matching symbols to run the direct-code test.
-    direct_cases = {"MULTIPLY": ("multiply.lua", 120)}
+    direct_cases = {"MULTIPLY": ("multiply.lua", 120),
+                    "FLOATMUL": ("float-multiply.lua", 180)}
     selected_direct = set(direct_cases) if not args.case else set(args.case) & direct_cases.keys()
     if selected_direct and (not args.firmware_dir or args.labels or args.case):
         labels = args.labels or firmware_dir / "debug" / "basic.lbl"

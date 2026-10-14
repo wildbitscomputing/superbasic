@@ -34,7 +34,7 @@ def multiply(value, delta):
 
 
 def shift_add_multiply(value, delta):
-    # Exact software 32x24->56 bit implementation of TrigFixedMultiply.
+    # Previous software 32x24->56 bit implementation (regression oracle).
     factor = abs(value)
     product = abs(delta)
     for _ in range(24):
@@ -42,6 +42,15 @@ def shift_add_multiply(value, delta):
             product += factor << 24
         product >>= 1
     magnitude = (product + (1 << 29)) >> 30
+    return -magnitude if (value < 0) != (delta < 0) else magnitude
+
+
+def hardware_multiply(value, delta):
+    a, b = abs(value), abs(delta)
+    a0, a1 = a & 65535, a >> 16
+    b0, b1 = b & 65535, b >> 16
+    product = a0*b0 + ((a1*b0 + a0*b1) << 16) + ((a1*b1) << 32)
+    magnitude = ((product >> 24) + 32) >> 6
     return -magnitude if (value < 0) != (delta < 0) else magnitude
 
 
@@ -82,6 +91,17 @@ class TablesTest(unittest.TestCase):
             value = rng.randrange(-SCALE, SCALE + 1)
             delta = rng.randrange(-HALF_STEP, HALF_STEP + 1)
             self.assertEqual(shift_add_multiply(value, delta), multiply(value, delta))
+            self.assertEqual(hardware_multiply(value, delta), multiply(value, delta))
+
+    def test_multiplier_carries_and_rounding(self):
+        values = [0, 1, 65535, 65536, 65537, (1 << 29)-1, 1 << 29,
+                  (1 << 29)+1, SCALE-1, SCALE]
+        deltas = [0, 1, 2, 65535, 65536, 65537, HALF_STEP-1, HALF_STEP]
+        for value in values:
+            for delta in deltas:
+                for a, b in [(value, delta), (-value, delta),
+                             (value, -delta), (-value, -delta)]:
+                    self.assertEqual(hardware_multiply(a, b), multiply(a, b))
 
     def test_dense_quarter_wave(self):
         worst = 0

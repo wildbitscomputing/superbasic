@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 ClearSystem:
+		jsr BranchCacheClear
 		;
 		;		Scan through all the variables resetting them to zero.
 		;
