@@ -45,7 +45,7 @@ class TokenSource(object):
 				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
 				get$( 		inkey(		get( 		itemcount(	itemget$( 	keydown(
 				tile(		screen(	    screen$(	fre(~
-				cwd$(		dir$(		dir(		tab(
+				cwd$(		dir$(		dir(		tab(		exists(
 				sin(        cos(        tan(        pi
 
 			{0}							// Set 0

@@ -28,6 +28,7 @@ keywords/dir
 keywords/drive
 keywords/end
 keywords/event
+keywords/exists
 keywords/false
 keywords/fn-endfn
 keywords/for-next

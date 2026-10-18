@@ -141,6 +141,7 @@
 	.include	"./system.f256/module.interfaces/kernel/commands/timer.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/cd.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/dir.asm"
+	.include	"./system.f256/module.interfaces/kernel/functions/exists.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/fre.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/getdatetime.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/getinkey.asm"
