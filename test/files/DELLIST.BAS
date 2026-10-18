@@ -1,0 +1,1 @@
+10 delete "EMPTY.DAT,LARGE.DAT"

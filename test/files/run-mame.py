@@ -26,6 +26,8 @@ def main():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--kernel-dir', type=Path)
     group.add_argument('--legacy-kernel', action='store_true')
+    parser.add_argument('--delete-only', action='store_true',
+                        help='Run deletion tests, also supported on legacy kernels')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     work = Path(tempfile.mkdtemp(prefix='superbasic-exists-'))
@@ -49,11 +51,25 @@ def main():
         for i in range(180):
             fs.create(f'/MANY/F{i:03}.DAT')
         fs.writebytes('/MANY/LAST.DAT', b'last')
+        fs.writebytes('/CROSS.DAT', bytes(range(256)) * 35 + bytes(range(40)))
+        fs.writebytes('/LOCKED.DAT', b'A')
+        entry = fs.fs.root_dir.get_entry('/LOCKED.DAT')
+        entry.attr |= 1  # FAT read-only attribute
+        fs.fs.update_directory_entry(fs.fs.root_dir)
     cases = [('EXISTS', 'EXISTS PASS'), ('TYPE', 'Type mismatch at line 10'),
              ('SYNTAX', 'Syntax error at line 10'), ('EMPTY', 'Out of Range at line 10'),
              ('WILD', 'Out of Range at line 10'), ('DRIVE', 'Storage error at line 20')]
     if args.legacy_kernel:
         cases = [('MISSING', 'Storage error at line 10')]
+    deletion = [('DELETE', 'DELETE PASS'), ('DELERR', 'Storage error at line 10'),
+                ('DELTYPE', 'Type mismatch at line 10'),
+                ('DELWILD', 'Out of Range at line 10'),
+                ('DELLIST', 'Out of Range at line 10'),
+                ('DELROOT', 'Out of Range at line 10')]
+    if args.delete_only:
+        cases = deletion
+    elif not args.legacy_kernel:
+        cases += deletion
     for name, expected in cases:
         command = [str(args.mame.resolve()), 'f256k2x', '-rompath', str(work / 'roms'),
                    '-nvram_directory', str(work / (name + '-nvram')),
@@ -72,6 +88,17 @@ def main():
         if result.returncode or 'RESULT: PASS' not in content or 'RESULT: FAIL' in content:
             raise SystemExit(f'FAIL: {name}; see {log}')
         print(f'PASS: {name}', flush=True)
+    if any(name == 'DELETE' for name, _ in cases):
+        with PyFatFS(str(work / 'tests.img'), offset=2048 * 512) as fs:
+            expected = bytes(range(256)) * 35 + bytes(range(40))
+            assert fs.readbytes('/COPY.DAT') == expected, 'Banked BLOAD round-trip mismatch'
+            for name in ('REMOVE.DAT', 'TEMP.DAT', 'ROOT.DAT', 'CROSS.DAT', 'SUBDIR/TEMP.DAT'):
+                assert not fs.exists('/' + name), f'Deletion failed: {name}'
+            assert fs.readbytes('/SUBDIR/INNER.DAT') == b'A'
+            assert fs.readbytes('/LOCKED.DAT') == b'A'
+            assert fs.exists('/EMPTY.DAT')
+            assert fs.readbytes('/LARGE.DAT') == b'X' * 300000
+        print('PASS: disk contents and cross-bank BLOAD round-trip', flush=True)
 
 
 if __name__ == '__main__':
