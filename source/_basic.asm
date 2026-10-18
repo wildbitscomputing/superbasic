@@ -127,6 +127,7 @@
 	.include	"./system.f256/module.interfaces/kernel/commands/event.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/files/bload.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/files/bsave.asm"
+	.include	"./system.f256/module.interfaces/kernel/commands/files/delete.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/files/dir.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/files/drive.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/files/load.asm"

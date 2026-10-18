@@ -24,7 +24,7 @@ Detecting missing files on SD cards requires a kernel whose FAT32 driver
 distinguishes `NOT_FOUND` from `ERROR`. Older kernels may raise `Storage error`
 for missing files. Read errors, unavailable drives, and resource failures must
 not be treated as permission to overwrite a file. `TRY` does not catch errors
-from this function; it currently only supports `BLOAD` and `BSAVE`.
+from this function; it currently only supports `BLOAD`, `BSAVE`, and `DELETE`.
 
 Checking and saving are separate operations: this is not an atomic
 create-if-absent guarantee. It does not change `SAVE` or `BSAVE` behavior.

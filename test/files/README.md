@@ -23,6 +23,14 @@ Tests cover expression/array arguments, absolute/relative paths, repeated
 probes, subsequent BLOAD/BSAVE, and type/syntax/name/unavailable-drive errors.
 Temporary images and logs are retained at the printed path.
 
+Deletion tests also run with the updated kernel. Pass `--delete-only` to run
+only these cases, including with `--legacy-kernel`. They check successful and
+repeated deletions, TRY status, read-only files, rejected directory/wildcard/
+multi-file targets, and unavailable drives. The runner checks final disk
+contents, including a 9,000-byte BLOAD/BSAVE round-trip across 8 KB boundaries
+to cover the banked BLOAD transfer loop. All deletions target the runner's
+private test image, never an attached SD card.
+
 Companion kernel fault-injection tests live in `tests/test_file_errors.py`
 in the kernel repository. Run its full suite after building:
 

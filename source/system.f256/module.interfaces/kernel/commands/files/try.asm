@@ -30,6 +30,8 @@ Command_Try:	;; [try]
 		beq 	_TryBLoad
 		cmp	 	#KWD1_BSAVE
 		beq 	_TryBSave
+		cmp #KWD1_DELETE
+		beq _TryDelete
 
 _TrySyntax:
 		.error_syntax
@@ -41,6 +43,9 @@ _TryBLoad:
 		bra 	_TryExit
 _TryBSave:
 		jsr 	BSaveHandler
+		bra _TryExit
+_TryDelete:
+		jsr DeleteHandler
 
 _TryExit:
 		pha 								; save result 

@@ -23,6 +23,7 @@ keywords/cls
 keywords/cprint
 keywords/cos
 keywords/cursor
+keywords/delete
 keywords/dim
 keywords/dir
 keywords/drive

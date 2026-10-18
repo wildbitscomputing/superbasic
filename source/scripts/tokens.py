@@ -67,7 +67,7 @@ class TokenSource(object):
 				bsave		lomem 		input 		cls 		gosub
 				return 		print 		cprint 		goto 		cursor
 				mouse 		mdelta 		try 		tile 		tiles
-				option		cd
+				option		cd		delete
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs
