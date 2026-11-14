@@ -19,8 +19,8 @@ lexers["superbasic"] = _lexer
 
 project = "Wildbits SuperBASIC"
 copyright = (
-    "2022-2023 Paul Robson",
     "2026 Wildbits Computing Company",
+    "2022-2023 Paul Robson",
 )
 author = "Paul Robson; Wildbits Computing Company"
 release = "1.1"
