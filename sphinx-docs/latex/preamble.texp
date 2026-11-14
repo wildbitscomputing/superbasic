@@ -235,7 +235,8 @@
 
 \newtcbox{\ttbox}{tt box}
 \newcommand{\code}[1]{\hspace{0.1em}\ttbox{\ttfamily#1}\hspace{0.1em}}
-\newcommand{\kwd}[1]{\code{\color{primary}\bfseries#1}}
+\newcommand{\kwd}[1]{\code{\color{keyword_color}\bfseries#1}}
+\newcommand{\asm}[1]{\code{\color{asm_color}\bfseries#1}}
 \newcommand{\keybd}[1]{\hspace{0.1em}\ttbox{\ttfamily#1}\hspace{0.1em}}
 \newtcbox{\screenout}{
   enhanced,
@@ -379,5 +380,6 @@
 
 %%% Sphinx to LaTeX
 \newcommand{\DUrolekwd}[1]{\kwd{#1}}
+\newcommand{\DUroleasm}[1]{\asm{#1}}
 \renewcommand{\sphinxkeyboard}[1]{\keybd{#1}}
 \renewcommand{\sphinxcode}[1]{\code{#1}}

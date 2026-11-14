@@ -10,7 +10,11 @@ help:
 	uv run sphinx-build -b wildbits-help . _build/help
 
 pdf:
-	uv run sphinx-build -b latex . _build/latex
+	uv run sphinx-build \
+	    -b latex \
+		-D pygments_style=superbasic_style.PDFStyle \
+	    . _build/latex
+
 	cd _build/latex && xelatex f256-superbasic.tex && xelatex f256-superbasic.tex
 
 livehtml:

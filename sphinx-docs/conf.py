@@ -3,6 +3,8 @@
 import sys
 from pathlib import Path
 
+import colorutils
+
 config_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(config_dir))
 sys.path.append(str(config_dir / "ext"))
@@ -12,6 +14,7 @@ from docutils import nodes
 from sphinx.highlighting import lexers
 from sphinx.roles import SphinxRole
 from superbasic_lexer import SuperBASICLexer
+from superbasic_style import BrandColors, PDFStyle
 
 _lexer = SuperBASICLexer()
 lexers["basic"] = _lexer
@@ -44,17 +47,22 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 class KeywordRole(SphinxRole):
+    def __init__(self, role: str):
+        self.role = role
+
     def run(self):
         node = nodes.inline(
             self.rawtext,
             self.text,
-            classes=["kwd"],
+            classes=[self.role],
         )
         return [node], []
 
 
 def setup(app):
-    app.add_role("kwd", KeywordRole())
+    for role in ["kwd", "asm"]:
+        app.add_role(role, KeywordRole(role))
+
     app.connect("doctree-resolved", left_align_tables)
 
 
@@ -64,6 +72,8 @@ def left_align_tables(app, doctree, docname):
 
 
 # -- Options for HTML output -------------------------------------------------
+
+pygments_style = "superbasic_style.HTMLStyle"
 
 html_theme = "furo"
 html_static_path = ["_static"]
@@ -75,7 +85,6 @@ html_theme_options = {
 }
 
 # -- Options for LaTeX output ------------------------------------------------
-
 
 latex_documents = [
     (
@@ -115,6 +124,10 @@ add_font("plex-mono")
 add_font("poppins")
 
 
+def hex_to_rgb(hex: str):
+    return " ,".join([str(c / 255) for c in colorutils.hex_to_rgb(hex)])
+
+
 latex_elements = {
     "papersize": "letterpaper",
     "pointsize": "10pt",
@@ -124,10 +137,17 @@ latex_elements = {
     # loaded before hyperref package and packages loaded from Sphinx extensions
     "extrapackages": r"""
 \usepackage{xcolor}
-\definecolor{primary}{rgb}{0.2, 0.2, 0.6}
+\definecolor{primary}{rgb}{%s}
+\definecolor{keyword_color}{rgb}{%s}
+\definecolor{asm_color}{rgb}{%s}
 \definecolor{silver}{rgb}{0.85, 0.85, 0.85}
 \definecolor{raspberry}{rgb}{0.65, 0.2, 0.4}
-""",
+"""
+    % (
+        hex_to_rgb(BrandColors.MIDNIGHT_BLUE),
+        hex_to_rgb(PDFStyle.KEYWORD_COLOR),
+        hex_to_rgb(PDFStyle.ASM_COLOR),
+    ),
     "hyperref": r"\usepackage[colorlinks=true, linkcolor=black, urlcolor=primary]{hyperref}",
     # loaded after hyperref
     "preamble": r"\input{preamble.texp}",
