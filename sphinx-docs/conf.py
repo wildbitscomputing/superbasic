@@ -55,6 +55,12 @@ class KeywordRole(SphinxRole):
 
 def setup(app):
     app.add_role("kwd", KeywordRole())
+    app.connect("doctree-resolved", left_align_tables)
+
+
+def left_align_tables(app, doctree, docname):
+    for table in doctree.findall(nodes.table):
+        table["align"] = "left"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -84,6 +90,8 @@ latex_documents = [
 latex_docclass = {
     "manual": "book",
 }
+
+latex_table_style = ["booktabs"]
 
 # Additional files that are referenced in `latex_elements` below and will be
 # copied to the build directory when building LaTeX output. Sphinx tries to run

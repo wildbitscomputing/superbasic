@@ -8,9 +8,17 @@
     --wb-teal: #6BA7BB;
 }
 
-/* Consistent table widths */
+/* Left-align tables, consistent width, no alternating row backgrounds */
 table.docutils {
-    width: 100%;
+    width: auto;
+    margin-left: 0;
+    margin-right: auto;
+    float: none;
+}
+
+table.docutils tbody tr,
+table.docutils tbody td {
+    background: transparent;
 }
 
 /* Mermaid diagram sizing */
