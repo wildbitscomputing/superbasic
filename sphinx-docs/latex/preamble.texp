@@ -54,6 +54,8 @@
   ItalicFont=*-Italic,
   BoldItalicFont=*-BoldItalic,
   Numbers={Monospaced,Lining},
+  FontFace={md}{n}{*-Medium},
+  FontFace={md}{it}{*-MediumItalic},
   Ligatures=TeX
 ]
 
@@ -82,7 +84,7 @@
 }
 
 % Indent code blocks
-\AddToHook{env/sphinxVerbatim/before}{%
+\AddToHook{env/sphinxVerbatim/before}[code-block-indent]{%
   \begin{adjustwidth}{1em}{0pt}%
 }
 \AddToHook{env/sphinxVerbatim/after}{%
@@ -111,6 +113,38 @@
   \end{adjustwidth}
 }
 
+%%% Reference entries styling
+
+% Disable section numbering
+\newif\ifreferenceentrybody
+\newenvironment{referenceentries}{%
+  \edef\referenceentriessecnumdepth{\number\value{secnumdepth}}%
+  \setcounter{secnumdepth}{0}%
+  \referenceentrybodyfalse
+  \let\referenceentrysection\section
+  \renewcommand{\section}[1]{%
+    \ifreferenceentrybody\end{entry}\fi
+    \referenceentrysection{##1}%
+    \begin{entry}%
+    \referenceentrybodytrue
+  }%
+}{%
+  \ifreferenceentrybody\end{entry}\fi
+  \setcounter{secnumdepth}{\referenceentriessecnumdepth}%
+}
+
+% Prefix code blocks in ref entries with an "Example" label
+\AddToHook{env/sphinxVerbatim/before}[reference-example-label]{%
+  \ifreferenceentrybody
+    \par\noindent
+    {\small\sffamily\fontseries{md}\itshape\selectfont\color{primary}Example}%
+    \par\nobreak\vspace{-.5\parskip}%
+  \fi
+}
+\DeclareHookRule{env/sphinxVerbatim/before}%
+  {reference-example-label}{before}{code-block-indent}
+
+%%% Admonitions
 \newtcolorbox{infobox1}[2][]
 {
   colframe = silver!25,

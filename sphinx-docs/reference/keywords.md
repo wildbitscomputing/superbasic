@@ -4,6 +4,10 @@ This section lists all the keywords and functions used in SuperBASIC. Note that
 some topical keywords---such as graphics commands---are explained in more detail
 in their dedicated chapters.
 
+```{raw} latex
+\begin{referenceentries}
+```
+
 ```{toctree}
 ---
 maxdepth: 1
@@ -103,4 +107,8 @@ keywords/verify
 keywords/while-wend
 keywords/xload
 keywords/zap
+```
+
+```{raw} latex
+\end{referenceentries}
 ```
