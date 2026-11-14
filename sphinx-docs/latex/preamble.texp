@@ -32,7 +32,8 @@
 \setlength{\parskip}{0.75em}
 
 % Scale main font to 90% to match `notomath`'s default config
-\setmainfont{NotoSerif}[
+\setmainfont{IBMPlexSerif}[
+  Path=./,
   Extension=.ttf,
   Scale=0.9,
   UprightFont=*-Regular,
@@ -43,12 +44,32 @@
   Ligatures=TeX
 ]
 
-% set monospace font to Inconsolatazi4
-\setmonofont{Inconsolatazi4}[
-  Extension=.otf,
+% Section and chapter styles use \sffamily
+\setsansfont{Poppins}[
+  Path=./,
+  Extension=.ttf,
+  Scale=0.9,
   UprightFont=*-Regular,
-  BoldFont=*-Bold
+  BoldFont=*-Bold,
+  ItalicFont=*-Italic,
+  BoldItalicFont=*-BoldItalic,
+  Numbers={Monospaced,Lining},
+  Ligatures=TeX
 ]
+
+\setmonofont{IBMPlexMono}[
+  Path=./,
+  Scale=0.9,
+  Extension=.ttf,
+  UprightFont=*-Regular,
+  BoldFont=*-SemiBold,
+  ItalicFont=*-Italic,
+  BoldItalicFont=*-SemiBoldItalic
+]
+
+% IBM Plex Mono does not include U+2423, which Sphinx uses to mark a wrapped
+% space in verbatim output; use a math-font symbol instead
+\sphinxsetup{verbatimvisiblespace={\textcolor{red}{\ensuremath{\sqcup}}}}
 
 \ChNumVar{\color{primary}\fontsize{76}{80}\usefont{OT1}{pzc}{m}{n}\selectfont}
 \ChTitleVar{\color{primary}\raggedleft\Huge\sffamily\bfseries}

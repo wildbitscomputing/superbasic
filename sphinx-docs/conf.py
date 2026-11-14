@@ -93,6 +93,20 @@ latex_additional_files = list(
     str(path.relative_to(config_dir)) for path in (config_dir / "latex").glob("*")
 )
 
+
+def add_font(font_subdir: str):
+    fonts_dir = config_dir / "fonts" / "ttf"
+    latex_additional_files.extend(
+        str(path.relative_to(config_dir))
+        for path in (fonts_dir / font_subdir).glob("*.ttf")
+    )
+
+
+add_font("plex-serif")
+add_font("plex-mono")
+add_font("poppins")
+
+
 latex_elements = {
     "papersize": "letterpaper",
     "pointsize": "10pt",
