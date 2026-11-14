@@ -71,6 +71,24 @@
 % space in verbatim output; use a math-font symbol instead
 \sphinxsetup{verbatimvisiblespace={\textcolor{red}{\ensuremath{\sqcup}}}}
 
+% Render code blocks without a background, border, or shadow
+\sphinxsetup{%
+  verbatimwithframe=false,%
+  pre_background-TeXcolor={white},%
+  pre_border-width=0pt,%
+  pre_border-radius=0pt,%
+  pre_box-shadow=none,%
+  pre_padding=0pt%
+}
+
+% Indent code blocks
+\AddToHook{env/sphinxVerbatim/before}{%
+  \begin{adjustwidth}{1em}{0pt}%
+}
+\AddToHook{env/sphinxVerbatim/after}{%
+  \end{adjustwidth}%
+}
+
 \ChNumVar{\color{primary}\fontsize{76}{80}\usefont{OT1}{pzc}{m}{n}\selectfont}
 \ChTitleVar{\color{primary}\raggedleft\Huge\sffamily\bfseries}
 
