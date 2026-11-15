@@ -6,7 +6,6 @@ from pathlib import Path
 import colorutils
 from docutils import nodes
 from sphinx.highlighting import lexers
-from sphinx.roles import SphinxRole
 
 config_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(config_dir))
@@ -40,6 +39,7 @@ numfig = True
 extensions = [
     "myst_parser",
     "chapter_ref",
+    "keyword_role",
     "kwd_title_slash",
     "pdf_structure",
     "sphinxcontrib.mermaid",
@@ -58,23 +58,8 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
-class KeywordRole(SphinxRole):
-    def __init__(self, role: str):
-        self.role = role
-
-    def run(self):
-        node = nodes.inline(
-            self.rawtext,
-            self.text,
-            classes=[self.role],
-        )
-        return [node], []
-
 
 def setup(app):
-    for role in ["kwd", "asm"]:
-        app.add_role(role, KeywordRole(role))
-
     app.connect("doctree-resolved", left_align_tables)
 
 

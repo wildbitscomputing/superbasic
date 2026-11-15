@@ -5,7 +5,7 @@ from docutils import nodes
 
 
 def is_keyword(node):
-    return isinstance(node, nodes.inline) and "kwd" in node.get("classes", ())
+    return isinstance(node, nodes.Inline) and "kwd" in node.get("classes", ())
 
 
 def is_literal(node):

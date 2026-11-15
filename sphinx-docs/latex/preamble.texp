@@ -474,8 +474,10 @@
 \finalhyphendemerits=50000
 
 %%% Sphinx to LaTeX
-\newcommand{\DUrolekwd}[1]{\kwd{#1}}
-\newcommand{\DUroleasm}[1]{\asm{#1}}
+% Keep styled roles intact in moving arguments such as headings and ToC entries,
+% while exposing plain text to PDF bookmarks
+\DeclareRobustCommand{\DUrolekwd}[1]{\texorpdfstring{\kwd{#1}}{#1}}
+\DeclareRobustCommand{\DUroleasm}[1]{\texorpdfstring{\asm{#1}}{#1}}
 \DeclareRobustCommand{\DUrolesep}[1]{%
   \texorpdfstring{{\normalfont\mdseries\color{riverblue}#1}}{#1}%
 }
