@@ -41,6 +41,7 @@ extensions = [
     "myst_parser",
     "chapter_ref",
     "kwd_title_slash",
+    "pdf_structure",
     "sphinxcontrib.mermaid",
     "sphinx_copybutton",
     "sphinx_design",
@@ -162,6 +163,7 @@ latex_elements = {
         hex_to_rgb(PDFStyle.ASM_COLOR),
     ),
     "hyperref": r"\usepackage[colorlinks=true, linkcolor=black, urlcolor=primary]{hyperref}",
+    "contentsname": r"\addto\captionsenglish{\renewcommand{\contentsname}{Contents}}",
     # loaded after hyperref
     "preamble": r"\input{preamble.texp}",
     # "document_TeXextras": r"\lstset{language=BASIC}",
@@ -177,7 +179,11 @@ latex_elements = {
 \end{titlepage}
 """,
     "tableofcontents": r"""
+\renewcommand{\contentsname}{Contents}
+\begingroup
+\hypersetup{linkcolor=primary}
 \tableofcontents
+\endgroup
 \updatechaptername
 """,
     "atendofbody": r"",

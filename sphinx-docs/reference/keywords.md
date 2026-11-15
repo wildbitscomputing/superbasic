@@ -1,3 +1,8 @@
+---
+toc_group: Reference
+appendix: true
+---
+
 # Keywords and functions
 
 This section lists all the keywords and functions used in SuperBASIC. Note that

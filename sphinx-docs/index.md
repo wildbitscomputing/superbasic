@@ -8,8 +8,8 @@ User and reference manual for a modernized BASIC interpreter for the Wildbits an
 ::::{grid} 2
 :gutter: 3
 
-:::{grid-item-card} Introduction
-:link: guide/introduction
+:::{grid-item-card} Preface
+:link: guide/preface
 :link-type: doc
 What is SuperBASIC?
 :::
@@ -92,10 +92,16 @@ Reference for every SuperBASIC operator and syntax symbol.
 ```{toctree}
 ---
 hidden:
-caption: User Guide
-numbered: 1
 ---
-guide/introduction
+guide/preface
+```
+
+```{toctree}
+---
+hidden:
+numbered: 1
+caption: User guide
+---
 guide/getting_started
 guide/variables
 guide/structured_programming

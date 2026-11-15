@@ -57,8 +57,19 @@
   Numbers={Monospaced,Lining},
   FontFace={md}{n}{*-Medium},
   FontFace={md}{it}{*-MediumItalic},
+  FontFace={sb}{n}{*-SemiBold},
   Ligatures=TeX
 ]
+
+% Style running page headers and footers
+\makeatletter
+\fancyheadinit{%
+  \renewcommand{\py@HeaderFamily}{\sffamily\fontseries{sb}\selectfont}%
+}
+\fancyfootinit{%
+  \renewcommand{\py@HeaderFamily}{\sffamily\fontseries{sb}\selectfont}%
+}
+\makeatother
 
 \setmonofont{IBMPlexMono}[
   Path=./,
@@ -67,12 +78,22 @@
   UprightFont=*-Regular,
   BoldFont=*-SemiBold,
   ItalicFont=*-Italic,
-  BoldItalicFont=*-SemiBoldItalic
+  BoldItalicFont=*-SemiBoldItalic,
+  FontFace={sb}{n}{*-SemiBold},
+  FontFace={sb}{it}{*-SemiBoldItalic}
 ]
 
 % IBM Plex Mono does not include U+2423, which Sphinx uses to mark a wrapped
 % space in verbatim output; use a math-font symbol instead
 \sphinxsetup{verbatimvisiblespace={\textcolor{red}{\ensuremath{\sqcup}}}}
+
+% Render front-matter chapters without changing the chapter or page counters
+\newcommand{\sphinxunnumberedchapter}[1]{%
+  \chapter*{#1}%
+  \phantomsection%
+  \addcontentsline{toc}{chapter}{#1}%
+  \markboth{#1}{#1}%
+}
 
 % Render code blocks without a background, border, or shadow
 \sphinxsetup{%
@@ -106,7 +127,7 @@
 \ChTitleVar{\color{primary}\raggedleft\Huge\sffamily\bfseries}
 
 \setlength{\parindent}{0pt}
-\allsectionsfont{\color{primary}\bfseries\sffamily}
+\allsectionsfont{\color{primary}\sffamily\fontseries{sb}\selectfont}
 \newcommand{\microsec}{$\mu$s}
 \newcommand{\example}[1]{\subsection*{Example: #1}}
 \newcommand{\stab}{\hspace*{0.8em}}
@@ -354,27 +375,87 @@
   xleftmargin=1.5em
 }
 
-\renewcommand{\cftchapfont}{\bfseries}
-\renewcommand{\cftchappagefont}{\bfseries}
+%% Table of contents
+
+% Insert a group marker into the .toc file at the current position. The marker
+% is rendered later, when LaTeX reads the .toc file, so headings such as "User
+% guide" and "Reference" appear between the entries they group.
+\newcommand{\sphinxtocgroup}[1]{%
+  \addtocontents{toc}{\protect\sphinxtocgroupheading{#1}}%
+}
+
+% Render a ToC group heading between thin rules. The negative penalty provides
+% a preferable page-break point before the heading; \nobreak keeps the heading
+% attached to the entries that follow it.
+\newcommand{\sphinxtocgroupheading}[1]{%
+  \addpenalty{-1000}%
+  \vspace{1.25em}%
+  \noindent\rule{\linewidth}{0.4pt}\par
+  \vspace{0.35em}%
+  {\color{primary}\sffamily\bfseries\Large #1}\par
+  \vspace{0.35em}%
+  \noindent\rule{\linewidth}{0.4pt}\par
+  \nobreak\vspace{0.6em}%
+}
+
+% Number chapters and appendices, but not their section headings
+\setcounter{secnumdepth}{0}
+
+% Draw the main "Contents" title between a heavy upper rule and a thin lower
+% rule
+\setlength{\cftbeforetoctitleskip}{0pt}
+\renewcommand{\cfttoctitlefont}{%
+  \color{primary}\par\noindent\rule{\linewidth}{1.2pt}\par
+  \vspace{0.4em}\hfill\sffamily\bfseries\Huge
+}
+\renewcommand{\cftaftertoctitle}{%
+  \par\vspace{0.4em}\noindent\rule{\linewidth}{0.4pt}\par
+  \vspace{1em}%
+}
+
+\setlength{\cftbeforechapskip}{0.8em}
+
+% Use semibold font for chapter and appendix ToC headings, set all headers color to primary
+\renewcommand{\cftchapfont}{\color{primary}\sffamily\fontseries{sb}\selectfont}
+\renewcommand{\cftchappagefont}{\color{primary}\sffamily\fontseries{sb}\selectfont}
+\renewcommand{\cftsecfont}{\color{primary}}
+\renewcommand{\cftsecpagefont}{\color{primary}}
+\renewcommand{\cftsubsecfont}{\color{primary}}
+\renewcommand{\cftsubsecpagefont}{\color{primary}}
+
+% Rght-aligned page number column
+\cftsetpnumwidth{2em}
+\renewcommand{\cftpnumalign}{r}
+
+% Reserve enough space for prefixes such as "Chapter 10:" and "Appendix A:"
 \renewcommand{\cftchapaftersnum}{:}
-\renewcommand{\cftchapnumwidth}{7em}
+\setlength{\cftchapnumwidth}{6.1em}
+
+% Draw dotted lines for every ToC entry
+\renewcommand{\cftchapleader}{{\color{riverblue}\cftdotfill{\cftdotsep}}}
+\renewcommand{\cftsecleader}{{\color{riverblue}\cftdotfill{\cftdotsep}}}
+\renewcommand{\cftsubsecleader}{{\color{riverblue}\cftdotfill{\cftdotsep}}}
+
+% Keep section entries in the contents, but suppress the numeric prefix stored
+% in each entry's \numberline. The group confines both overrides to the current
+% section entry, leaving document headings and other ToC levels unchanged.
+\makeatletter
+\let\superbasic@l@section\l@section
+\renewcommand{\l@section}[2]{%
+  \begingroup
+  \let\numberline\@gobble
+  \setlength{\cftsecnumwidth}{0pt}%
+  \superbasic@l@section{#1}{#2}%
+  \endgroup
+}
+\makeatother
+
+% Update the prefix written for subsequent chapter-level ToC entries. \@chapapp
+% expands to the context-sensitive label ("Chapter" or "Appendix"). Writing the
+% change into .toc applies it at the correct point when that file is read.
 \makeatletter
 \newcommand*\updatechaptername{%
 	\addtocontents{toc}{\protect\renewcommand*\protect\cftchappresnum{\@chapapp\ }}
-}
-\newcommand{\compactappendixheader}[1]{%
-  \refstepcounter{chapter}%
-  \addcontentsline{toc}{chapter}{\appendixname~\thechapter: #1}%
-  \markboth{\appendixname~\thechapter: #1}{\appendixname~\thechapter: #1}%
-  {\color{primary}\raggedleft\sffamily\bfseries
-  {\large \appendixname~\thechapter\par}
-  \vspace{0.2em}
-  \mghrulefill{\RW}\par
-  \vspace{0.2em}
-  {\Huge #1\par}
-  \vspace{1em}
-  \mghrulefill{\RW}\par}
-  \vspace{2em}
 }
 \makeatother
 
