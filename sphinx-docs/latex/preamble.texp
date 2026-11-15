@@ -7,6 +7,7 @@
 \usetikzlibrary{svg.path}
 \usetikzlibrary{decorations.pathmorphing}
 \usepackage{caption}
+\usepackage{hypcap}
 \usepackage{changepage}
 \usepackage{amssymb}
 % \usepackage{footnote}
@@ -86,6 +87,16 @@
 % Indent code blocks
 \AddToHook{env/sphinxVerbatim/before}[code-block-indent]{%
   \begin{adjustwidth}{1em}{0pt}%
+  \ifx\sphinxVerbatimTitle\empty\else
+    \def\sphinxtablecapwidth{\linewidth}%
+    \captionsetup{
+      labelformat=nolabel,
+      format=referenceexample,
+      justification=raggedright,
+      singlelinecheck=false,
+      font=referenceexample,
+    }%
+  \fi
 }
 \AddToHook{env/sphinxVerbatim/after}{%
   \end{adjustwidth}%
@@ -120,6 +131,7 @@
 \newenvironment{referenceentries}{%
   \edef\referenceentriessecnumdepth{\number\value{secnumdepth}}%
   \setcounter{secnumdepth}{0}%
+  \renewcommand{\sphinxliteralblockneedspace}{0pt}%
   \referenceentrybodyfalse
   \let\referenceentrysection\section
   \renewcommand{\section}[1]{%
@@ -136,9 +148,7 @@
 % Prefix code blocks in ref entries with an "Example" label
 \AddToHook{env/sphinxVerbatim/before}[reference-example-label]{%
   \ifreferenceentrybody
-    \par\noindent
-    {\small\sffamily\fontseries{md}\itshape\selectfont\color{primary}Example}%
-    \par\nobreak\vspace{-.5\parskip}%
+    \sphinxSetupCaptionForVerbatim{Example}%
   \fi
 }
 \DeclareHookRule{env/sphinxVerbatim/before}%
@@ -294,6 +304,10 @@
 }
 
 \DeclareCaptionLabelFormat{nolabel}{}
+\DeclareCaptionFormat{referenceexample}{\hspace*{-1em}#3}
+\DeclareCaptionFont{referenceexample}{%
+  \small\sffamily\fontseries{md}\itshape\selectfont\color{primary}%
+}
 \captionsetup[lstlisting]{
   labelformat=nolabel,
   justification=raggedright,
