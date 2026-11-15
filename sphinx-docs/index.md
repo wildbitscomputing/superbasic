@@ -93,6 +93,7 @@ Reference for every SuperBASIC operator and syntax symbol.
 ---
 hidden:
 caption: User Guide
+numbered: 1
 ---
 guide/introduction
 guide/getting_started

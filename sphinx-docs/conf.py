@@ -27,9 +27,11 @@ copyright = (
 )
 author = "Paul Robson; Wildbits Computing Company"
 release = "1.1"
+numfig = True
 
 extensions = [
     "myst_parser",
+    "chapter_ref",
     "kwd_title_slash",
     "sphinxcontrib.mermaid",
     "sphinx_copybutton",

@@ -5,7 +5,7 @@ are stored as a 32-bit signed mantissa and an 8-bit exponent, and can represent
 numbers approximately between -3.4E+38 and +3.4E+38, with around 9 decimal
 digits of precision. The type suffix is considered part of the variable's name;
 for example, `age` and `age#` are treated as two distinct variables (integer and
-floating-point, respectively). See Chapter {ref}`chap:variables` for an in-depth
+floating-point, respectively). See {chapref}`chap:variables` for an in-depth
 exploration of variable types.
 
 ```basic

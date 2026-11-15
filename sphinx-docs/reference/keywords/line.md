@@ -1,6 +1,6 @@
 # {kwd}`line`
 
-Draws a line on the bitmap layer. See Chapter {ref}`chap:graphics` for more
+Draws a line on the bitmap layer. See {chapref}`chap:graphics` for more
 details.
 
 ```basic
