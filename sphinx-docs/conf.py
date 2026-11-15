@@ -16,6 +16,14 @@ sys.path.append(str(config_dir / "ext" / "wildbits-help"))
 from superbasic_lexer import SuperBASICLexer  # noqa: E402
 from superbasic_style import BrandColors, PDFStyle  # noqa: E402
 
+
+def read_version() -> str:
+    with open(config_dir.parent / "VERSION", "r") as version_file:
+        full_version = version_file.read().strip()
+
+    return ".".join(full_version.split(".")[:2])
+
+
 _lexer = SuperBASICLexer()
 lexers["basic"] = _lexer
 lexers["superbasic"] = _lexer
@@ -26,7 +34,7 @@ copyright = (
     "2022-2023 Paul Robson",
 )
 author = "Paul Robson; Wildbits Computing Company"
-release = "1.1"
+version = read_version()
 numfig = True
 
 extensions = [
@@ -93,7 +101,7 @@ latex_documents = [
     (
         "index",  # master document
         "f256-superbasic.tex",  # output file name
-        "SuperBASIC Reference Manual",  # title
+        "SuperBASIC %s User and Reference Manual" % version,  # title
         r"Paul Robson \\ Wildbits Computing Company",  # author
         "manual",  # Sphinx document class, 'howto' or 'manual'
     ),
