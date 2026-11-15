@@ -1,4 +1,4 @@
-# {kwd}`proc` {kwd}`endproc`
+# {kwd}`proc` / {kwd}`endproc`
 
 Simple procedures. These should be used rather than {kwd}`gosub`. The empty
 parentheses are mandatory even if there aren't any parameters. Definitions are

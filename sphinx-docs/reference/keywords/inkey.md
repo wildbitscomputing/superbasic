@@ -1,4 +1,4 @@
-# {kwd}`inkey()` {kwd}`inkey$()`
+# {kwd}`inkey()` / {kwd}`inkey$()`
 
 Returns the most recent key press, if any. {kwd}`inkey()` returns the ASCII code
 of the key, while {kwd}`inkey$()` returns the character as a string. If no key

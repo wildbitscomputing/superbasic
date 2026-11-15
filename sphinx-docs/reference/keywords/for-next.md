@@ -1,4 +1,4 @@
-# {kwd}`for` {kwd}`next`
+# {kwd}`for` / {kwd}`next`
 
 A loop that repeats code a fixed number of times. The loop body will be executed
 at least once. The default step is 1 for {kwd}`to` and -1 for {kwd}`downto`.

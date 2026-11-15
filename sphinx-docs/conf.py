@@ -4,17 +4,17 @@ import sys
 from pathlib import Path
 
 import colorutils
+from docutils import nodes
+from sphinx.highlighting import lexers
+from sphinx.roles import SphinxRole
 
 config_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(config_dir))
 sys.path.append(str(config_dir / "ext"))
 sys.path.append(str(config_dir / "ext" / "wildbits-help"))
 
-from docutils import nodes
-from sphinx.highlighting import lexers
-from sphinx.roles import SphinxRole
-from superbasic_lexer import SuperBASICLexer
-from superbasic_style import BrandColors, PDFStyle
+from superbasic_lexer import SuperBASICLexer  # noqa: E402
+from superbasic_style import BrandColors, PDFStyle  # noqa: E402
 
 _lexer = SuperBASICLexer()
 lexers["basic"] = _lexer
@@ -30,6 +30,7 @@ release = "1.1"
 
 extensions = [
     "myst_parser",
+    "kwd_title_slash",
     "sphinxcontrib.mermaid",
     "sphinx_copybutton",
     "sphinx_design",
@@ -138,6 +139,7 @@ latex_elements = {
     "extrapackages": r"""
 \usepackage{xcolor}
 \definecolor{primary}{rgb}{%s}
+\definecolor{riverblue}{rgb}{%s}
 \definecolor{keyword_color}{rgb}{%s}
 \definecolor{asm_color}{rgb}{%s}
 \definecolor{silver}{rgb}{0.85, 0.85, 0.85}
@@ -145,6 +147,7 @@ latex_elements = {
 """
     % (
         hex_to_rgb(BrandColors.MIDNIGHT_BLUE),
+        hex_to_rgb(BrandColors.RIVER_BLUE),
         hex_to_rgb(PDFStyle.KEYWORD_COLOR),
         hex_to_rgb(PDFStyle.ASM_COLOR),
     ),

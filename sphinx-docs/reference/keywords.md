@@ -105,8 +105,8 @@ keywords/try
 keywords/val
 keywords/verify
 keywords/while-wend
-keywords/xload
-keywords/zap
+keywords/xload-xgo
+keywords/zap-ping-shoot-explode
 ```
 
 ```{raw} latex

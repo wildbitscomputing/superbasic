@@ -1,4 +1,4 @@
-# {kwd}`screen()` {kwd}`screen$()`
+# {kwd}`screen()` / {kwd}`screen$()`
 
 Returns the character located at the given screen coordinates. {kwd}`screen()`
 returns the ASCII code of the character, while {kwd}`screen$()` returns the

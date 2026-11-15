@@ -1,4 +1,4 @@
-# {kwd}`repeat` {kwd}`until`
+# {kwd}`repeat` / {kwd}`until`
 
 Conditional loop, which is tested at the bottom.
 

@@ -1,4 +1,4 @@
-# {kwd}`tile` {kwd}`tile()`
+# {kwd}`tile` / {kwd}`tile()`
 
 {kwd}`tile` command manipulates the tile map. This allows you to set the scroll
 offset (with `to xscroll,yscroll`) and draw on the time map using `at x,y` to
