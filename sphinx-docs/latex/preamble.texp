@@ -324,6 +324,14 @@
   morestring=[b]",
 }
 
+% Figure captions styling
+\DeclareCaptionFont{figurecaption}{%
+  \sffamily\fontseries{md}\selectfont%
+}
+\captionsetup[figure]{
+  font={small,figurecaption},
+}
+
 \DeclareCaptionLabelFormat{nolabel}{}
 \DeclareCaptionFormat{referenceexample}{\hspace*{-1em}#3}
 \DeclareCaptionFont{referenceexample}{%

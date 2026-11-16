@@ -56,7 +56,7 @@ myst_enable_extensions = [
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-
+numfig_format = {"figure": "Figure %s"}
 
 
 def setup(app):

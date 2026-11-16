@@ -14,17 +14,12 @@ played simultaneously on both the left and right channels.
 There are four sound channels, numbered 0 to 3. Channels 0–2 are simple square
 wave channels; channel 3 is a noise channel.
 
-```{mermaid}
-flowchart TD
-    classDef primary fill:#272662,color:#fff,stroke:#1a1a4a
-    classDef secondary fill:#F1632B,color:#fff,stroke:#d14a1a
-    classDef accent fill:#44A348,color:#fff,stroke:#358a38
+```{figure} figures/sound-channels.*
+:alt: Four sound channels mixed and sent to the left and right speakers
+:width: 80%
+:name: fig:sound-channels
 
-    CH0["Channel 0 — Square"]:::primary --> MIX["Mixer"]:::accent
-    CH1["Channel 1 — Square"]:::primary --> MIX
-    CH2["Channel 2 — Square"]:::primary --> MIX
-    CH3["Channel 3 — Noise"]:::secondary --> MIX
-    MIX --> SPK["Speaker"]:::primary
+Sound channels and output routing
 ```
 
 Sounds have a queue of sounds to play. So you could queue up a series of notes
