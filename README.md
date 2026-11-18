@@ -31,7 +31,10 @@ When we generate release notes, the first four categories (`feat`, `fix`, `perf`
 
 ## Local development
 
-You need Make, Python and 64tass assembler on your machine.
+You need Make, Python, [uv](https://docs.astral.sh/uv/), and the
+[64tass](https://tass64.sourceforge.net/) assembler installed on your machine.
+If you use Homebrew, run `brew bundle` in the repository root to install the
+prerequisites.
 
 ### Building
 
