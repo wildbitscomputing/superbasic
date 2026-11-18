@@ -54,8 +54,8 @@ A procedure is called by writing its name followed by parentheses:
 ```
 
 Here, lines 200–230 define the procedure, and line 100 calls it. When the
-program encounters the `greet()` call in line 100, it jumps to the first line of
-the procedure's body (line 210, {kwd}`print`{code}` "Hello!"`), executes the
+program encounters the {basic}`greet()` call in line 100, it jumps to the first line of
+the procedure's body (line 210, {basic}`print "Hello!"`), executes the
 entire body, and then returns to line 110 to continue with the rest of the
 program.
 
@@ -157,7 +157,7 @@ flowchart LR
 
 When a function's logic is too complex for a single expression, you can write a
 multi-line function using {kwd}`fn` ... {kwd}`endfn`. Use
-{kwd}`return`{code}` expr` inside the body to return a value:
+{basic}`return expr` inside the body to return a value:
 
 ```basic
 100   print absval(-7)                   ' prints 7
@@ -360,7 +360,7 @@ instead of {kwd}`to`. This version prints the numbers from 10 down to 1:
 :class: compatibility
 
 Some BASIC dialects require the {kwd}`next` keyword to be followed by a loop 
-variable (for example, {kwd}`next`{code}` i`), and use that variable to identify
+variable (for example, {basic}`next i`), and use that variable to identify
 which loop to advance. If the variable names an outer loop, any intervening 
 inner loops may be discarded automatically. In SuperBASIC, a variable reference 
 following {kwd}`next` is purely syntactic and is ignored; {kwd}`next` always 
@@ -381,7 +381,7 @@ A {kwd}`while` loop checks its condition before entering the loop. For example:
 130 wend
 ```
 
-Here, the program keeps calling `playgame()` while the variable `lives` is
+Here, the program keeps calling {basic}`playgame()` while the variable `lives` is
 greater than zero. If the test on line 110 fails immediately, the loop body will
 never run. Notice how indentation, shown when the program is listed, helps to
 make the repeated block visually clear.
@@ -408,8 +408,8 @@ because the test is checked only at the end:
 ```
 
 This example produces the same behaviour as the {kwd}`while` loop above, but
-with a different control flow: the loop executes `playgame()` once before
-checking whether `lives = 0`.
+with a different control flow: the loop executes {basic}`playgame()` once before
+checking whether {basic}`lives = 0`.
 
 ```{mermaid}
 flowchart LR

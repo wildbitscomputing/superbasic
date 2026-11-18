@@ -1,7 +1,7 @@
 # {kwd}`mid$()`
 
 Returns a subsegment of a string, given the start position (first character is
-1\) and the length, so {kwd}`mid$`{code}`(“abcdef”,3,2)` returns `“cd”`.
+1\) and the length, so {basic}`mid$("abcdef", 3, 2)` returns `"cd"`.
 
 ```basic
 100 print mid$("hello",2,3)

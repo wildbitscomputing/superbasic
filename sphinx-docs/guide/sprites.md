@@ -90,7 +90,7 @@ flowchart LR
 ## Collision detection
 
 Collision detection between sprites is done using
-{kwd}`hit`{code}`(sprite1, sprite2)`. This uses a box test based on the size of
+{basic}`hit(sprite1, sprite2)`. This uses a box test based on the size of
 the sprite. The value returned is zero for no collision, or the lower of the two
 coordinate differences from the centre, approximately.
 

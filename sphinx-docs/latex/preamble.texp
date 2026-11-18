@@ -330,6 +330,8 @@
   \fi
 }
 
+%%% Inline literals styling
+
 \tcbset{tt box/.style={
   on line,
   boxrule=0pt,
@@ -345,8 +347,13 @@
 
 \newtcbox{\ttbox}{tt box}
 \newcommand{\code}[1]{\hspace{0.1em}\ttbox{\ttfamily#1}\hspace{0.1em}}
-\newcommand{\kwd}[1]{\code{\color{keyword_color}\bfseries#1}}
-\newcommand{\asm}[1]{\code{\color{asm_color}\bfseries#1}}
+
+\newcommand{\kwdtoken}[1]{{\color{keyword_color}\bfseries#1}}
+\newcommand{\kwd}[1]{\code{\kwdtoken{#1}}}
+
+\newcommand{\asmtoken}[1]{{\color{asm_color}\bfseries#1}}
+\newcommand{\asm}[1]{\code{\asmtoken{#1}}}
+
 \newcommand{\keybd}[1]{\hspace{0.1em}\ttbox{\ttfamily#1}\hspace{0.1em}}
 \newtcbox{\screenout}{
   enhanced,
@@ -565,6 +572,9 @@
 % while exposing plain text to PDF bookmarks
 \DeclareRobustCommand{\DUrolekwd}[1]{\texorpdfstring{\kwd{#1}}{#1}}
 \DeclareRobustCommand{\DUroleasm}[1]{\texorpdfstring{\asm{#1}}{#1}}
+\DeclareRobustCommand{\DUrolekwdtoken}[1]{\texorpdfstring{\kwdtoken{#1}}{#1}}
+\DeclareRobustCommand{\DUroleasmtoken}[1]{\texorpdfstring{\asmtoken{#1}}{#1}}
+
 \DeclareRobustCommand{\DUrolesep}[1]{%
   \texorpdfstring{{\normalfont\mdseries\color{riverblue}#1}}{#1}%
 }

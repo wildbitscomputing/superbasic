@@ -124,9 +124,9 @@ three storage areas:
 
 | Call                   | Returns                                                                  |
 | ---------------------- | ------------------------------------------------------------------------ |
-| {kwd}`fre`{code}`(0)`  | Free program memory (bytes remaining across all unallocated pages)       |
-| {kwd}`fre`{code}`(-1)` | Free variable and string space (bytes remaining in `$1000`–`$1FFF`)      |
-| {kwd}`fre`{code}`(-2)` | Free array and {kwd}`alloc()` space (bytes remaining in `$4000`–`$7FFF`) |
+| {basic}`fre(0)`  | Free program memory (bytes remaining across all unallocated pages)       |
+| {basic}`fre(-1)` | Free variable and string space (bytes remaining in `$1000`–`$1FFF`)      |
+| {basic}`fre(-2)` | Free array and {kwd}`alloc()` space (bytes remaining in `$4000`–`$7FFF`) |
 
 ## Cross-development upload area
 

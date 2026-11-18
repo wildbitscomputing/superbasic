@@ -3,7 +3,7 @@
 Returns the character located at the given screen coordinates. {kwd}`screen()`
 returns the ASCII code of the character, while {kwd}`screen$()` returns the
 character itself as a string. The coordinates are given as `row`, `column`, and
-use the same coordinate system as {kwd}`print at`:
+use the same coordinate system as {basic}`print at`:
 
 ```basic
 100 print at 15, 10; "#"

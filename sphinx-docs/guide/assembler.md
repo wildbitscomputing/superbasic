@@ -10,12 +10,12 @@ routines can be called via the {kwd}`call` statement.
 
 The instructions, named after their 65C02 opcode equivalents, generate code - so
 as a simple example, the instruction {asm}`txa` generates the machine code `$8A`
-in memory. If the instruction has an operand (say) {asm}`lda`{code}` #size*2`
+in memory. If the instruction has an operand (say) {basic}`lda #size*2`
 the expression is evaluated and the appropriate 2 bytes are stored in memory.
 
 Labels are specified using `.<label name>`, e.g. `.loop`; this is equivalent to
 setting the variable `loop` to the current write address, which can then be used
-in expressions, such as {asm}`jmp`{code}` loop`.
+in expressions, such as {basic}`jmp loop`.
 
 ## The {kwd}`assemble` command
 
@@ -64,7 +64,7 @@ assembler code - assembler commands can be put in at any time.
 There is a minor syntactic limitation, in that instructions that target the
 accumulator ({asm}`inc`, {asm}`dec`, {asm}`lsr`, {asm}`ror`, {asm}`asl` and
 {asm}`rol`) must not use the `A` postfix - so it is {asm}`inc` rather than
-{asm}`inc`{code}` a`.
+{basic}`inc a`.
 
 More generally, this assembler should be used for writing supporting code for
 BASIC programs - to speed up a part that is too slow in an interpreted language.

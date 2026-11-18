@@ -47,26 +47,25 @@ up to three bitmaps, but only one is supported using BASIC commands.
 Following drawing commands {kwd}`plot`, {kwd}`line`, {kwd}`rect`, {kwd}`circle`,
 {kwd}`sprite`, {kwd}`char` and {kwd}`image` there are actions and modifiers
 which either change or cause the command to be done (e.g. draw the line, draw
-the string etc.). Changes persist, so if you set {kwd}`colour` 3 or {kwd}`solid`
+the string etc.). Changes persist, so if you set {basic}`color 3` or {kwd}`solid`
 it will apply to all subsequent draws until you change it. Not all things work
 or make sense for all commands; you can't change the dimensions of a line, or
 the colour of a hardware sprite.
 
 | Modifier                                         | Description                                                                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| {kwd}`to`{code}` 100,100`                        | Draws the object from the current point to the new point, or at the new point.                                                                                                                                                                                                                                                |
-| {kwd}`from`{code}` 10,10`                        | Sets the current point, but doesn't draw. So you have {kwd}`rect` 10,10 {kwd}`to` 100,100. Note that {kwd}`plot` requires {kwd}`to` to do something, which is a little odd but consistent. The {kwd}`from` is optional, but must be used where a number precedes the coordinates (e.g. you can't do {kwd}`colour` 5 100,200). |
+| {basic}`to 100,100`                        | Draws the object from the current point to the new point, or at the new point.                                                                                                                                                                                                                                                |
+| {basic}`from 10,10`                        | Sets the current point, but doesn't draw. So you have {basic}`rect 10,10 to 100,100`. Note that {kwd}`plot` requires {kwd}`to` to do something, which is a little odd but consistent. The {kwd}`from` is optional, but must be used where a number precedes the coordinates (e.g. you can't do {basic}`color 5 100,200`). |
 | {kwd}`here`                                      | Same as {kwd}`to` but done at the current point.                                                                                                                                                                                                                                                                              |
-| {kwd}`by`{code}` 4,5`                            | Same as {kwd}`to` but offset from the current point by 4 horizontal, 5 vertical.                                                                                                                                                                                                                                              |
+| {basic}`by 4,5`                            | Same as {kwd}`to` but offset from the current point by 4 horizontal, 5 vertical.                                                                                                                                                                                                                                              |
 | {kwd}`solid`                                     | Causes shapes to be filled in.                                                                                                                                                                                                                                                                                                |
 | {kwd}`outline`                                   | Causes shapes to be drawn in outline.                                                                                                                                                                                                                                                                                         |
-| {kwd}`dim`{code}` 3`                             | Sets the size of scalable objects ({kwd}`char`, {kwd}`image`) from 1 to 8.                                                                                                                                                                                                                                                    |
-| {kwd}`colour`{code}` 4` / {kwd}`color`{code}` 4` | Synonyms, sets the current drawing colour from LUT 0, which is set up as `RRRGGGBB`.                                                                                                                                                                                                                                          |
+| {basic}`dim 3`                             | Sets the size of scalable objects ({kwd}`char`, {kwd}`image`) from 1 to 8.                                                                                                                                                                                                                                                    |
+| {basic}`colour 4` / {basic}`color 4` | Synonyms, sets the current drawing colour from LUT 0, which is set up as `RRRGGGBB`.                                                                                                                                                                                                                                          |
 
 ## Some useful examples
 
-All these examples start with {kwd}`bitmap`
-{kwd}`on`{code}`:`{kwd}`cls`{code}`:`{kwd}`bitmap` {kwd}`clear`{code}` 3`, which
+All these examples start with {basic}`bitmap on: cls: bitmap clear 3`, which
 enables the bitmap display, clears the screen, and fills the bitmap with color
 value 3. In binary, this is `00000011`, and since colors are encoded as
 `RRRGGGBB` by default, this corresponds to blue.
