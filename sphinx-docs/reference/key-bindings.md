@@ -1,3 +1,7 @@
+---
+toc_depth: 0
+---
+
 # Key bindings / shortcuts
 
 ## Editing

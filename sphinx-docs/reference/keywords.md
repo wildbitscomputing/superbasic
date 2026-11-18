@@ -1,8 +1,17 @@
+---
+toc_group: Reference
+appendix: true
+---
+
 # Keywords and functions
 
 This section lists all the keywords and functions used in SuperBASIC. Note that
 some topical keywords---such as graphics commands---are explained in more detail
 in their dedicated chapters.
+
+```{raw} latex
+\begin{referenceentries}
+```
 
 ```{toctree}
 ---
@@ -107,6 +116,10 @@ keywords/try
 keywords/val
 keywords/verify
 keywords/while-wend
-keywords/xload
-keywords/zap
+keywords/xload-xgo
+keywords/zap-ping-shoot-explode
+```
+
+```{raw} latex
+\end{referenceentries}
 ```

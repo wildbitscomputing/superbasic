@@ -15,7 +15,7 @@ example, `$10` is interpreted as a hexadecimal constant with the decimal value
 When used as a suffix in an identifier, `$` designates a string variable. The
 suffix is considered part of the variable name, so `id` and `id$` are treated as
 two distinct variables—an integer and a string, respectively. See
-Chapter {ref}`chap:variables` for an in-depth discussion of variable types.
+{chapref}`chap:variables` for an in-depth discussion of variable types.
 
 ```basic
 100 an_integer_id = $FFFF

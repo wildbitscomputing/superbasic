@@ -32,10 +32,18 @@ $name       ' $ character must be at the end
 total#sum   ' # character must be at the end
 ```
 
+Many early BASIC dialetcs allowed you to type long variable names for 
+readability, but, to save memory, stored and compared only the first few 
+characters. SuperBASIC always uses the full variable name when resolving a 
+variable reference.
+
 ```{admonition} Implementation note
+:class: implementation
 
-When a program is stored in memory, each identifier name is stored only once, regardless of how many times it appears in the program. Thus, aside from that single instance, using shorter identifier names provides no additional space savings.
-
+When a program is stored in memory, each identifier name is stored only once, 
+regardless of how many times it appears in the program. Thus, aside from that 
+single instance, using shorter identifier names provides no additional space 
+savings.
 ```
 
 ## Types

@@ -1,4 +1,4 @@
-# {kwd}`rnd()` {kwd}`random()`
+# {kwd}`rnd()` / {kwd}`random()`
 
 Generates random numbers. this has two forms, which is still many fewer than
 odo. {kwd}`rnd()` behaves like Microsoft BASIC, negative numbers set the seed, 0

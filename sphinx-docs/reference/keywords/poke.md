@@ -1,4 +1,4 @@
-# {kwd}`poke` {kwd}`pokew` {kwd}`pokel` {kwd}`poked`
+# {kwd}`poke` / {kwd}`pokew` / {kwd}`pokel` / {kwd}`poked`
 
 The {kwd}`poke`, {kwd}`pokew`, {kwd}`pokel` and {kwd}`poked` functions write one
 to four bytes to the specified memory address.

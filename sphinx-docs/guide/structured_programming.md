@@ -103,7 +103,8 @@ procedure call:
 
 A procedure can accept up to 13 parameters.
 
-```{admonition} Summary
+```{admonition} Procedures summary
+:class: summary
 
 -   A named procedure is a snippet of code that has a name.
 
@@ -112,7 +113,6 @@ A procedure can accept up to 13 parameters.
 -   A procedure can have no parameters, one parameter, or as many as you need.
 
 -   Procedures make your code more flexible—you can reuse the same procedure for lots of different inputs.
-
 ```
 
 ## User-defined functions
@@ -213,13 +213,12 @@ Functions can also be used inside control structures, results assigned to
 variables, or combined with any other expression.
 
 ```{admonition} Functions vs. Procedures
----
-class: seealso
----
-- A **procedure** ({kwd}`proc`/{kwd}`endproc`) performs an action but does not return a value. You call it as
+:class: summary
+
+- A procedure is defined with {kwd}`proc`/{kwd}`endproc` and *performs an action* but does not return a value. You call it as
   a standalone statement.
-- A **function** ({kwd}`fn`/{kwd}`endfn`) computes and returns a value. You call it inside an expression.
-- Both support parameters, and both localise their parameters automatically.
+- A function is defined with {kwd}`fn`/{kwd}`endfn` and *computes and returns a value*. You call it inside an expression.
+- Both are invoked using their names followed by parentheses and support passing parameters, calling other procedures and functions, and recursively calling themselves.
 ```
 
 ## {kwd}`for` loops
@@ -357,9 +356,15 @@ instead of {kwd}`to`. This version prints the numbers from 10 down to 1:
 120 next
 ```
 
-```{admonition} Compatibility
+```{admonition} Compatibility note
+:class: compatibility
 
-In some BASIC dialects, the loop variable must be written again after the {kwd}`next` keyword (for example, {kwd}`next`{code}` i`), and intricate behaviors are triggered if a loop is closed out of order. SuperBASIC simplifies this by requiring only a plain {kwd}`next`, with no variable name, and it does not support or allow those peculiar behaviors.
+Some BASIC dialects require the {kwd}`next` keyword to be followed by a loop 
+variable (for example, {kwd}`next`{code}` i`), and use that variable to identify
+which loop to advance. If the variable names an outer loop, any intervening 
+inner loops may be discarded automatically. In SuperBASIC, a variable reference 
+following {kwd}`next` is purely syntactic and is ignored; {kwd}`next` always 
+advances the innermost active loop.
 ```
 
 ## {kwd}`while` and {kwd}`repeat` loops

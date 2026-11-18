@@ -2,6 +2,10 @@
 
 This section lists all the operators and symbols used in SuperBASIC.
 
+```{raw} latex
+\begin{referenceentries}
+```
+
 ```{toctree}
 ---
 maxdepth: 1
@@ -27,4 +31,8 @@ operators/quote
 operators/less-than
 operators/left-shift
 operators/right-shift
+```
+
+```{raw} latex
+\end{referenceentries}
 ```
