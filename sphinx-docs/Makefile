@@ -13,6 +13,7 @@ GRC_LATEX_CONFIG := $(abspath .grc/latex.conf)
 
 pdf:
 	uv run sphinx-build \
+	    -E -a \
 	    -b latex \
 		-D pygments_style=superbasic_style.PDFStyle \
 	    . _build/latex
