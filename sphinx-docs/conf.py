@@ -38,6 +38,7 @@ numfig = True
 
 extensions = [
     "myst_parser",
+    "admonition_type",
     "chapter_ref",
     "keyword_role",
     "kwd_title_slash",
@@ -103,9 +104,11 @@ latex_table_style = ["booktabs"]
 # copied to the build directory when building LaTeX output. Sphinx tries to run
 # `pdflatex` on all `.tex` files in the build directory, so we use the `.texp`
 # extension for the partials.
-latex_additional_files = list(
-    str(path.relative_to(config_dir)) for path in (config_dir / "latex").glob("*")
-)
+latex_additional_files = [
+    str(path.relative_to(config_dir))
+    for path in (config_dir / "latex").rglob("*")
+    if path.is_file()
+]
 
 
 def add_font(font_subdir: str):

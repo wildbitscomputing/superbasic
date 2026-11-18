@@ -17,7 +17,9 @@ On startup, SuperBASIC configures the CPU address space as follows:
 | 6    | `$C000`–`$DFFF` | 8KB  | Kernel / I/O registers           |
 | 7    | `$E000`–`$FFFF` | 8KB  | Kernel ROM                       |
 
-```{note}
+```{admonition} Kernel compatibility
+:class: caution
+
 The `$C000`–`$DFFF` slot contains I/O registers and is used by the kernel. You can read and
 write I/O registers here, and SuperBASIC itself uses this slot to access text screen and colour
 RAM by temporarily mapping in different I/O pages. If you remap this slot, be sure to restore
@@ -104,7 +106,9 @@ number internally. Valid values range from page 8 (`$10000`) up to page 63
 (`$7E000`). The page number is calculated by dividing the address by 8192 (the
 size of one page).
 
-```{note}
+```{admonition} Use with caution
+:class: caution
+
 Setting {kwd}`lomem` to a low address may overlap with graphics or sprite memory. Make sure
 the pages you allocate for BASIC programs do not conflict with other hardware resources you
 are using.
