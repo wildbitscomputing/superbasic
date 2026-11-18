@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 import colorutils
-from docutils import nodes
 from sphinx.highlighting import lexers
 
 config_dir = Path(__file__).resolve().parent
@@ -43,6 +42,7 @@ extensions = [
     "keyword_role",
     "kwd_title_slash",
     "pdf_structure",
+    "pdf_tables",
     "sphinxcontrib.mermaid",
     "sphinx_copybutton",
     "sphinx_design",
@@ -58,15 +58,6 @@ myst_enable_extensions = [
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 numfig_format = {"figure": "Figure %s"}
-
-
-def setup(app):
-    app.connect("doctree-resolved", left_align_tables)
-
-
-def left_align_tables(app, doctree, docname):
-    for table in doctree.findall(nodes.table):
-        table["align"] = "left"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -98,7 +89,7 @@ latex_docclass = {
     "manual": "book",
 }
 
-latex_table_style = ["booktabs"]
+latex_table_style = ["booktabs", "colorrows"]
 
 # Additional files that are referenced in `latex_elements` below and will be
 # copied to the build directory when building LaTeX output. Sphinx tries to run

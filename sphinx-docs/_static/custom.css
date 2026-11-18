@@ -16,6 +16,29 @@ table.docutils {
     float: none;
 }
 
+/* Disable content wrapping for all but the last column */
+table.docutils :is(th, td):not(:last-child) {
+    width: 1%;
+    white-space: nowrap;
+}
+
+table.docutils :is(th, td):last-child {
+    width: 100%;
+}
+
+table.docutils :is(th, td) {
+    padding-block: 0.2em;
+}
+
+table.docutils thead th {
+    background: color-mix(
+        in srgb,
+        var(--wb-teal) 10%,
+        var(--color-background-primary)
+    );
+    font-weight: 600;
+}
+
 table.docutils tbody tr,
 table.docutils tbody td {
     background: transparent;

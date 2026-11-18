@@ -145,6 +145,25 @@
   \end{adjustwidth}
 }
 
+%%% Table styling
+
+% Disable content wrapping for all but the last column; see `ext/pdf_tables.py`
+\newcommand{\sphinxnowrapcolwidth}[2]{\tymax}
+\newcolumntype{N}{>{\let\sphinxcolwidth\sphinxnowrapcolwidth}l}
+
+% Add a little breathing room between table rows without changing line spacing
+% inside cells
+\newcommand{\sphinxtablerowspacing}{\setlength{\extrarowheight}{2pt}}
+\AddToHook{env/tabular/begin}[table-row-spacing]{\sphinxtablerowspacing}
+\AddToHook{env/tabulary/begin}[table-row-spacing]{\sphinxtablerowspacing}
+\AddToHook{env/longtable/begin}[table-row-spacing]{\sphinxtablerowspacing}
+
+% Fill header rows with a subtle brand tint while keeping body rows unfilled
+\colorlet{sphinxTableRowColorHeader}{riverblue!10}
+\colorlet{sphinxTableRowColorOdd}{white}
+\colorlet{sphinxTableRowColorEven}{white}
+\renewcommand{\sphinxstyletheadfamily}{\sffamily\fontseries{sb}\selectfont}
+
 %%% Reference entries styling
 
 % Disable section numbering
