@@ -30,7 +30,7 @@ class PDFStyle(Style):
     KEYWORD_COLOR = BrandColors.MIDNIGHT_BLUE
     KEYWORD_STYLE = f"bold {KEYWORD_COLOR}"
 
-    ASM_COLOR = "#1f9ca2"
+    ASM_COLOR = "#496f98"
     ASM_STYLE = f"bold {ASM_COLOR}"
 
     COMMENT_COLOR = "#b58b17"
