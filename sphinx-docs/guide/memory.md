@@ -17,7 +17,9 @@ On startup, SuperBASIC configures the CPU address space as follows:
 | 6    | `$C000`–`$DFFF` | 8KB  | Kernel / I/O registers           |
 | 7    | `$E000`–`$FFFF` | 8KB  | Kernel ROM                       |
 
-```{note}
+```{admonition} Kernel compatibility
+:class: caution
+
 The `$C000`–`$DFFF` slot contains I/O registers and is used by the kernel. You can read and
 write I/O registers here, and SuperBASIC itself uses this slot to access text screen and colour
 RAM by temporarily mapping in different I/O pages. If you remap this slot, be sure to restore
@@ -104,7 +106,9 @@ number internally. Valid values range from page 8 (`$10000`) up to page 63
 (`$7E000`). The page number is calculated by dividing the address by 8192 (the
 size of one page).
 
-```{note}
+```{admonition} Use with caution
+:class: caution
+
 Setting {kwd}`lomem` to a low address may overlap with graphics or sprite memory. Make sure
 the pages you allocate for BASIC programs do not conflict with other hardware resources you
 are using.
@@ -120,9 +124,9 @@ three storage areas:
 
 | Call                   | Returns                                                                  |
 | ---------------------- | ------------------------------------------------------------------------ |
-| {kwd}`fre`{code}`(0)`  | Free program memory (bytes remaining across all unallocated pages)       |
-| {kwd}`fre`{code}`(-1)` | Free variable and string space (bytes remaining in `$1000`–`$1FFF`)      |
-| {kwd}`fre`{code}`(-2)` | Free array and {kwd}`alloc()` space (bytes remaining in `$4000`–`$7FFF`) |
+| {basic}`fre(0)`  | Free program memory (bytes remaining across all unallocated pages)       |
+| {basic}`fre(-1)` | Free variable and string space (bytes remaining in `$1000`–`$1FFF`)      |
+| {basic}`fre(-2)` | Free array and {kwd}`alloc()` space (bytes remaining in `$4000`–`$7FFF`) |
 
 ## Cross-development upload area
 

@@ -1,4 +1,4 @@
-# {kwd}`min()` {kwd}`max()`
+# {kwd}`min()` / {kwd}`max()`
 
 Returns the largest or smallest of the parameters, there can be any number of
 these (at least one). You can't mix strings and integers.

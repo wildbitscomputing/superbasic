@@ -1,4 +1,4 @@
-# `<` (less than), `<=` (less equal), `=` (equal), `<>` (not equal), `>` (greater than), `>=` (greater equal)
+# `<` (less than) / `<=` (less equal) / `=` (equal) / `<>` (not equal) / `>` (greater than) / `>=` (greater equal)
 
 Numeric and string comparison. Each operator returns 0 if the condition is
 {kwd}`false` and -1 if {kwd}`true`. Comparing a number to a string produces a

@@ -69,5 +69,5 @@ other arguments:
 110 print "Hello"; at 2,4 "from"; at 4,8 "Canada"
 ```
 
-For the reverse of {kwd}`print at`, that is, *reading* the character at a
+For the reverse of {basic}`print at`, that is, *reading* the character at a
 specific screen position, see {kwd}`screen$()`.

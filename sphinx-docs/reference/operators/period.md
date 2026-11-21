@@ -21,6 +21,6 @@ assembly address. The label acts as an integer variable that holds this address:
 ```
 
 Labels can be referenced before they are defined, but doing so requires a
-multi-pass assembly block—see Chapter {ref}`chap:assembly` for details.
+multi-pass assembly block—see {chapref}`chap:assembly` for details.
 
 Since labels are variables, they must be globally unique.

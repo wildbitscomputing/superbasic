@@ -1,4 +1,4 @@
-# {kwd}`if` ... {kwd}`else` ... {kwd}`endif`
+# {kwd}`if` / {kwd}`else` / {kwd}`endif`
 
 The {kwd}`if` statement. Comes in two forms:
 

@@ -1,4 +1,4 @@
-# {kwd}`zap` {kwd}`ping` {kwd}`shoot` and {kwd}`explode`
+# {kwd}`zap` / {kwd}`ping` / {kwd}`shoot` / {kwd}`explode`
 
 Simple commands that generate a simple sound effect.
 

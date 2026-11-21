@@ -1,4 +1,4 @@
-# {kwd}`joyx()` {kwd}`joyy()`
+# {kwd}`joyx()` / {kwd}`joyy()`
 
 Return the directional value of a joystick or gamepad along the X or Y axis. A
 value of `1` indicates movement to the right (X) or down (Y), `-1` indicates

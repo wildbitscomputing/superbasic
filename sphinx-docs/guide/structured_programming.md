@@ -54,8 +54,8 @@ A procedure is called by writing its name followed by parentheses:
 ```
 
 Here, lines 200–230 define the procedure, and line 100 calls it. When the
-program encounters the `greet()` call in line 100, it jumps to the first line of
-the procedure's body (line 210, {kwd}`print`{code}` "Hello!"`), executes the
+program encounters the {basic}`greet()` call in line 100, it jumps to the first line of
+the procedure's body (line 210, {basic}`print "Hello!"`), executes the
 entire body, and then returns to line 110 to continue with the rest of the
 program.
 
@@ -103,7 +103,8 @@ procedure call:
 
 A procedure can accept up to 13 parameters.
 
-```{admonition} Summary
+```{admonition} Procedures summary
+:class: summary
 
 -   A named procedure is a snippet of code that has a name.
 
@@ -112,7 +113,6 @@ A procedure can accept up to 13 parameters.
 -   A procedure can have no parameters, one parameter, or as many as you need.
 
 -   Procedures make your code more flexible—you can reuse the same procedure for lots of different inputs.
-
 ```
 
 ## User-defined functions
@@ -157,7 +157,7 @@ flowchart LR
 
 When a function's logic is too complex for a single expression, you can write a
 multi-line function using {kwd}`fn` ... {kwd}`endfn`. Use
-{kwd}`return`{code}` expr` inside the body to return a value:
+{basic}`return expr` inside the body to return a value:
 
 ```basic
 100   print absval(-7)                   ' prints 7
@@ -213,13 +213,12 @@ Functions can also be used inside control structures, results assigned to
 variables, or combined with any other expression.
 
 ```{admonition} Functions vs. Procedures
----
-class: seealso
----
-- A **procedure** ({kwd}`proc`/{kwd}`endproc`) performs an action but does not return a value. You call it as
+:class: summary
+
+- A procedure is defined with {kwd}`proc`/{kwd}`endproc` and *performs an action* but does not return a value. You call it as
   a standalone statement.
-- A **function** ({kwd}`fn`/{kwd}`endfn`) computes and returns a value. You call it inside an expression.
-- Both support parameters, and both localise their parameters automatically.
+- A function is defined with {kwd}`fn`/{kwd}`endfn` and *computes and returns a value*. You call it inside an expression.
+- Both are invoked using their names followed by parentheses and support passing parameters, calling other procedures and functions, and recursively calling themselves.
 ```
 
 ## {kwd}`for` loops
@@ -357,9 +356,15 @@ instead of {kwd}`to`. This version prints the numbers from 10 down to 1:
 120 next
 ```
 
-```{admonition} Compatibility
+```{admonition} Compatibility note
+:class: compatibility
 
-In some BASIC dialects, the loop variable must be written again after the {kwd}`next` keyword (for example, {kwd}`next`{code}` i`), and intricate behaviors are triggered if a loop is closed out of order. SuperBASIC simplifies this by requiring only a plain {kwd}`next`, with no variable name, and it does not support or allow those peculiar behaviors.
+Some BASIC dialects require the {kwd}`next` keyword to be followed by a loop 
+variable (for example, {basic}`next i`), and use that variable to identify
+which loop to advance. If the variable names an outer loop, any intervening 
+inner loops may be discarded automatically. In SuperBASIC, a variable reference 
+following {kwd}`next` is purely syntactic and is ignored; {kwd}`next` always 
+advances the innermost active loop.
 ```
 
 ## {kwd}`while` and {kwd}`repeat` loops
@@ -376,7 +381,7 @@ A {kwd}`while` loop checks its condition before entering the loop. For example:
 130 wend
 ```
 
-Here, the program keeps calling `playgame()` while the variable `lives` is
+Here, the program keeps calling {basic}`playgame()` while the variable `lives` is
 greater than zero. If the test on line 110 fails immediately, the loop body will
 never run. Notice how indentation, shown when the program is listed, helps to
 make the repeated block visually clear.
@@ -403,8 +408,8 @@ because the test is checked only at the end:
 ```
 
 This example produces the same behaviour as the {kwd}`while` loop above, but
-with a different control flow: the loop executes `playgame()` once before
-checking whether `lives = 0`.
+with a different control flow: the loop executes {basic}`playgame()` once before
+checking whether {basic}`lives = 0`.
 
 ```{mermaid}
 flowchart LR

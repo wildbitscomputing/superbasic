@@ -1,4 +1,4 @@
-# {kwd}`while` {kwd}`wend`
+# {kwd}`while` / {kwd}`wend`
 
 Conditional loop with test at the top.
 

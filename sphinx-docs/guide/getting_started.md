@@ -1,3 +1,7 @@
+---
+toc_group: User guide
+---
+
 (chap:getting-started)=
 
 # Getting started
