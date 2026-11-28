@@ -39,6 +39,7 @@ extensions = [
     "myst_parser",
     "admonition_type",
     "chapter_ref",
+    "keyboard_keys",
     "keyword_role",
     "kwd_title_slash",
     "pdf_structure",
@@ -65,7 +66,7 @@ numfig_format = {"figure": "Figure %s"}
 pygments_style = "superbasic_style.HTMLStyle"
 
 html_theme = "furo"
-html_static_path = ["_static"]
+html_static_path = ["_static", "symbols"]
 html_css_files = ["custom.css"]
 html_title = "Wildbits SuperBASIC"
 
@@ -99,6 +100,9 @@ latex_additional_files = [
     str(path.relative_to(config_dir))
     for path in (config_dir / "latex").rglob("*")
     if path.is_file()
+] + [
+    str(path.relative_to(config_dir))
+    for path in (config_dir / "symbols").rglob("*.pdf")
 ]
 
 
@@ -130,6 +134,8 @@ latex_elements = {
 \usepackage{xcolor}
 \definecolor{primary}{rgb}{%s}
 \definecolor{riverblue}{rgb}{%s}
+\definecolor{mango}{rgb}{%s}
+\definecolor{dragonfire}{rgb}{%s}
 \definecolor{keyword_color}{rgb}{%s}
 \definecolor{asm_color}{rgb}{%s}
 \definecolor{silver}{rgb}{0.85, 0.85, 0.85}
@@ -138,6 +144,8 @@ latex_elements = {
     % (
         hex_to_rgb(BrandColors.MIDNIGHT_BLUE),
         hex_to_rgb(BrandColors.RIVER_BLUE),
+        hex_to_rgb(BrandColors.MANGO),
+        hex_to_rgb(BrandColors.DRAGON_FIRE),
         hex_to_rgb(PDFStyle.KEYWORD_COLOR),
         hex_to_rgb(PDFStyle.ASM_COLOR),
     ),

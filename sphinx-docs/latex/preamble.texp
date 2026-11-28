@@ -354,7 +354,65 @@
 \newcommand{\asmtoken}[1]{{\color{asm_color}\bfseries#1}}
 \newcommand{\asm}[1]{\code{\asmtoken{#1}}}
 
-\newcommand{\keybd}[1]{\hspace{0.1em}\ttbox{\ttfamily#1}\nobreak\hspace{0.1em}}
+%%% Key literals styling
+
+\tcbset{key box/.style 2 args={
+  enhanced,
+  on line,
+  boxrule=0.35pt,
+  boxsep=1pt,
+  colback=#1,
+  colframe=#1,
+  arc=1.5pt,
+  left=2pt,
+  right=2pt,
+  top=0.8pt,
+  bottom=0.4pt,
+  frame code={%
+    \fill[#2,rounded corners=1.5pt]
+      ([yshift=-0.8pt]frame.south west)
+      rectangle ([yshift=-1.125pt]frame.north east);%
+    \fill[#1,rounded corners=1.5pt]
+      (frame.south west) rectangle (frame.north east);%
+  }
+}}
+
+\tcbset{
+  minimum key box/.style={left=0pt, right=0pt, width=9.5pt, height=8.75pt, tcbox width=minimum center},
+  letter key box/.style={key box={primary!10}{primary!50}, minimum key box, valign=center},
+  cursor key box/.style={key box={mango!40}{mango}, minimum key box},
+  control key box/.style={key box={dragonfire!30}{dragonfire!80}},
+  control icon key box/.style={control key box, minimum key box}
+}
+\newtcbox{\keybox}[1]{#1}
+
+\newcommand{\keybdletterstyle}{\color{primary}\sffamily\fontseries{md}\fontsize{7.5}{9}}
+\newcommand{\keybdcursorstyle}{\color{primary}}
+\newcommand{\keybdcontrolstyle}{\color{primary}\sffamily\fontseries{md}\itshape}
+
+\newcommand{\keybdstyled}[3]{%
+  \hspace{0.1em}%
+  \raisebox{0.15ex}{%
+    \keybox{#1}{\fontsize{7}{8}#2\selectfont#3}%
+  }%
+  \nobreak\hspace{0.1em}%
+}
+\newcommand{\keybdletter}[1]{\keybdstyled{letter key box}{\keybdletterstyle}{\MakeLowercase{#1}}}
+\newcommand{\keybdcursor}[1]{\keybdstyled{cursor key box}{\keybdcursorstyle}{#1}}
+\newcommand{\keybdcontrol}[1]{\keybdstyled{control key box}{\keybdcontrolstyle}{\MakeUppercase{#1}}}
+
+\newcommand{\keybdiconstyled}[3]{%
+  \keybdstyled{#1}{#2}{\includegraphics[height=0.8em]{#3.pdf}}%
+}
+\newcommand{\keybdlettericon}[2]{\keybdiconstyled{letter key box}{\keybdletterstyle}{#1}}
+\newcommand{\keybdcursoricon}[2]{\keybdiconstyled{cursor key box}{\keybdcursorstyle}{#1}}
+\newcommand{\keybdcontrolicon}[2]{%
+  \keybdiconstyled{control icon key box}{\keybdcontrolstyle}{#1}%
+}
+
+\newcommand{\keybd}[1]{\keybdcontrol{#1}}
+
+
 \newtcbox{\screenout}{
   enhanced,
   boxrule=0pt,
